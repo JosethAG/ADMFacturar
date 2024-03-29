@@ -1,0 +1,18 @@
+﻿@{
+}
+﻿
+﻿<header class="w-full bg-sidebar py-5 px-6 sm:hidden" x-data="{ isOpen: false }">
+    <div class="flex items-center justify-between">
+        <button x-on:click="isOpen = !isOpen" class="text-white text-3xl focus:outline-none">
+            <i x-show="!isOpen" class="fas fa-bars"></i>
+            <i x-show="isOpen" class="fas fa-times"></i>
+        </button>
+
+        <button class="text-white text-3xl focus:outline-none">
+            <i x-show="!isOpen" class="fas fa-user"></i>
+        </button>
+    </div>
+    <nav x-bind:class="isOpen ? 'flex' : 'hidden'" class="flex flex-col pt-4">
+        <partial name="PageOptions">
+    </nav>
+</header>
