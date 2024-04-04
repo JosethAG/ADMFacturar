@@ -2,29 +2,60 @@
 Page Options
 *@
 
+<a asp-controller="Home" asp-action="Index"
+   class="flex items-center text-white py-4 pl-6 nav-item">
+    <i class="fa-solid fa-house mr-3"></i>
+    Inicio
+</a>
+
 <a asp-controller="CXC" asp-action="Index"
    class="flex items-center text-white py-4 pl-6 nav-item">
-    <i class="fas fa-tachometer-alt mr-3"></i>
+    <i class="fa-solid fa-receipt mr-3"></i>
+    Facturación
+</a>
+
+<a asp-controller="CXC" asp-action="Index"
+   class="flex items-center text-white py-4 pl-6 nav-item">
+    <i class="fa-solid fa-wallet mr-3"></i>
     Cuentas por Cobrar
 </a>
 
 <a asp-controller="CXP" asp-action="Index" 
    class="flex items-center text-white py-4 pl-6 nav-item">
-    <i class="fas fa-tachometer-alt mr-3"></i>
+    <i class="fa-solid fa-money-bill-transfer mr-3"></i>
     Cuentas por Pagar
 </a>
 
-<a href="#"
+<a asp-controller="CXP" asp-action="Index" 
    class="flex items-center text-white py-4 pl-6 nav-item">
-    <i class="fas fa-tachometer-alt mr-3"></i>
-    2
+    <i class="fa-solid fa-boxes-stacked mr-3"></i>
+    Inventario
 </a>
 
-<a href="#"
+<a asp-controller="CXP" asp-action="Index" 
    class="flex items-center text-white py-4 pl-6 nav-item">
-    <i class="fas fa-tachometer-alt mr-3"></i>
-    3
-</a>﻿
+    <i class="fa-solid fa-ranking-star mr-3"></i>
+    Marketing
+</a>
+
+<a asp-controller="CXP" asp-action="Index" 
+   class="flex items-center text-white py-4 pl-6 nav-item">
+    <i class="fa-solid fa-file mr-3"></i>
+    Reportes
+</a>
+
+@* Se debe colocar un condicional para administradores *@
+<a asp-controller="CXP" asp-action="Index" 
+   class="flex items-center text-white py-4 pl-6 nav-item">
+    <i class="fa-solid fa-users mr-3"></i>
+    Administración
+</a>
+
+<a asp-controller="CXP" asp-action="Index" 
+   class="flex items-center text-white py-4 pl-6 nav-item">
+    <i class="fa-solid fa-shield-halved mr-3"></i>
+    Seguridad
+</a>
 
 @* 
 <div class="nav-item dropdown">

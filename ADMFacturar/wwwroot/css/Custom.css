@@ -63,7 +63,11 @@
 }
 
 .bg-sidebar {
-    background: #064e85;
+    background: #01040F;
+}
+
+.bg-body {
+    background-color: #111726;
 }
 
 .cta-btn {
@@ -79,11 +83,11 @@
     }
 
 .active-nav-link {
-    background: linear-gradient(90deg, #064e85, #242424);
+    background: linear-gradient(90deg, #01040F, #242424);
 }
 
 .nav-item:hover {
-    background: linear-gradient(90deg, #064e85, #242424);
+    background: linear-gradient(90deg, #01040F, #242424);
 }
 
 .account-link:hover {
