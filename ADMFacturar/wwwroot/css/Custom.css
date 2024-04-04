@@ -109,3 +109,70 @@
         transform: rotate(360deg);
     }
 }
+
+.btnCrear {
+    background-color: transparent;
+    border: 1px solid #3182ce; 
+    color: #3182ce; 
+    width: 2rem; 
+    height: 2rem; 
+    font-weight: bold;
+    padding: 0.25rem 0.5rem; 
+    border-radius: 0.375rem; 
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; 
+    margin: 0.25rem; 
+    outline: none; 
+    box-shadow: none; 
+}
+
+    .btnCrear:hover {
+        background-color: #3182ce; 
+        color: #ffffff; 
+    }
+
+.VerDetalles {
+    background-color: transparent;
+    border: 1px solid #525f70;
+    color: #525f70;
+    width: 2rem;
+    height: 2rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0.25rem;
+    outline: none;
+    box-shadow: none;
+}
+
+    .VerDetalles:hover {
+        background-color: #525f70;
+        color: #ffffff;
+    }
+
+/* Estilos para el botón de radio oculto */
+.hidden-radio {
+    display: none; /* Oculta el botón de radio predeterminado */
+}
+
+/* Estilos para el contenedor del botón de radio personalizado */
+.custom-radio {
+    display: inline-block;
+}
+
+/* Estilos para la etiqueta del botón de radio personalizado */
+.custom-label {
+    padding: 5px 10px;
+    background-color: #007a80; /* Color de fondo inicial */
+    border: 1px solid #ccc; /* Bordes del botón de radio */
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Estilos para el botón de radio personalizado cuando está seleccionado */
+.custom-radio input:checked + .custom-label {
+    background-color: #007bff; /* Color de fondo cuando está seleccionado */
+    color: #ffffff; /* Color del texto cuando está seleccionado */
+}
