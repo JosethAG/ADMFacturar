@@ -1,5 +1,20 @@
 @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
 
+/*CSS AARON*/
+.custom-button {
+    width: 150px; /* Ancho personalizado */
+    background-color: #00BFFF; /* Color celeste */
+    color: #ffffff; /* Texto blanco */
+    border: 2px solid #00008B; /* Bordes azul oscuro */
+    transition: background-color 2s; /* Transición de 2 segundos */
+}
+
+    .custom-button:hover {
+        background-color: #00008B; /* Cambio de color al pasar el mouse */
+    }
+/*FIN CSS AARON*/
+
+
 .preloader {
     width: 100%;
     height: 100%;

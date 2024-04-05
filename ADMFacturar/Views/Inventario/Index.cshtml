@@ -1,0 +1,147 @@
+﻿<link href="~/css/custom.css" rel="stylesheet" />
+
+<link href="~/css/custom.css" rel="stylesheet" />
+
+<div class="w-full">
+</div>
+
+
+
+<p>
+    <a asp-action="Create" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">Agregar al Inventario</a>
+</p>
+
+<br />
+
+<form>
+    <div class="border-b border-gray-900/10 pb-12">
+        <h2 class="text-base font-semibold leading-7 text-white">Filtro de Inventario</h2>
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-3">
+
+            <div class="sm:col-span-1">
+                <label for="provider" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
+                <div class="mt-2">
+                    <select id="provider" name="provider" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <option value="">Seleccionar Proveedor</option>
+                        <!-- METER LECTURA DE LA BD -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Ingreso</label>
+                <div class="mt-2">
+                    <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label for="branch" class="block text-sm font-medium leading-6 text-white">Sucursal</label>
+                <div class="mt-2">
+                    <select id="branch" name="branch" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <option value="">Seleccionar Sucursal</option>
+                        <!-- METER LECTURA DE LA BD -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label for="warehouse" class="block text-sm font-medium leading-6 text-white">Bodega</label>
+                <div class="mt-2">
+                    <input type="text" id="warehouse" name="warehouse" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+
+            <div class="sm:col-span-1">
+                <label for="item" class="block text-sm font-medium leading-6 text-white">Artículo</label>
+                <div class="mt-2">
+                    <input type="text" id="item" name="item" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+
+
+            <div class="sm:col-span-1">
+                <label for="payment_method" class="block text-sm font-medium leading-6 text-white">Forma de Pago</label>
+                <div class="mt-2">
+                    <select id="payment_method" name="payment_method" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <option value="">Seleccionar Forma de Pago</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="sm:col-span-1">
+                <label for="total" class="block text-sm font-medium leading-6 text-white">Total a Pagar</label>
+                <div class="mt-2">
+                    <input type="text" id="total" name="total" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<!--                  Formulario                        -->
+
+
+<div class="w-full">
+    <p class="text-xl pb-3 flex items-center text-white">
+        <i class="fas fa-list mr-3"></i> Listado del Inventario
+    </p>
+    <div class="bg-white overflow-auto">
+        <table class="min-w-full bg-white border border-gray-300">
+            <thead class="bg-gray-900 text-white">
+                <tr>
+                    <th class="text-center py-3">Proveedor</th>
+                    <th class="text-center py-3">Fecha Ingreso</th>
+                    <th class="text-center py-3">Fecha fin Garantía</th>
+                    <th class="text-center py-3">Sucursal</th>
+                    <th class="text-center py-3">Bodega</th>
+                    <th class="text-center py-3">Ubicación</th>
+                    <th class="text-center py-3">Artículo</th>
+                    <th class="text-center py-3">Cantidad</th>
+                    <th class="text-center py-3">Costo</th>
+                    <th class="text-center py-3">Forma de Pago</th>
+                    <th class="text-center py-3">Impuesto</th>
+                    <th class="text-center py-3">Total a pagar</th>
+                    <th class="text-center py-3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
+                    <td class="p-3 border border-gray-300">American America</td>
+                    <td class="p-3 border border-gray-300">22/07/2024</td>
+                    <td class="p-3 border border-gray-300">22/07/2026</td>
+                    <td class="p-3 border border-gray-300">Sucursal A</td>
+                    <td class="p-3 border border-gray-300">Bodega 1</td>
+                    <td class="p-3 border border-gray-300">Ubicación 1</td>
+                    <td class="p-3 border border-gray-300">Artículo A</td>
+                    <td class="p-3 border border-gray-300">5</td>
+                    <td class="p-3 border border-gray-300">₡50.000</td>
+                    <td class="p-3 border border-gray-300">Efectivo</td>
+                    <td class="p-3 border border-gray-300">₡7.500</td>
+                    <td class="p-3 border border-gray-300">₡57.500</td>
+                    <td class="p-3 border border-gray-300">
+                        
+                        <button class="btn VerDetalles" title="Editar">
+                            <a asp-action="Edit">
+                                <svg class ="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
+                            </a>
+                        </button>
+                        <button class="btn VerDetalles" title="Eliminar">
+                            <a asp-action="Delete">
+                                <svg class="svg-inline--fa fa-eye fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
+                            </a>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
