@@ -2,19 +2,28 @@
 
 namespace ADMFacturar.Controllers
 {
-    public class CXPController : Controller
+    public class InventarioController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult Detalles()
+
+        public IActionResult Create()
         {
             return View();
         }
-        public IActionResult Abono()
+
+        public IActionResult Delete()
         {
             return View();
         }
+
+        public IActionResult Edit()
+        {
+            return View();
+        }
+
+
     }
 }
