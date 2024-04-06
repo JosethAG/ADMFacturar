@@ -8,5 +8,13 @@ namespace ADMFacturar.Controllers
         {
             return View();
         }
+        public IActionResult Detalles()
+        {
+            return View();
+        }
+        public IActionResult Abono()
+        {
+            return View();
+        }
     }
 }
