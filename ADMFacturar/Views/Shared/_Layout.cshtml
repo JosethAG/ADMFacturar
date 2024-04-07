@@ -1,5 +1,4 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,21 +6,19 @@
     <title>Layout</title>
     <partial name="Head">
 </head>
-<body class="bg-body font-family-karla flex">
-
+<body class="bg-body font-family-karla flex" style="margin: 0;">
     <partial name="Aside">
-
-        <div class="w-full flex flex-col h-screen overflow-y-hidden">
+        <div class="w-full flex flex-col h-screen overflow-y-hidden" style="margin-top: 0; padding-top: 0;">
             <partial name="Header">
                 <partial name="Responsive">
-
                     <div class="w-full overflow-x-hidden border-t flex flex-col">
                         <main class="w-full flex-grow p-6">
-
                             @RenderBody()
                         </main>
                     </div>
+                </partial>
+            </partial>
         </div>
+    </partial>
 </body>
-@RenderBody()
 </html>
