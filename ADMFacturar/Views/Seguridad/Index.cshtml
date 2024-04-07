@@ -1,20 +1,19 @@
 ﻿<link href="~/css/custom.css" rel="stylesheet" />
 
 <div class="w-full">
-    
 </div>
 
 <form>
-        <div class="border-b border-gray-900/10 pb-12">
-            <h2 class="text-base font-semibold leading-7 text-white">Información Cuentas Por Pagar</h2>
-            <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            
+    <div class="border-b border-gray-900/10 pb-12">
+        <h2 class="text-base font-semibold leading-7 text-white">Información Cuentas Por Cobrar</h2>
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
             <div class="sm:col-span-2 sm:col-start-1">
                 <label for="city" class="block text-sm font-medium leading-6 text-white">Fecha Inicio</label>
                 <div class="mt-2">
-                    <input type="date"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    <input type="date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
-            </div>        
+            </div>
 
             <div class="sm:col-span-2">
                 <label for="region" class="block text-sm font-medium leading-6 text-white">Fecha Final</label>
@@ -40,45 +39,45 @@
                 </div>
             </div>
 
-                <!--Fin de Fechas-->
+            <!--Fin de Fechas-->
 
 
             <div class="sm:col-span-2 sm:col-start-1">
                 <label for="email" class="block text-sm font-medium leading-6 text-white">Cliente</label>
-                    <div class="mt-2">
-                    <input type="text"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                    </div>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
-
-                <div class="sm:col-span-2 ">
-                <label for="city" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
-                    <div class="mt-2">
-                    <input type="text"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                    </div>
-                </div>
-
-                <div class="sm:col-span-2">
-                <label for="region" class="block text-sm font-medium leading-6 text-white">Factura</label>
-                    <div class="mt-2">
-                    <input type="text"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                    </div>
-                </div>
-
-                <!-- Fin de Datos-->
             </div>
+
+            <div class="sm:col-span-2 ">
+                <label for="city" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="region" class="block text-sm font-medium leading-6 text-white">Factura</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <!-- Fin de Datos-->
         </div>
+    </div>
 </form>
 
 <!--                  Formulario                        -->
 
 <div class="w-full">
     <p class="text-xl pb-3 flex items-center text-white">
-        <i class="fas fa-list mr-3"></i> Listado de Cuentas Por Pagar
+        <i class="fas fa-list mr-3"></i> Listado de Cuentas Por Cobrar
     </p>
     <div class="bg-white overflow-auto">
         <table class="min-w-full bg-white border border-gray-300">
             <thead class="bg-gray-900 text-white">
-                <tr>               
+                <tr>
                     <th class="text-center py-3">Factura</th>
                     <th class="text-center py-3">Cliente</th>
                     <th class="text-center py-3">Detalle</th>
@@ -91,7 +90,7 @@
                 <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
                     <td class="p-3 border border-gray-300">000001</td>
                     <td class="p-3 border border-gray-300">
-                        <span class=" text-md font-medium px-2.5 py-0.5">Outlet US</span>
+                        <span class=" text-md font-medium px-2.5 py-0.5">American America</span>
                     </td>
                     <td class="p-3 border border-gray-300">Se debe cancelar el 22/07/2024</td>
                     <td class="p-3 border border-gray-300">₡300.000</td>
@@ -113,3 +112,4 @@
             </tbody>
         </table>
     </div>
+</div>
