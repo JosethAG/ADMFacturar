@@ -3,11 +3,6 @@
 <div class="w-full">
 </div>
 
-<p>
-    <a asp-action="AgregarInventario" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">Agregar al Inventario</a>
-</p>
-
-<br />
 
 <form>
     <div class="border-b border-gray-900/10 pb-12">
@@ -54,9 +49,14 @@
 </form>
 
 <div class="w-full">
-    <p class="text-xl pb-3 flex items-center text-white">
-        <i class="fas fa-list mr-3"></i> Listado de Proveedores
-    </p>
+    <div class="flex justify-between items-center px-6 py-4 border-b">
+        <p class="text-xl pb-3 flex items-center text-white">
+            <i class="fas fa-list mr-3"></i> Listado de Proveedores
+        </p>
+        <p>
+            <a asp-action="AgregarInventario" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Crear Ingreso de Productos</a>
+        </p>
+    </div>
     <div class="bg-white overflow-auto">
         <table class="min-w-full bg-white border border-gray-300">
             <thead class="bg-gray-900 text-white">

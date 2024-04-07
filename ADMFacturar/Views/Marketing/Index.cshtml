@@ -1,5 +1,153 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
 }
+
+<!--        Seleccion de tarea      -->
+<!--        Tarjetas            -->
+<div class="flex flex-col justify-start items-left lg:flex-row lg:items-start">
+    <div id="DivCard" class="max-w-sm p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 " onclick="abrirModal('modalCrearCorreo')">
+        <div class="flex mt-2">
+            <svg class=" w-7 h-7 mb-3 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
+            </svg>
+            <p class="mb-2 font-normal">Crear Nuevo Correo</p>
+        </div>
+    </div>
+
+    <div id="DivCard" class="max-w-sm p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 ">
+        <a asp-action="GCIndex">
+            <div class="flex mt-2">
+                <svg class=" w-7 h-7 mb-3 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                    <path d="M96 0C60.7 0 32 28.7 32 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H96zM208 288h64c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16H144c-8.8 0-16-7.2-16-16c0-44.2 35.8-80 80-80zm-32-96a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM512 80c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V80zM496 192c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm16 144c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V336z" />
+                </svg>
+                <p class="mb-2 font-normal">Administrar Grupos de Correo</p>
+            </div>
+        </a>
+    </div>
+
+    <div id="DivCard" class="max-w-sm p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 ">
+        <a asp-action="TemplateIndex">
+            <div class="flex mt-2">
+                <svg class=" w-7 h-7 mb-3 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 576 512">
+                    <path d="M264.5 5.2c14.9-6.9 32.1-6.9 47 0l218.6 101c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 149.8C37.4 145.8 32 137.3 32 128s5.4-17.9 13.9-21.8L264.5 5.2zM476.9 209.6l53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 277.8C37.4 273.8 32 265.3 32 256s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0l152-70.2zm-152 198.2l152-70.2 53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 405.8C37.4 401.8 32 393.3 32 384s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0z" />
+                </svg>
+                <p class="mb-2 font-normal">Administrar Template</p>
+            </div>
+        </a>
+    </div>
+</div>
+<!--        Final Seleccion de tarea      -->
+
+<div class="containerReg">
+    <div class="header">
+        <h1>Registro de Marketing</h1>
+    </div>
+    <div class="main-content">
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="date-box">
+                    <div class="date">09/28/2017</div>
+                </div>
+                <div class="title-status">
+                    <div class="title">Título: ¡Renueva tu armario con las últimas tendencias!</div>
+                    <div>
+                        Dirigido a: info@yourstore.com, sales@yourstore.com, support@yourstore.com
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="date-box">
+                    <div class="date">09/28/2017</div>
+                </div>
+                <div class="title-status">
+                    <div class="title">Título: ¡Renueva tu armario con las últimas tendencias!</div>
+                    <div>
+                        Dirigido a: info@yourstore.com, sales@yourstore.com, support@yourstore.com
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="date-box">
+                    <div class="date">09/28/2017</div>
+                </div>
+                <div class="title-status">
+                    <div class="title">Título: ¡Renueva tu armario con las últimas tendencias!</div>
+                    <div>
+                        Dirigido a: info@yourstore.com, sales@yourstore.com, support@yourstore.com
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="date-box">
+                    <div class="date">09/28/2017</div>
+                </div>
+                <div class="title-status">
+                    <div class="title">Título: ¡Renueva tu armario con las últimas tendencias!</div>
+                    <div>
+                        Dirigido a: info@yourstore.com, sales@yourstore.com, support@yourstore.com
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="date-box">
+                    <div class="date">09/28/2017</div>
+                </div>
+                <div class="title-status">
+                    <div class="title">Título: ¡Renueva tu armario con las últimas tendencias!</div>
+                    <div>
+                        Dirigido a: info@yourstore.com, sales@yourstore.com, support@yourstore.com
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--        Modales         -->
+<!--                  Modal de Crear Abono                        -->
+<div id="modalCrearCorreo" class="modal">
+    <div class="modal-content">
+
+        <form action="#" class="flex flex-col space-y-8 text-white">
+
+            <div>
+                <h3 class="text-2xl font-semibold text-center">Nuevo Correo</h3>
+                <hr>
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Para: </label>
+                <input type="text" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" />
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Grupo de correos: </label>
+                <select class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                    <option>Ninguno</option>
+                    <option>Todos</option>
+                    <option>PYMES</option>
+                    <option>Gobierno</option>
+                </select>
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Titulo </label>
+                <input type="text" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" />
+            </div>
+
+            <div class="form-item w-full">
+                <label class="text-xl ">Contenido</label>
+                <textarea cols="30" rows="10" class="w-full appearance-none text-black rounded py-1 px-2 mr-2 focus:outline-none  focus:border-blue-200 "></textarea>
+            </div>
+            <div class="form-item w-full">
+                <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Envíar</button>
+                <button class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--                  Final Modal de Crear Abono                        -->
+<!--                  Final Modales                        -->

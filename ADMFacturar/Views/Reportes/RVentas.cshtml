@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Ventas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="~/css/custom.css" rel="stylesheet" />
+    
+</head>
+<body>
+    <form>
+        <div class="border-b border-gray-900/10 pb-12">
+            <h2 class="text-base font-semibold leading-7 text-white">Filtros de Búsqueda</h2>
+            <!--                  Inicio Fechas                        -->
+            <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+                <div class="sm:col-span-2 sm:col-start-1">
+                    <label for="city" class="block text-sm font-medium leading-6 text-white">Fecha Inicio</label>
+                    <div class="mt-2">
+                        <input type="date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="region" class="block text-sm font-medium leading-6 text-white">Fecha Final</label>
+                    <div class="mt-2">
+                        <input type="date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
+                </div>
+                <!--                  Final de Fechas                        -->
+
+                <!--                  Inicio Datos                        -->
+
+                <div class="sm:col-span-2">
+                    <label for="email" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                    <div class="mt-2">
+                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
+                </div>
+                <div class="sm:col-span-2 ">
+                    <label for="email" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
+                    <div class="mt-2">
+                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
+                </div>
+
+                <div class="sm:col-span-2 ">
+                    <label for="email" class="block text-sm font-medium leading-6 text-white">Factura</label>
+                    <div class="mt-2">
+                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="region" class="block text-sm font-medium leading-6 text-white">Pedido</label>
+                    <div class="mt-2">
+                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
+                </div>
+
+                <!--                  Final Datos                        -->
+            </div>
+        </div>
+    </form>
+        <!-- Tabla de ventas -->
+    <div class="w-full">
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+        <p class="text-xl pb-3 flex items-center text-white">
+            <i class="fas fa-list mr-3"></i> Listado Reporte de Ventas
+        </p>
+        <div>
+            <button class="bg-green-500 text-white px-4 py-2 mr-4 rounded hover:bg-green-600">Exportar a Excel</button>
+            <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Exportar a PDF</button>
+        </div>
+        </div>
+        <div class="bg-white overflow-auto">
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead class="bg-gray-900 text-white">
+                    <tr>
+                        <th class="py-2 px-4">Factura</th>
+                        <th class="py-2 px-4">Pedido</th>
+                          <th class="py-2 px-4">Fecha</th>
+                        <th class="py-2 px-4">Cliente</th>
+                        <th class="py-2 px-4">Nombre</th>
+                        <th class="py-2 px-4">Descuento</th>
+                        <th class="py-2 px-4">Total</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
+                        <td class="py-2 px-4">000001</td>
+                        <td class="py-2 px-4">Pedido 1</td>
+                         <td class="py-2 px-4">02/02/204</td>
+                        <td class="py-2 px-4">American America</td>
+                        <td class="py-2 px-4">John Doe</td>
+                        <td class="py-2 px-4">₡0</td>
+                        <td class="py-2 px-4">₡300,000</td>
+                    </tr>
+                    <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
+                        <td class="py-2 px-4">000002</td>
+                        <td class="py-2 px-4">Pedido 2</td>
+                            <td class="py-2 px-4">02/02/204</td>
+                        <td class="py-2 px-4">Boutique Ana</td>
+                        <td class="py-2 px-4">Ana Gomez</td>
+                        <td class="py-2 px-4">₡0</td>
+                        <td class="py-2 px-4">₡280,000</td>
+                    </tr>
+                        <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
+                        <td class="py-2 px-4">000003</td>
+                        <td class="py-2 px-4">Pedido 3</td>
+                            <td class="py-2 px-4">02/02/204</td>
+                        <td class="py-2 px-4">Tienda Solo Bueno</td>
+                        <td class="py-2 px-4">Arturo Monge</td>
+                        <td class="py-2 px-4">₡0</td>
+                        <td class="py-2 px-4">₡750,000</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="py-2 px-4 font-semibold text-right">Total de Ventas:</td>
+                        <td colspan="7" class="py-2 px-4 font-semibold text-center">₡1.330.000</td>                 
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+              <!-- Tabla de ventas -->
+    </div>
+</body>
+</html>
