@@ -1,0 +1,69 @@
+﻿<link href="~/css/custom.css" rel="stylesheet" />
+
+<div class="w-full">
+</div>
+
+<form>
+    <p>
+        <a asp-action="ListProvedores">
+            <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#ffffff" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" /></svg>
+        </a>
+    </p>
+    <br />
+    <br />
+
+
+    <div class="border-b border-gray-900/10 pb-12">
+        <h2 class="text-base font-semibold leading-7 text-white">Creacion de nuevo Proveedor</h2>
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+            <div class="sm:col-span-1">
+                <label for="region" class="block text-sm font-medium leading-6 text-white">Codigo Provedore</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+            <div class="sm:col-span-1">
+                <label for="region" class="block text-sm font-medium leading-6 text-white">Nombre Provedor</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+            <div class="sm:col-span-1">
+                <label for="region" class="block text-sm font-medium leading-6 text-white">Telefono Provedor</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-1 sm:col-start-1">
+                <label for="email" class="block text-sm font-medium leading-6 text-white">Correo Provedor</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+            <fieldset>
+                <legend class="block text-sm font-medium leading-6 text-white">Estado</legend>
+                <div class="mt-3 flex items-center gap-x-10">
+                    <div class="flex items-center gap-x-2 bg-blue-100 text-blue-800 text-md font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400 ">
+                        <input id="push-everything" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                        <label for="push-everything" class="block text-sm font-medium leading-6 text-gray-900">Activo</label>
+                    </div>
+                    <div class="flex items-center gap-x-2 bg-red-100 text-red-800 text-md font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-red-400">
+                        <input id="push-email" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                        <label for="push-email" class="block text-sm font-medium leading-6 text-gray-900">Inactivo</label>
+                    </div>
+                </div>
+                <fieldset/>
+        </div>
+        </div>
+        <br />
+        <br />
+
+        <p>
+
+            <a asp-action="ListProvedores" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">Guarda Nuevo Proveedor</a>
+        </p>
+    </div>
+
+</form>
