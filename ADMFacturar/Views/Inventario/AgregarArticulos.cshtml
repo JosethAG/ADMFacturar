@@ -1,0 +1,85 @@
+﻿<link href="~/css/custom.css" rel="stylesheet" />
+
+<div class="w-full"></div>
+
+<form asp-action="AgregarArticulos" method="post">
+    <div class="border-b border-gray-900/10 pb-12">
+        <h2 class="text-base font-semibold leading-7 text-white">Agregar articulos</h2>
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
+
+            <div class="sm:col-span-1">
+                <label for="article" class="block text-sm font-medium leading-6 text-white">Artículo</label>
+                <div class="mt-2">
+                    <select id="article" name="article" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <option value="">Seleccionar Artículo</option>
+                        <!-- OPCIONES DE ARTÍCULO -->
+                        <option value="Artículo A">Artículo A</option>
+                        <option value="Artículo B">Artículo B</option>
+                        <option value="Artículo C">Artículo C</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label for="quantity" class="block text-sm font-medium leading-6 text-white">Cantidad</label>
+                <div class="mt-2">
+                    <input type="number" id="quantity" name="quantity" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label for="cost" class="block text-sm font-medium leading-6 text-white">Costo</label>
+                <div class="mt-2">
+                    <input type="text" id="cost" name="cost" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <br />
+        <div class="form-group">
+            <input asp-action="AgregarInventario" type="submit" value="Confirmar" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
+            <input asp-action="AgregarArticulos" type="submit" value="Agregar Artículo" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
+        </div>
+    </div>
+</form>
+
+
+<div class="w-full">
+    <p class="text-xl pb-3 flex items-center text-white">
+        <i class="fas fa-list mr-3"></i> Listado de Artículos
+    </p>
+    <div class="bg-white overflow-auto">
+        <table class="min-w-full bg-white border border-gray-300">
+            <thead class="bg-gray-900 text-white">
+                <tr>
+                    <th class="text-center py-3">Artículo</th>
+                    <th class="text-center py-3">Cantidad</th>
+                    <th class="text-center py-3">Costo</th>
+                    <th class="text-center py-3">Total a Pagar</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <!-- FILAS DE LA TABLA -->
+                <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
+                    <td class="p-3 border border-gray-300">Artículo A</td>
+                    <td class="p-3 border border-gray-300">10</td>
+                    <td class="p-3 border border-gray-300">$50</td>
+                    <td class="p-3 border border-gray-300">$500</td>
+                </tr>
+                <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
+                    <td class="p-3 border border-gray-300">Artículo B</td>
+                    <td class="p-3 border border-gray-300">5</td>
+                    <td class="p-3 border border-gray-300">$80</td>
+                    <td class="p-3 border border-gray-300">$400</td>
+                </tr>
+                <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
+                    <td class="p-3 border border-gray-300">Artículo C</td>
+                    <td class="p-3 border border-gray-300">20</td>
+                    <td class="p-3 border border-gray-300">$30</td>
+                    <td class="p-3 border border-gray-300">$600</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
