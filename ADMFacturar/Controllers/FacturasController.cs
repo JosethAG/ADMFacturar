@@ -2,44 +2,39 @@
 
 namespace ADMFacturar.Controllers
 {
-    public class InventarioController : Controller
+    public class FacturasController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult AgregarInventario()
+        public IActionResult RegistroAnulaciones()
         {
             return View();
         }
 
-        public IActionResult AgregarArticulos()
+        public IActionResult RegistroModificaciones()
         {
             return View();
         }
 
-        public IActionResult EditarInventario()
+        public IActionResult AgregarFactura()
         {
             return View();
         }
 
-        public IActionResult DetallesInventario()
+        public IActionResult Anular()
         {
             return View();
         }
 
-        public IActionResult EditarArticulo()
+        public IActionResult Imprimir()
         {
             return View();
         }
 
-        public IActionResult EditarArticuloDesdeAgregarArticulos()
-        {
-            return View();
-        }
-
-        public IActionResult DetallesArticulo()
+        public IActionResult EditarFactura()
         {
             return View();
         }
