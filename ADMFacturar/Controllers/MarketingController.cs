@@ -9,11 +9,11 @@ namespace ADMFacturar.Controllers
         {
             return View();
         }
-        public IActionResult Detalles()
+        public IActionResult GCIndex()
         {
             return View();
         }
-        public IActionResult Abono()
+        public IActionResult TemplateIndex()
         {
             return View();
         }
