@@ -224,7 +224,7 @@ img, video {
 }
 
 *, ::after, ::before {
-    --tw-border-opacity: 1;
+    --tw-border-opacity: 0;
     border-color: rgba(229,231,235,var(--tw-border-opacity))
 }
 
@@ -12440,23 +12440,23 @@ img, video {
 }
 
 .border-b-0 {
-    border-bottom-width: 0
+    border-bottom-width: 0px
 }
 
 .border-b-2 {
-    border-bottom-width: 2px
+    border-bottom-width: 0px
 }
 
 .border-b-4 {
-    border-bottom-width: 4px
+    border-bottom-width: 0px
 }
 
 .border-b-8 {
-    border-bottom-width: 8px
+    border-bottom-width: 0px
 }
 
 .border-b {
-    border-bottom-width: 1px
+    border-bottom-width: 0px
 }
 
 .border-l-0 {
