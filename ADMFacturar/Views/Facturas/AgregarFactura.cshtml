@@ -1,48 +1,64 @@
 ﻿<form>
     <div class="border-b border-gray-900/10 pb-12">
         <h2 class="text-base font-semibold leading-7 text-white">Filtros</h2>
-        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-3">
 
             <div class="sm:col-span-1">
-                <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Emisión</label>
+                <label for="codigo" class="block text-sm font-medium leading-6 text-white">Código</label>
                 <div class="mt-2">
-                    <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    <input type="text" id="codigo" name="codigo" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
             </div>
 
             <div class="sm:col-span-1">
-                <label for="customer" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                <label for="fecha_emision" class="block text-sm font-medium leading-6 text-white">Fecha de Emisión</label>
                 <div class="mt-2">
-                    <select id="customer" name="customer" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                    <input type="date" id="fecha_emision" name="fecha_emision" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label for="cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                <div class="mt-2">
+                    <select id="cliente" name="cliente" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
                         <option value="">Seleccionar Cliente</option>
-                        <!-- SUPONGO QUE SE TOMAN DE LA BASE DE DATOS -->
-                        <option value="Cliente A">Cliente A</option>
-                        <option value="Cliente B">Cliente B</option>
-                        <option value="Cliente C">Cliente C</option>
+                        <!-- OPCIONES DE CLIENTES -->
+                        <option value="cliente1">Cliente 1</option>
+                        <option value="cliente2">Cliente 2</option>
                     </select>
                 </div>
             </div>
 
             <div class="sm:col-span-1">
-                <label for="salesperson" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
+                <label for="cedula" class="block text-sm font-medium leading-6 text-white">Cédula</label>
                 <div class="mt-2">
-                    <select id="salesperson" name="salesperson" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                    <select id="cedula" name="cedula" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                        <option value="">Seleccionar Tipo de Cédula</option>
+                        <option value="Juridica">Jurídica</option>
+                        <option value="Fisica">Física</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label for="vendedor" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
+                <div class="mt-2">
+                    <select id="vendedor" name="vendedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
                         <option value="">Seleccionar Vendedor</option>
-                        <!-- SUPONGO QUE SE TOMAN DE LA BASE DE DATOS -->
-                        <option value="Vendedor A">Vendedor A</option>
-                        <option value="Vendedor B">Vendedor B</option>
-                        <option value="Vendedor C">Vendedor C</option>
+                        <!-- OPCIONES DE VENDEDORES -->
+                        <option value="vendedor1">Vendedor 1</option>
+                        <option value="vendedor2">Vendedor 2</option>
                     </select>
                 </div>
             </div>
 
             <div class="sm:col-span-1">
-                <label for="status" class="block text-sm font-medium leading-6 text-white">Estado</label>
+                <label for="condicion_pago" class="block text-sm font-medium leading-6 text-white">Condición de Pago</label>
                 <div class="mt-2">
-                    <select id="status" name="status" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
-                        <option value="">Seleccionar Estado</option>
-                        <option value="Pagado">Pagado</option>
-                        <option value="Sin Pagar">Sin Pagar</option>
+                    <select id="condicion_pago" name="condicion_pago" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                        <option value="">Seleccionar Condición de Pago</option>
+                        <option value="Credito">Crédito</option>
+                        <option value="Contado">Contado</option>
                     </select>
                 </div>
             </div>
@@ -56,13 +72,9 @@
 
         </div>
     </div>
-
-    <div class="form-group">
-        <input asp-action="Index" type="submit" value="Agregar Factura" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
-        <!-- EN CASO DE QUE SE TOMEN DE BASE DE DATOS IMAGINO QUE SE TIENEN QUE PONER AGREGAR NUEVOS XD -->
-        <input asp-action="Index" type="submit" value="Agregar Cliente" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
-        <input asp-action="Index" type="submit" value="Agregar Vendedor" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
+    <div>
+            <a asp-action="Index" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white" >Guardar</a>
+            <a asp-action="Index" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white" >Cancelar</a>
     </div>
+
 </form>
-
-

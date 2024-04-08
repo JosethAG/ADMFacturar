@@ -7,7 +7,7 @@
 <form>
     <div class="border-b border-gray-900/10 pb-12">
         <h2 class="text-base font-semibold leading-7 text-white">Filtros</h2>
-        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-3">
 
             <div class="sm:col-span-1">
                 <label for="provider" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
@@ -54,7 +54,7 @@
             <i class="fas fa-list mr-3"></i> Listado de Proveedores
         </p>
         <div>
-            <button asp-action="AgregarInventario" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white" onclick="abrirModal('modalCrearUsuario')">Crear Ingreso de Productos</button>
+            <a asp-action="AgregarInventario" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white" onclick="abrirModal('modalCrearUsuario')">Crear Ingreso de Productos</a>
         </div>
     </div>
     <div class="bg-white overflow-auto">
