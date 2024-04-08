@@ -53,9 +53,9 @@
         <p class="text-xl pb-3 flex items-center text-white">
             <i class="fas fa-list mr-3"></i> Listado de Proveedores
         </p>
-        <p>
-            <a asp-action="AgregarInventario" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Crear Ingreso de Productos</a>
-        </p>
+        <div>
+            <button asp-action="AgregarInventario" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white" onclick="abrirModal('modalCrearUsuario')">Crear Ingreso de Productos</button>
+        </div>
     </div>
     <div class="bg-white overflow-auto">
         <table class="min-w-full bg-white border border-gray-300">
