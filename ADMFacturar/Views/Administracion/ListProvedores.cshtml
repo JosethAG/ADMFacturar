@@ -5,43 +5,43 @@
 
 <!--                  Formulario                        -->
 
-<div class="w-full">
-    <p class="text-xl pb-3 flex items-center text-white">
-        <i class="fas fa-list mr-3"></i> Listado de Proveedores
-    </p>
-    <p>
-        <a asp-action="CreateProvedores" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">Crear Nuevo Proveedor</a>
-    </p>
-    <br />
-    <br />
+<form>
+    <div class="border-b border-gray-900/10 pb-12">
+        <h2 class="text-base font-semibold leading-7 text-white">Filtro de Proveedores</h2>
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-    <!--                  Formulario                        -->
-    <form>
-        <div class="border-b border-gray-900/10 pb-12">
-            <h2 class="text-base font-semibold leading-7 text-white">Filtro de Proveedores</h2>
-            <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
-                <div class="sm:col-span-1 ">
-                    <label for="city" class="block text-sm font-medium leading-6 text-white">Nombre de Proveedor</label>
-                    <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                    </div>
+            <div class="sm:col-span-1 ">
+                <label for="city" class="block text-sm font-medium leading-6 text-white">Nombre de Proveedor</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
-                <div class="sm:col-span-1 ">
-                    <label for="city" class="block text-sm font-medium leading-6 text-white">Correo de Proveedor</label>
-                    <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                    </div>
+            </div>
+            <div class="sm:col-span-1 ">
+                <label for="city" class="block text-sm font-medium leading-6 text-white">Correo de Proveedor</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
-                <div class="sm:col-span-1 ">
-                    <label for="city" class="block text-sm font-medium leading-6 text-white">Estado de Proveedor</label>
-                    <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                    </div>
+            </div>
+            <div class="sm:col-span-1 ">
+                <label for="city" class="block text-sm font-medium leading-6 text-white">Estado de Proveedor</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+</form>
+
+<div class="w-full">
+    <div class="flex justify-between items-center px-6 py-4 border-b">
+        <p class="text-xl pb-3 flex items-center text-white">
+            <i class="fas fa-list mr-3"></i> Listado de Provedores
+        </p>
+        <div>
+            <button class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white" onclick="abrirModal('modalCrearProvedor')">Crear Nuevo Provedor </button>
+        </div>
+    </div>
+
 
     <!--                  Tabla                        -->
     <div class="bg-white overflow-auto">
@@ -83,3 +83,61 @@
         </table>
     </div>
 </div>
+
+<!--                  Modal de Crear Template                        -->
+<div id="modalCrearProvedores" class="modal">
+    <div class="modal-content">
+        <form>
+            <div class="border-b border-gray-900/10 pb-12">
+                <h2 class="text-base font-semibold leading-7 text-white">Creacion de nuevo Provedor</h2>
+                <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+                    <div class="sm:col-span-2 sm:col-start-1">
+                        <label for="region" class="block text-sm font-medium leading-6 text-white">Rol</label>
+                        <div class="mt-2">
+                            <select class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                                <option>Admin</option>
+                                <option>Vendedor</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="region" class="block text-sm font-medium leading-6 text-white">Usuario</label>
+                        <div class="mt-2">
+                            <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="region" class="block text-sm font-medium leading-6 text-white">Nombre</label>
+                        <div class="mt-2">
+                            <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="region" class="block text-sm font-medium leading-6 text-white">Correo</label>
+                        <div class="mt-2">
+                            <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="region" class="block text-sm font-medium leading-6 text-white">Telefono</label>
+                        <div class="mt-2">
+                            <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="region" class="block text-sm font-medium leading-6 text-white">Contraseña</label>
+                        <div class="mt-2">
+                            <input type="password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <br />
+                <button type="submit" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px;">Crear Nuevo Provedor </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--                  Final Modal de Crear Tempalte                        -->

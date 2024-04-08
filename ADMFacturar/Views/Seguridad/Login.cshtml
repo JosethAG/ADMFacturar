@@ -3,32 +3,40 @@
 <div class="w-full">
 </div>
 
-<div class="min-h-8 flex items-center justify-center w-600 dark:bg-gray-950">
-	<div class="bg-white dark:bg-gray-900 shadow-md rounded-lg px-20 py-6 max-w-md">
-		<h1 class="text-2xl font-bold text-center mb-4 dark:text-gray-200">Bienvenido</h1>
-		<form action="#">
-			<div class="mb-4">
-				<label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Correo Electronico</label>
-				<input type="email" id="email" class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ingrese su correo" required>
-			</div>
-			<div class="mb-4">
-				<label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Contraseña</label>
-				<input type="password" id="password" class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ingrese su contraseña" required>
-				<a href="#"
-				   class="text-xs text-gray-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-				</a>
-			</div>
-			<div class="flex items-center justify-between mb-4">
-				<div class="flex items-center">
-					<input type="checkbox" id="remember" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 focus:outline-none" checked>
-					<label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Recordarme</label>
-				</div>
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <img src="~/imgs/ADMLogo.png" class="mx-auto h-20 w-auto">
+        <h2 class="mt-10 text-center text-3xl font-bold leading-9 tracking-tight text-white">
+            Iniciar Sesión
+        </h2>
+    </div>
 
-			</div>
-			<Button class="flex justify-center items-center bg-indigo-600 rounded-xl py-5 px-20 text-center text-white text-xl">
-				<a asp-action="List">Entrar</a>
-			</Button>
-		</form>
-	</div>
+
+    <!-- Formulario -->
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form class="space-y-6" action="#" method="POST">
+            <div>
+                <label for="city" class="block text-lg font-medium leading-7 text-white">Usuario</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-lg border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-7" style="padding-left: 15px;">
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between">
+                    <label for="city" class="block text-lg font-medium leading-7 text-white">Contraseña</label>
+                </div>
+                <div class="mt-2">
+                    <input type="password" class="block w-full rounded-lg border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-7" style="padding-left: 15px;">
+                </div>
+            </div>
+
+            <div>
+                 <button asp-controller="Home" asp-action="Index" type="submit" class="flex w-full justify-center rounded-lg bg-blue-500 px-4 py-2 text-lg font-semibold leading-7 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Ingresar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Fin Formulario -->
+
 </div>
-
