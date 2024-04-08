@@ -1,81 +1,112 @@
-﻿<link href="~/css/custom.css" rel="stylesheet" />
+﻿@*
+
+*@
+
+<!--                  Incio de form                        -->
+<form>
+    <div class="border-b border-gray-900/10 pb-12">
+        <h2 class="text-base font-semibold leading-7 text-white">Facturación</h2>
+        <!--                  Fechas del Form                        -->
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+            <div class="sm:col-span-2 sm:col-start-1">
+                <label for="city" class="block text-sm font-medium leading-6 text-white">Fecha Inicio</label>
+                <div class="mt-2">
+                    <input type="date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="region" class="block text-sm font-medium leading-6 text-white">Fecha Final</label>
+                <div class="mt-2">
+                    <input type="date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+            <!--                  Fin de Fechas                        -->
+
+
+            <div class="sm:col-span-2 sm:col-start-1">
+                <label for="email" class="block text-sm font-medium leading-6 text-white">Factura</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-2 ">
+                <label for="city" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="region" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+            <!--                  Fin de Datos                        -->
+        </div>
+    </div>
+</form>
+<!--                  Final de From                        -->
+
+
 
 <div class="w-full">
-</div>
-
-<link href="~/css/custom.css" rel="stylesheet" />
-
-<div class="w-full">
-</div>
-
-<div>
-    <div style="display: inline-block;">
-        <a asp-controller="Facturas" asp-action="AgregarFactura" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; margin-right: 10px;">Agregar Factura</a>
-    </div>
-
-    <div style="display: inline-block;">
-        <a asp-controller="Facturas" asp-action="RegistroAnulaciones" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; margin-right: 10px;">Registro Anulaciones</a>
-    </div>
-
-    <div style="display: inline-block;">
-        <a asp-controller="Facturas" asp-action="RegistroModificaciones" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; margin-right: 10px;">Registro Modificaciones</a>
+    <div class="flex justify-between items-center px-6 py-4 border-b">
+        <p class="text-xl pb-3 flex items-center text-white">
+            <i class="fas fa-list mr-3"></i> Listado de Facturas
+        </p>
+        <div>
+            <a asp-action="AgregarFactura" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Crear Factura</a>
+            <a asp-action="RegistroAnulaciones" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Crear Nota de Crédito</a>
+            <a asp-action="RegistroModificaciones" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Crear Nota de Crédito por Monto</a>
+        </div>
     </div>
 </div>
 
 
-<div style="display: flex; align-items: center; margin-bottom: 15px; margin-top: 30px;">
-    <label  style="color: white; margin-right: 10px;">Cliente o # de Factura</label>
-    <input type="text" id="buscarFactura" style="background-color: white; border-radius: 5px; padding: 5px; border: 1px solid #3985CD; margin-right: 10px;">
-    <button type="button" class="btn-info" style="background-color: #3985CD; color: white; border: 1px solid #3985CD; border-radius: 5px; padding: 5px;">Buscar</button>
-</div>
-
-<div class="w-full">
-    <p class="text-xl pb-3 flex items-center text-white">
-        <i class="fas fa-list mr-3"></i> Listado de Facturas
-    </p>
-    <div class="bg-white overflow-auto">
-        <table class="min-w-full bg-white border border-gray-300">
-            <thead class="bg-gray-900 text-white">
-                <tr>
-                    <th class="text-center py-3"># Factura</th>
-                    <th class="text-center py-3">Fecha Emisión</th>
-                    <th class="text-center py-3">Cliente</th>
-                    <th class="text-center py-3">Vendedor</th>
-                    <th class="text-center py-3">Estado</th>
-                    <th class="text-center py-3">Total</th>
-                    <th class="text-center py-3">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
-                    <td class="p-3 border border-gray-300">123456</td>
-                    <td class="p-3 border border-gray-300">2024-04-01</td>
-                    <td class="p-3 border border-gray-300">Cliente A</td>
-                    <td class="p-3 border border-gray-300">Vendedor A</td>
-                    <td class="p-3 border border-gray-300">Pagado</td>
-                    <td class="p-3 border border-gray-300">$25,000</td>
-                    <td class="p-3 border border-gray-300">
-                        <button class="btn btnEliminar" title="Anular">
-                            <!--Hacer el asp action bien-->
-                            <a asp-action="Index">
-                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z" /></svg>
-                            </a>
+<div class="bg-white overflow-auto">
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead class="bg-gray-900 text-white">
+            <tr>
+                <th class="text-center py-3">Factura</th>
+                <th class="text-center py-3">Fecha Emisión</th>
+                <th class="text-center py-3">Cliente</th>
+                <th class="text-center py-3">Vendedor</th>
+                <th class="text-center py-3">Estado</th>
+                <th class="text-center py-3">Total</th>
+                <th class="text-center py-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
+                <td class="p-3 border border-gray-300">123456</td>
+                <td class="p-3 border border-gray-300">2024-04-01</td>
+                <td class="p-3 border border-gray-300">Cliente A</td>
+                <td class="p-3 border border-gray-300">Vendedor A</td>
+                <td class="p-3 border border-gray-300">Cancelada</td>
+                <td class="p-3 border border-gray-300">$25,000</td>
+                <td class="p-3 border border-gray-300">
+                    <div class="flex justify-center">
+                        <button class="btn btnEditar" title="Editar Template">
+                            <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d=" M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
                         </button>
-                        <button class="btn btnCrear" title="Editar">
-                            <a asp-action="EditarFactura">
-                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" fill="currentColor"></path></svg>
-                            </a>
+                        <botton class="btn btnEliminar" title="Eliminar Abono">
+                            <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path fill="currentColor" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                            </svg>
+                        </botton>
+                        <button class="btn VerDetalles" title="Editar Template">
+                            @* <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d=" M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg> *@
+                            <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zM432 248a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" /></svg>
                         </button>
-                        <button class="btn btnCrear" title="Imprimir">
-                            <!--Hacer el asp action bien-->
-                            <a asp-action="Index">
-                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zM432 248a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" /></svg>
-                            </a>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 </div>
 

@@ -6,4 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Reportes\Index - Copia.cshtml" />
+    <Content Remove="Views\Reportes\RVentas - Copia %282%29.cshtml" />
+    <Content Remove="Views\Reportes\RVentas - Copia %283%29.cshtml" />
+    <Content Remove="Views\Reportes\RVentas - Copia %284%29.cshtml" />
+    <Content Remove="Views\Reportes\RVentas - Copia %285%29.cshtml" />
+    <Content Remove="Views\Reportes\RVentas - Copia %286%29.cshtml" />
+    <Content Remove="Views\Reportes\RVentas - Copia.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Reportes\RInventario" />
+  </ItemGroup>
+
 </Project>
