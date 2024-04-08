@@ -5,101 +5,53 @@
 
 <main class="max-w-6xl mx-auto pt-10 pb-36 px-8">
 
-    <div class="flex flex-col justify-between items-center lg:flex-row lg:items-start">
+    <!--        Tarjetas            -->
+    <div class="container mx-auto py-8 ">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-4">
 
-        <div class="mr-3 w-full flex-1 mt-8 p-8 order-2 bg-white shadow-xl rounded-3xl sm:w-96 lg:w-full lg:order-1 lg:rounded">
-            <div class="mb-7 pb-7 flex items-center border-b border-gray-300">
-                <img src="https://static.vecteezy.com/system/resources/previews/021/350/454/non_2x/customer-icon-for-your-website-design-logo-app-ui-free-vector.jpg" alt="" class="rounded-3xl w-20 h-20" />
-                <div class="ml-5">
-                    <span class="block text-2xl font-semibold">Clientes</span>
-                   </div>
-            </div>
-            <ul class="mb-7 font-medium text-gray-500">
-                <li class="flex text-lg mb-2">
-                    <span class="text-black">Create de clientes</span>
-                </li>
-                <li class="flex text-lg mb-2">
-                    <span class="text-black">Update de clientes</span>
-                </li>
-                <li class="flex text-lg">
-                    <span class="text-black">Delete de clientes</span>
-                </li>
-            </ul>
-            <Button class="flex justify-center items-center bg-indigo-600 rounded-xl py-5 px-4 text-center text-white text-xl">
-                <a asp-action="ListClientes">Ingresar</a>      
-            </Button>
-        </div>
-
-
-        <div class="mr-3 ml-2 w-full flex-1 mt-8 p-8 order-2 bg-white shadow-xl rounded-3xl sm:w-96 lg:w-full lg:order-1 lg:rounded">
-            <div class="mb-7 pb-7 flex items-center border-b border-gray-300">
-                <img src="https://w7.pngwing.com/pngs/698/880/png-transparent-computer-icons-vendor-delivery-miscellaneous-blue-data-thumbnail.png" alt="" class="rounded-3xl w-20 h-20" />
-                <div class="ml-5">
-                    <span class="block text-2xl font-semibold">Provedores</span>
-           </div>
-            </div>
-            <ul class="mb-7 font-medium text-gray-500">
-                <li class="flex text-lg mb-2">
-                    <span class="text-black">Create de Provedores</span>
-                </li>
-                <li class="flex text-lg mb-2">
-                    <span class="text-black">Update de Provedores</span>
-                </li>
-                <li class="flex text-lg">
-                    <span class="text-black">Delete de Provedores</span>
-                </li>
-            </ul>
-            <Button class="flex justify-center items-center bg-indigo-600 rounded-xl py-5 px-4 text-center text-white text-xl">
-                <a asp-action="ListProvedores">Ingresar</a>
-            </Button>
-        </div>
-
-        <div class="mr-3 ml-2 w-full flex-1 mt-8 p-8 order-2 bg-white shadow-xl rounded-3xl sm:w-96 lg:w-full lg:order-1 lg:rounded">
-            <div class="mb-7 pb-7 flex items-center border-b border-gray-300">
-                <img src="https://static.vecteezy.com/system/resources/previews/007/527/014/non_2x/shirt-icon-logo-design-template-vector.jpg" alt="" class="rounded-3xl w-20 h-20" />
-                <div class="ml-5">
-                    <span class="block text-2xl font-semibold">Articulos</span>
+            <a asp-action="ListClientes">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fa-solid fa-user-tag text-5xl text-blue-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold">Clientes</h3>
+                    <p class="text-gray-600">Adminsitración de Clientes</p>
                 </div>
-            </div>
-            <ul class="mb-7 font-medium text-gray-500">
-                <li class="flex text-lg mb-2">
-                    <span class="text-black">Create de Articulos</span>
-                </li>
-                <li class="flex text-lg mb-2">
-                    <span class="text-black">Update de Articulos</span>
-                </li>
-                <li class="flex text-lg">
-                    <span class="text-black">Delete de Articulos</span>
-                </li>
-            </ul>
-            <Button class="flex justify-center items-center bg-indigo-600 rounded-xl py-5 px-4 text-center text-white text-xl">
-                <a asp-action="ListArticulos">Ingresar</a>
-            </Button>
-        </div>
+            </a>
 
-        <div class="mr-3 ml-2 w-full flex-1 mt-8 p-8 order-3 bg-white shadow-xl rounded-3xl sm:w-96 lg:w-full lg:order-3 lg:rounded">
-            <div class="mb-7 pb-7 flex items-center border-b border-gray-300">
-                <img src="https://w7.pngwing.com/pngs/19/118/png-transparent-computer-icons-sales-businessperson-business-text-people-logo.png" alt="" class="rounded-3xl w-20 h-20" />
-                <div class="ml-5">
-                    <span class="block text-2xl font-semibold">Vendedores</span>
+            <a asp-action="ListArticulos">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fa-solid fa-grip-vertical text-5xl text-blue-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold">Artículos</h3>
+                    <p class="text-gray-600">Adminsitración de Artículos</p>
                 </div>
-            </div>
-            <ul class="mb-7 font-medium text-gray-500">
-                <li class="flex text-lg mb-2">
-                    <span class="text-black">Create de Vendedores</span>
-                </li>
-                <li class="flex text-lg mb-2">
-                    <span class="text-black">Update de Vendedores</span>
-                </li>
-                <li class="flex text-lg">
-                    <span class="text-black">Delete de Vendedores</span>
-                </li>
-            </ul>
-            <Button class="flex justify-center items-center bg-indigo-600 rounded-xl py-5 px-4 text-center text-white text-xl">
-                <a asp-action="ListVendedores">Ingresar</a>
-            </Button>
-        </div>
+            </a>
 
+            <a asp-action="ListProvedores">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fa-solid fa-address-book text-5xl text-blue-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold">Proveedores</h3>
+                    <p class="text-gray-600">Adminsitración de Proveedores </p>
+                </div>
+            </a>
+
+            <a asp-action="ListVendedores">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fa-solid fa-user-tie text-5xl text-blue-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold">Vendedores</h3>
+                    <p class="text-gray-600">Adminsitración de Vendedores</p>
+                </div>
+            </a>
+
+            <a asp-action="ListTransportes">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <i class="fa-solid fa-truck-fast text-5xl text-blue-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold">Transportes</h3>
+                    <p class="text-gray-600">Adminsitración de Transportes</p>
+                </div>
+            </a>
+        </div>
     </div>
+
+
+    <!--        Final Seleccion de tarea      -->
 
 </main>

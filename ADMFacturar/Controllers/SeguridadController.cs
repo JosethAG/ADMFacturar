@@ -8,5 +8,23 @@ namespace ADMFacturar.Controllers
         {
             return View();
         }
+        public IActionResult Login()
+        {
+            return View();
+        }
+        public IActionResult CreateUser()
+        {
+            return View();
+
+        }
+        public IActionResult UpdateUser()
+        {
+            return View();
+
+        }
+        public IActionResult List()
+        {
+            return View();
+        }
     }
 }
