@@ -3,41 +3,10 @@
 <div class="w-full">
 </div>
 
-<form asp-action="AgregarInventario" method="post">
+<form>
     <div class="border-b border-gray-900/10 pb-12">
-        <h2 class="text-base font-semibold leading-7 text-white">Insertar al Inventario</h2>
-        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
-
-            <div class="sm:col-span-1">
-                <label for="provider" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
-                <div class="mt-2">
-                    <select id="provider" name="provider" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
-                        <option value="">Seleccionar Proveedor</option>
-                        <!-- OPCIONES DE PROVEEDOR -->
-                        <option value="Proveedor A">Proveedor A</option>
-                        <option value="Proveedor B">Proveedor B</option>
-                        <option value="Proveedor C">Proveedor C</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número Documento</label>
-                <div class="mt-2">
-                    <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="payment_method" class="block text-sm font-medium leading-6 text-white">Forma de Pago</label>
-                <div class="mt-2">
-                    <select id="payment_method" name="payment_method" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
-                        <option value="">Seleccionar Forma de Pago</option>
-                        <option value="Credito">Credito</option>
-                        <option value="Contado">Contado</option>
-                    </select>
-                </div>
-            </div>
+        <h2 class="text-base font-semibold leading-7 text-white">Filtros</h2>
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-3">
 
             <div class="sm:col-span-1">
                 <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Emisión</label>
@@ -52,28 +21,55 @@
                     <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
             </div>
+            <div class="sm:col-span-1">
+            </div>
 
-            
+            <div class="sm:col-span-1">
+                <label for="provider" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
+                <div class="mt-2">
+                    <select id="provider" name="provider" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                        <option value="">Seleccionar Proveedor</option>
+                        <!-- LECTURA DE LA BD O OPCIONES ESTÁTICAS -->
+                        <option value="Proveedor A">Proveedor A</option>
+                        <option value="Proveedor B">Proveedor B</option>
+                        <option value="Proveedor C">Proveedor C</option>
 
-        </div>
+                    </select>
+                </div>
+            </div>
 
-        <br />
+            <div class="sm:col-span-1">
+                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número de Documento</label>
+                <div class="mt-2">
+                    <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+              <div class="sm:col-span-1">
+                <label for="payment_method" class="block text-sm font-medium leading-6 text-white">Forma de Pago</label>
+                <div class="mt-2">
+                    <select id="payment_method" name="payment_method" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                        <option value="">Seleccionar Forma de Pago</option>
+                        <option value="Credito">Credito</option>
+                        <option value="Contado">Contado</option>
+                    </select>
+                </div>
+            </div>
 
-
-        <br />
-        <div class="form-group">
-            <input asp-action="Index" type="submit" value="Confirmar" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
-            
-            <input asp-action="AgregarArticulos" type="submit" value="Crear Articulo" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
         </div>
     </div>
 </form>
 
 
 <div class="w-full">
-    <p class="text-xl pb-3 flex items-center text-white">
-        <i class="fas fa-list mr-3"></i> Listado de Articulos
-    </p>
+    <div class="flex justify-between items-center px-6 py-4 border-b">
+        <p class="text-xl pb-3 flex items-center text-white">
+            <i class="fas fa-list mr-3"></i> Listado de Articulos
+        </p>
+        <div>
+            <a asp-action="AgregarArticulos" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Agregar Articulos</a>
+            <a asp-action="Index" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Guardar</a>
+        </div>
+    </div>
     <div class="bg-white overflow-auto">
         <table class="min-w-full bg-white border border-gray-300">
             <thead class="bg-gray-900 text-white">
