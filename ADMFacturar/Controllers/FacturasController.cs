@@ -38,5 +38,12 @@ namespace ADMFacturar.Controllers
         {
             return View();
         }
+
+        public IActionResult AgregarNotadeCredito()
+        {
+            return View();
+        }
+
+        
     }
 }
