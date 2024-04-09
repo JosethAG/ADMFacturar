@@ -3,41 +3,10 @@
 <div class="w-full">
 </div>
 
-<form asp-action="AgregarInventario" method="post">
+<form>
     <div class="border-b border-gray-900/10 pb-12">
-        <h2 class="text-base font-semibold leading-7 text-white">Insertar al Inventario</h2>
-        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
-
-            <div class="sm:col-span-1">
-                <label for="provider" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
-                <div class="mt-2">
-                    <select id="provider" name="provider" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
-                        <option value="">Seleccionar Proveedor</option>
-                        <!-- OPCIONES DE PROVEEDOR -->
-                        <option value="Proveedor A">Proveedor A</option>
-                        <option value="Proveedor B">Proveedor B</option>
-                        <option value="Proveedor C">Proveedor C</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número Documento</label>
-                <div class="mt-2">
-                    <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="payment_method" class="block text-sm font-medium leading-6 text-white">Forma de Pago</label>
-                <div class="mt-2">
-                    <select id="payment_method" name="payment_method" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
-                        <option value="">Seleccionar Forma de Pago</option>
-                        <option value="Credito">Credito</option>
-                        <option value="Contado">Contado</option>
-                    </select>
-                </div>
-            </div>
+        <h2 class="text-base font-semibold leading-7 text-white">Filtros</h2>
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-3">
 
             <div class="sm:col-span-1">
                 <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Emisión</label>
@@ -52,28 +21,55 @@
                     <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
             </div>
+            <div class="sm:col-span-1">
+            </div>
 
-            
+            <div class="sm:col-span-1">
+                <label for="provider" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
+                <div class="mt-2">
+                    <select id="provider" name="provider" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                        <option value="">Seleccionar Proveedor</option>
+                        <!-- LECTURA DE LA BD O OPCIONES ESTÁTICAS -->
+                        <option value="Proveedor A">Proveedor A</option>
+                        <option value="Proveedor B">Proveedor B</option>
+                        <option value="Proveedor C">Proveedor C</option>
 
-        </div>
+                    </select>
+                </div>
+            </div>
 
-        <br />
+            <div class="sm:col-span-1">
+                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número de Documento</label>
+                <div class="mt-2">
+                    <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+              <div class="sm:col-span-1">
+                <label for="payment_method" class="block text-sm font-medium leading-6 text-white">Forma de Pago</label>
+                <div class="mt-2">
+                    <select id="payment_method" name="payment_method" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                        <option value="">Seleccionar Forma de Pago</option>
+                        <option value="Credito">Credito</option>
+                        <option value="Contado">Contado</option>
+                    </select>
+                </div>
+            </div>
 
-
-        <br />
-        <div class="form-group">
-            <input asp-action="Index" type="submit" value="Confirmar" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
-            
-            <input asp-action="AgregarArticulos" type="submit" value="Crear Articulo" class="btn-info" style="background-color: #3985CD; color: #fff; padding: 5px; border-radius: 5px; ">
         </div>
     </div>
 </form>
 
 
 <div class="w-full">
-    <p class="text-xl pb-3 flex items-center text-white">
-        <i class="fas fa-list mr-3"></i> Listado de Articulos
-    </p>
+    <div class="flex justify-between items-center px-6 py-4 border-b">
+        <p class="text-xl pb-3 flex items-center text-white">
+            <i class="fas fa-list mr-3"></i> Listado de Articulos
+        </p>
+        <div>
+            <a asp-action="AgregarArticulos" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Agregar Articulos</a>
+            <a asp-action="Index" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Guardar</a>
+        </div>
+    </div>
     <div class="bg-white overflow-auto">
         <table class="min-w-full bg-white border border-gray-300">
             <thead class="bg-gray-900 text-white">
@@ -93,9 +89,9 @@
                     <td class="p-3 border border-gray-300">$50</td>
                     <td class="p-3 border border-gray-300">$500</td>
                     <td class="p-3 border border-gray-300">
-                        <button class="btn VerDetalles" title="Editar">
+                        <button class ="btn btnEditar" title="Editar">
                             <a asp-action="EditarArticulo">
-                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
+                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d=" M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
                             </a>
                         </button>
                         <button class="btn btnEliminar" title="Eliminar Abono">
@@ -111,9 +107,9 @@
                     <td class="p-3 border border-gray-300">$80</td>
                     <td class="p-3 border border-gray-300">$400</td>
                     <td class="p-3 border border-gray-300">
-                        <button class="btn VerDetalles" title="Editar">
+                        <button class="btn btnEditar" title="Editar">
                             <a asp-action="EditarArticulo">
-                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
+                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d=" M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
                             </a>
                         </button>
                         <button class="btn btnEliminar" title="Eliminar Abono">
@@ -129,9 +125,9 @@
                     <td class="p-3 border border-gray-300">$30</td>
                     <td class="p-3 border border-gray-300">$600</td>
                     <td class="p-3 border border-gray-300">
-                        <button class="btn VerDetalles" title="Editar">
+                        <button class="btn btnEditar" title="Editar">
                             <a asp-action="EditarArticulo">
-                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
+                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d=" M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
                             </a>
                         </button>
                         <button class="btn btnEliminar" title="Eliminar Abono">
