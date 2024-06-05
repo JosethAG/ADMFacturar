@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADMFacturar", "ADMFacturar\ADMFacturar.csproj", "{ACA3E3C9-932F-4146-BD5C-F584DED78CAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADM.Cliente", "ADMFacturar\ADM.Cliente.csproj", "{ACA3E3C9-932F-4146-BD5C-F584DED78CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADM.API", "ADM.API\ADM.API.csproj", "{F7E15887-E572-488C-9416-C11D96C2A023}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{ACA3E3C9-932F-4146-BD5C-F584DED78CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACA3E3C9-932F-4146-BD5C-F584DED78CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACA3E3C9-932F-4146-BD5C-F584DED78CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E15887-E572-488C-9416-C11D96C2A023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E15887-E572-488C-9416-C11D96C2A023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E15887-E572-488C-9416-C11D96C2A023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E15887-E572-488C-9416-C11D96C2A023}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
