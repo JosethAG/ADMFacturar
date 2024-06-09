@@ -1,5 +1,5 @@
-CREATE DATABASE [ADM]
-USE [ADM]
+--CREATE DATABASE [ADM]
+--USE [ADM]
 
 
 ----------------------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ GO
 CREATE TABLE [dbo].[TBL_TRANSPORTES](
     [PK_Medio_Transporte] [bigint] IDENTITY(1,1) NOT NULL,
 	[Descripcion] [varchar](100) NULL,
-    [Estado] [char](1),
+    [Estado] [bit],
     [FK_Usuario_Creacion] [varchar](50) NOT NULL,
     [FK_Usuario_Modificacion] [varchar](50)  NULL,
     [Fecha_Creacion] [datetime]  NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE [dbo].[TBL_CONDICIONES_PAGO](
     [PK_Condicion_Pago] [int] IDENTITY(1,1) NOT NULL,
 	[Descripcion] [varchar](100) NOT NULL,
     [Dias] [int] NULL,
-    [Estado] [char](1) NULL,
+    [Estado] [bit] NULL,
     [FK_Usuario_Creacion] [varchar](50) NOT NULL,
     [FK_Usuario_Modificacion] [varchar](50)  NULL,
     [Fecha_Creacion] [datetime] NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE [dbo].[TBL_VENDEDORES](
 	[Nombre] [varchar](200) NULL,
 	[Telefono] [varchar](100) NULL,
 	[Correo] [varchar](200) NULL,
-	[Estado] [char](1),
+	[Estado] [bit],
 PRIMARY KEY CLUSTERED 
 (
     [PK_Vendedor] ASC
@@ -108,21 +108,21 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TBL_CLIENTES](
     [PK_Cliente] [varchar](50) NOT NULL,
-    [TipoIdentificacion] [varchar](500) NULL,
+    [TipoIdentificacion] [varchar](10) NULL,
     [Identificacion] [int] NULL,
     [Nombre] [varchar](300) NOT NULL,
 	[Telefono] [varchar](100) NULL,
 	[Correo] [varchar](500) NULL,
-	[Provincia] [varchar](500) NULL,
-	[Canton] [varchar](500) NULL,
-	[Distrito] [varchar](500) NULL,
+	[Provincia] [varchar](10) NULL,
+	[Canton] [varchar](10) NULL,
+	[Distrito] [varchar](10) NULL,
     [OtrasSenas] [varchar](max) NULL,
-    [Estado] [char](1),
+    [Estado] [bit],
     [FK_CondicionPago] [int] NULL,
     [FK_Transporte] [bigint] NULL,  
 	[FK_Vendedor] [bigint] NULL,
-    [FK_Usuario_Creacion] [varchar](500) NOT NULL,
-    [FK_Usuario_Modificacion] [varchar](500)  NULL,
+    [FK_Usuario_Creacion] [varchar](100) NOT NULL,
+    [FK_Usuario_Modificacion] [varchar](100)  NULL,
     [Fecha_Creacion] [datetime] NOT NULL,
     [Fecha_Modificacion] [datetime]  NULL,
  CONSTRAINT [PK_TBL_CLIENTES_1] PRIMARY KEY CLUSTERED 
@@ -153,37 +153,192 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        cli.PK_Cliente,
-        cli.TipoIdentificacion,
-        cli.Identificacion,
-        cli.Nombre,
-        cli.Telefono,
-        cli.Correo,
-        cli.Provincia,
-        cli.Canton,
-        cli.Distrito,
-        cli.OtrasSenas,
-        cli.Estado,
-        cp.Descripcion AS CondicionPago,
-        mt.Descripcion AS MedioTransporte,
-        v.Nombre AS Vendedor,
-        cli.FK_Usuario_Creacion,
-        cli.FK_Usuario_Modificacion,
-        cli.Fecha_Creacion,
-        cli.Fecha_Modificacion
+        PK_Cliente,
+        TipoIdentificacion,
+        Identificacion,
+        Nombre,
+        Telefono,
+        Correo,
+        Provincia,
+        Canton,
+        Distrito,
+        OtrasSenas,
+        Estado,
+        FK_CondicionPago,
+        FK_Transporte,
+        FK_Vendedor,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
     FROM 
-        dbo.TBL_CLIENTES cli
-    LEFT JOIN 
-        dbo.TBL_CONDICIONES_PAGO cp ON cli.FK_CondicionPago = cp.PK_Condicion_Pago
-    LEFT JOIN 
-        dbo.TBL_TRANSPORTES mt ON cli.FK_Transporte = mt.PK_Medio_Transporte
-    LEFT JOIN 
-        dbo.TBL_VENDEDORES v ON cli.FK_Vendedor = v.PK_Vendedor
+        dbo.TBL_CLIENTES
     ORDER BY 
-        cli.Nombre;
+        Nombre;
 END
+
 GO
 
+CREATE PROCEDURE dbo.sp_ListarClientesxNombre
+    @Nombre NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Cliente,
+        TipoIdentificacion,
+        Identificacion,
+        Nombre,
+        Telefono,
+        Correo,
+        Provincia,
+        Canton,
+        Distrito,
+        OtrasSenas,
+        Estado,
+        FK_CondicionPago,
+        FK_Transporte,
+        FK_Vendedor,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_CLIENTES 
+    WHERE 
+        Nombre LIKE '%' + @Nombre + '%'
+    ORDER BY 
+        Nombre;
+END;
+
+GO
+
+
+CREATE PROCEDURE dbo.sp_InsertarModificarClientes
+    @P_PK_Cliente VARCHAR(50),
+    @P_TipoIdentificacion VARCHAR(500),
+    @P_Identificacion INT,
+    @P_Nombre VARCHAR(300),
+    @P_Telefono VARCHAR(100),
+    @P_Correo VARCHAR(500),
+    @P_Provincia VARCHAR(500),
+    @P_Canton VARCHAR(500),
+    @P_Distrito VARCHAR(500),
+    @P_OtrasSenas VARCHAR(MAX),
+    @P_Estado BIT,
+    @P_FK_CondicionPago INT,
+    @P_FK_Transporte BIGINT,
+    @P_FK_Vendedor BIGINT,
+    @P_FK_Usuario_Creacion VARCHAR(500),
+    @P_FK_Usuario_Modificacion VARCHAR(500),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_InsertarModificarClientes]
+    BEGIN TRY
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.TBL_CLIENTES WITH (NOLOCK)
+            WHERE PK_Cliente = @P_PK_Cliente
+        )
+        BEGIN
+            UPDATE dbo.TBL_CLIENTES
+            SET TipoIdentificacion = @P_TipoIdentificacion,
+                Identificacion = @P_Identificacion,
+                Nombre = @P_Nombre,
+                Telefono = @P_Telefono,
+                Correo = @P_Correo,
+                Provincia = @P_Provincia,
+                Canton = @P_Canton,
+                Distrito = @P_Distrito,
+                OtrasSenas = @P_OtrasSenas,
+                Estado = @P_Estado,
+                FK_CondicionPago = @P_FK_CondicionPago,
+                FK_Transporte = @P_FK_Transporte,
+                FK_Vendedor = @P_FK_Vendedor,
+                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+                Fecha_Modificacion = @P_Fecha_Modificacion
+            WHERE PK_Cliente = @P_PK_Cliente;
+        END;
+        ELSE
+        BEGIN
+            INSERT INTO [dbo].[TBL_CLIENTES]
+            (
+                PK_Cliente,
+                TipoIdentificacion,
+                Identificacion,
+                Nombre,
+                Telefono,
+                Correo,
+                Provincia,
+                Canton,
+                Distrito,
+                OtrasSenas,
+                Estado,
+                FK_CondicionPago,
+                FK_Transporte,
+                FK_Vendedor,
+                FK_Usuario_Creacion,
+                Fecha_Creacion
+            )
+            VALUES
+            (
+                @P_PK_Cliente,
+                @P_TipoIdentificacion,
+                @P_Identificacion,
+                @P_Nombre,
+                @P_Telefono,
+                @P_Correo,
+                @P_Provincia,
+                @P_Canton,
+                @P_Distrito,
+                @P_OtrasSenas,
+                @P_Estado,
+                @P_FK_CondicionPago,
+                @P_FK_Transporte,
+                @P_FK_Vendedor,
+                @P_FK_Usuario_Creacion,
+                @P_Fecha_Creacion
+            );
+        END;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+
+GO
+
+CREATE PROCEDURE [dbo].[sp_EliminarClientes]
+    @P_PK_Cliente VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_EliminarClientes]
+    BEGIN TRY
+        -- Update the Estado to 0 for the specified client
+        UPDATE dbo.TBL_CLIENTES
+        SET Estado = 0
+        WHERE PK_Cliente = @P_PK_Cliente;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+
+GO
 
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
@@ -1316,6 +1471,7 @@ INSERT [dbo].[TBL_DISTRITO] ([ID_PROVINCIA], [ID_CANTON], [ID_DISTRITO], [NOMBRE
 GO
 INSERT [dbo].[TBL_DISTRITO] ([ID_PROVINCIA], [ID_CANTON], [ID_DISTRITO], [NOMBRE]) VALUES (7, 6, 5, N'DUACARÍ')
 GO
+
 
 
 
