@@ -22,8 +22,6 @@ namespace ADM.API.Controllers
         [Route("Listar")]
         public IEnumerable<Cliente> ListaClientes(string? Nombre)
         {
-            //var lista = _ClienteService.ListaClientes(Nombre);
-            //return lista;
             DataTable tCliente = null;
 
             if (Nombre == null)
@@ -49,7 +47,7 @@ namespace ADM.API.Controllers
         {
             List<DBParameter> parameters = new List<DBParameter>
             {
-                new DBParameter("@P_PK_Cliente", cliente.IdCliente),
+                new DBParameter("@P_PK_Cliente", cliente.PK_Cliente),
                 new DBParameter("@P_TipoIdentificacion", cliente.TipoIdentificacion),
                 new DBParameter("@P_Identificacion", cliente.NumeroIdentificacion.ToString()),
                 new DBParameter("@P_Nombre", cliente.Nombre),
@@ -72,6 +70,27 @@ namespace ADM.API.Controllers
             var result = DBData.Execute("sp_InsertarModificarClientes", parameters);
 
             return result;
+        }
+
+        [HttpDelete]
+        [Route("Eliminar")]
+        public bool EliminarCliente(string Id)
+        {
+            if (Id == null || Id.Length == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                {
+                    new DBParameter("@P_PK_Cliente", Id)
+                };
+                
+                var result = DBData.Execute("sp_EliminarClientes", parameters);
+
+                return !result;
+            }
         }
     }
 }
