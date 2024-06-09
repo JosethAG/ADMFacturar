@@ -37,7 +37,7 @@ namespace ADM.Service
         {
             List<DBParameter> parameters = new List<DBParameter>
             {
-                new DBParameter("@P_PK_Cliente", cliente.IdCliente),
+                new DBParameter("@P_PK_Cliente", cliente.PK_Cliente),
                 new DBParameter("@P_TipoIdentificacion", cliente.TipoIdentificacion),
                 new DBParameter("@P_Identificacion", cliente.NumeroIdentificacion.ToString()),
                 new DBParameter("@P_Nombre", cliente.Nombre),
