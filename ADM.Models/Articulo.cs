@@ -1,4 +1,4 @@
-﻿namespace ADM.API.Models
+﻿namespace ADM.Models
 {
     public class Articulo
     {

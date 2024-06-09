@@ -1,29 +1,18 @@
-﻿using System.Data.SqlClient;
-using System.Data;
-using ADM.API;
-using ADM.Models;
-using ADM.Service;
-using Microsoft.AspNetCore.Mvc;
-using ADM.Interface;
-using ADM.Architectur;
+﻿using ADM.Architectur;
 using ADM.Architecture;
+using ADM.Interface;
+using ADM.Models;
 using Newtonsoft.Json;
+using System.Data;
 
-
-namespace ADM.API.Controllers
+namespace ADM.Service
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClienteController : Controller
+    public class ClienteService : IClienteService
     {
-        private IClienteService? _ClienteService;
+        public ClienteService() { }
 
-        [HttpGet]
-        [Route("Listar")]
-        public IEnumerable<Cliente> ListaClientes(string? Nombre)
+        IEnumerable<Cliente> IClienteService.ListaClientes(string? Nombre)
         {
-            //var lista = _ClienteService.ListaClientes(Nombre);
-            //return lista;
             DataTable tCliente = null;
 
             if (Nombre == null)
@@ -43,9 +32,8 @@ namespace ADM.API.Controllers
             return result;
         }
 
-        [HttpPost]
-        [Route("Crear")]
-        public bool CrearCliente(Cliente cliente)
+
+        bool IClienteService.CrearUpdCliente(Cliente cliente)
         {
             List<DBParameter> parameters = new List<DBParameter>
             {
@@ -72,6 +60,23 @@ namespace ADM.API.Controllers
             var result = DBData.Execute("sp_InsertarModificarClientes", parameters);
 
             return result;
+        }
+
+        bool IClienteService.EliminarCliente(string Id)
+        {
+            if (Id == null || Id.Length == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                {
+                    new DBParameter("@", Id)
+                };
+
+                return DBData.Execute("", parameters);
+            }
         }
     }
 }

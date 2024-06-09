@@ -1,4 +1,4 @@
-﻿namespace ADM.API.Models
+﻿namespace ADM.Models
 {
     public class Cliente
     {
@@ -13,5 +13,12 @@
         public string Distrito { get; set; }
         public string OtrasSenas { get; set; }
         public bool Estado { get; set; }
+        public int FK_CondicionPago { get; set; }
+        public int FK_Transporte { get; set; }
+        public int FK_Vendedor { get; set; }
+        public int UsuarioCreacion { get; set; }
+        public int UsuarioModificacion { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public DateTime FechaModificacion { get; set; }
     }
 }
