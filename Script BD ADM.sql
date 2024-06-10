@@ -1,5 +1,5 @@
 --CREATE DATABASE [ADM]
---USE [ADM]
+USE [ADM]
 
 
 ----------------------------------------------------------------------------------------------------
@@ -154,8 +154,8 @@ CREATE TABLE [dbo].[TBL_PROVEEDORES](
 	[PK_Proveedor] [bigint] IDENTITY(1,1) NOT NULL,
 	[Nombre] [varchar](100) NOT NULL,
 	[Telefono] [varchar](100) NOT NULL,
-	[Correo] [varchar](50) NOT NULL,
-	[Direccion] [varchar](50) NOT NULL,
+	[Correo] [varchar](200) NOT NULL,
+	[Direccion] [varchar](300) NOT NULL,
 	[Estado] [bit] NOT NULL,
 	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
 	[FK_Usuario_Modificacion] [varchar](50)  NULL,
@@ -403,7 +403,7 @@ BEGIN
     FROM 
         dbo.TBL_PROVEEDORES
     ORDER BY 
-        Nombre;
+        PK_Proveedor;
 END;
 
 GO
@@ -436,7 +436,7 @@ BEGIN
     WHERE 
         Nombre LIKE '%' + @Nombre + '%'
     ORDER BY 
-        Nombre;
+        PK_Proveedor;
 END;
 
 
@@ -473,25 +473,28 @@ BEGIN
         BEGIN
             UPDATE dbo.TBL_PROVEEDORES
             SET Nombre = @P_Nombre,
-                Telefono = @P_Telefono,
-                Correo = @P_Correo,
-                Direccion = @P_Direccion,
-                Estado = @P_Estado,
-                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
-                Fecha_Modificacion = @P_Fecha_Modificacion
+				Telefono = @P_Telefono,
+				Correo = @P_Correo,
+				Direccion = @P_Direccion,
+				Estado = @P_Estado, 
+				FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+				Fecha_Modificacion = @P_Fecha_Modificacion  
+       
             WHERE PK_Proveedor = @P_PK_Proveedor;
         END;
         ELSE
         BEGIN
             INSERT INTO [dbo].[TBL_PROVEEDORES]
             (
-                Nombre,
-                Telefono,
-                Correo,
-                Direccion,
-                Estado,
-                FK_Usuario_Creacion,
-                Fecha_Creacion
+				Nombre,
+				Telefono,
+				Correo,
+				Direccion,
+				Estado,
+				FK_Usuario_Creacion,
+				FK_Usuario_Modificacion,
+				Fecha_Creacion,
+				Fecha_Modificacion
             )
             VALUES
             (
@@ -501,7 +504,9 @@ BEGIN
                 @P_Direccion,
                 @P_Estado,
                 @P_FK_Usuario_Creacion,
-                @P_Fecha_Creacion
+				@P_FK_Usuario_Modificacion,
+                @P_Fecha_Creacion,
+				@P_Fecha_Modificacion 
             );
         END;
 
@@ -548,13 +553,13 @@ GO
 -------------------------------------------------
 					/*Vendedores*/
 -------------------------------------------------
-	GO
+GO
 /****** Object:  StoredProcedure [dbo].[sp_ListarVendedores]    Script Date: 6/9/2024 9:40:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [dbo].[sp_ListarVendedores]
+CREATE PROCEDURE [dbo].[sp_ListarVendedores]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -581,7 +586,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [dbo].[sp_ListarVendedoresxNombre]
+CREATE PROCEDURE [dbo].[sp_ListarVendedoresxNombre]
     @Nombre NVARCHAR(255)
 AS
 BEGIN
@@ -611,7 +616,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [dbo].[sp_InsertarModificarVendedores]
+CREATE PROCEDURE [dbo].[sp_InsertarModificarVendedores]
     @P_PK_Vendedor BIGINT,
     @P_Nombre VARCHAR(200),
     @P_Telefono VARCHAR(100),
@@ -683,7 +688,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [dbo].[sp_EliminarVendedores]
+CREATE PROCEDURE [dbo].[sp_EliminarVendedores]
     @P_PK_Vendedor BIGINT
 AS
 BEGIN
@@ -1882,5 +1887,4 @@ VALUES
  ('Proveedor 3', '345-678-9012', 'proveedor3@empresa.com', 'Calle 3, Ciudad C', 1, 'usuario_creacion3', GETDATE()),
  ('Proveedor 4', '456-789-0123', 'proveedor4@empresa.com', 'Calle 4, Ciudad D', 1, 'usuario_creacion4', GETDATE()),
  ('Proveedor 5', '567-890-1234', 'proveedor5@empresa.com', 'Calle 5, Ciudad E', 1, 'usuario_creacion5', GETDATE());
-
 
