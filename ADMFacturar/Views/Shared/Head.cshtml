@@ -8,4 +8,31 @@
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/6467377a4d.js" crossorigin="anonymous"></script>
+    <script>
+        // Función para abrir la modal
+        function abrirModal(idModal) {
+            var modal = document.getElementById(idModal);
+            modal.style.display = "block";
+        }
+
+        // Cierra la modal cuando el usuario hace clic en el botón de cerrar (x)
+        var modals = document.getElementsByClassName("modal");
+        for (var i = 0; i < modals.length; i++) {
+            var modal = modals[i];
+            var closeButton = modal.getElementsByClassName("close")[0];
+            closeButton.onclick = function () {
+                modal.style.display = "none";
+            }
+        }
+
+        // Cierra la modal cuando el usuario hace clic fuera de ella
+        window.onclick = function (event) {
+            for (var i = 0; i < modals.length; i++) {
+                var modal = modals[i];
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+    </script>
 </head>

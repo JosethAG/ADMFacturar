@@ -1,0 +1,204 @@
+﻿@{
+}
+<!--                  Incio de form                        -->
+<form>
+    <div class="border-b border-gray-900/10 pb-12">
+        <h2 class="text-base font-semibold leading-7 text-white">Templates de correo</h2>
+        <!--                  Fechas del Form                        -->
+        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+            <div class="sm:col-span-2 sm:col-start-1">
+                <label for="email" class="block text-sm font-medium leading-6 text-white">Código</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-2 ">
+                <label for="city" class="block text-sm font-medium leading-6 text-white">Nombre del Template</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+            <!--                  Fin de Datos                        -->
+        </div>
+    </div>
+</form>
+<!--                  Final de From                        -->
+<!--                  Inico Tabla                        -->
+<div class="w-full">
+    <div class="flex justify-between items-center px-6 py-4 border-b">
+        <p class="text-xl pb-3 flex items-center text-white">
+            <i class="fa-solid fa-address-book mr-3"></i> Listado Templates
+        </p>
+        <div>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="abrirModal('modalCrearTM')">Crear Template</button>
+        </div>
+    </div>
+    <div class="bg-white overflow-auto">
+        <table class="min-w-full bg-white border border-gray-300">
+            <thead class="bg-gray-900 text-white">
+                <tr>
+                    <th class="py-2 px-4">Código</th>
+                    <th class="py-2 px-4">Nombre del Template</th>
+                    <th class="py-2 px-4"></th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center border border-gray-300">
+                    <td class="py-2 px-4">001</td>
+                    <td class="py-2 px-4">Marketing de nueva marcadería</td>
+                    <td class="py-2 px-1">
+                        <div class="flex flex-row-reverse mr-5">
+                            <botton class="btn btnEliminar" title="Eliminar Abono">
+                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                    <path fill="currentColor" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                </svg>
+                            </botton>
+                            <button class="btn VerDetalles" title="Detalles" onclick="abrirModal('modalDetalleTM')">
+                                <svg class="svg-inline--fa fa-eye fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path> </svg>
+                            </button>
+                            <button class="btn btnEditar" title="Editar Template" onclick="abrirModal('modalCrearTM')">
+                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d=" M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
+                            </button>
+                            <button class="btn btnCrear" title="Crear Correo Template" onclick="abrirModal('modalCorreoTM')">
+                                <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" /></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--                  Final Tabla                        -->
+<!--                  Inicio de Modal                        -->
+<!--                  Modal de Crear Template                        -->
+<div id="modalCrearTM" class="modal">
+    <div class="modal-content">
+
+        <form action="#" class="flex flex-col space-y-8 text-white">
+
+            <div>
+                <h3 class="text-2xl font-semibold text-center">Template</h3>
+                <hr>
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Nombre del Template</label>
+                <input type="text" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" />
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Titulo</label>
+                <input type="text" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" />
+            </div>
+
+            <div class="form-item w-full">
+                <label class="text-xl ">Contenido</label>
+                <textarea cols="30" rows="10" class="w-full appearance-none text-black rounded py-1 px-2 mr-2 focus:outline-none  focus:border-blue-200 "></textarea>
+            </div>
+            <div class="form-item w-full">
+                <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
+                <button type="submit" class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--                  Final Modal de Crear Tempalte                        -->
+
+
+<!--                  Modal de Crear correo Template                        -->
+<div id="modalCorreoTM" class="modal">
+    <div class="modal-content">
+        <form action="#" class="flex flex-col space-y-8 text-white">
+
+            <div>
+                <h3 class="text-2xl font-semibold text-center">Nuevo Correo Template</h3>
+                <hr>
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Para: </label>
+                <input type="text" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" />
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Grupo de correos: </label>
+                <select class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                    <option>Ninguno</option>
+                    <option>Todos</option>
+                    <option>PYMES</option>
+                    <option>Gobierno</option>
+                </select>
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Titulo </label>
+                <input type="text" value="Promo del Mes [Dato de la promo]" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200"/>
+            </div>
+
+            <div class="form-item w-full">
+                <label class="text-xl ">Contenido</label>
+                <textarea cols="30" rows="10" class="w-full appearance-none text-black rounded py-1 px-2 mr-2 focus:outline-none  focus:border-blue-200 "> 
+                    Hola [Nombre del cliente],
+                    ¡Tenemos una oferta especial para ti!
+                    [Descripción breve y atractiva de la promoción]
+                    Detalles de la promoción:
+                    Oferta: [Descripción detallada de la oferta]
+                    Válido hasta: [Fecha límite de la promoción]
+                    Código de promoción: [código para acceder a la promoción] 
+                </textarea>
+            </div>
+            <div class="form-item w-full">
+                <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Envíar</button>
+                <button class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--                  Final Modal de Crear Correo Tempalte                        -->
+
+<!--                  Modal de Detalle Template                        -->
+<div id="modalDetalleTM" class="modal">
+    <div class="modal-content">
+
+        <form action="#" class="flex flex-col space-y-8 text-white">
+
+            <div>
+                <h3 class="text-2xl font-semibold text-center">Template</h3>
+                <hr>
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Nombre del Template</label>
+                <input type="text" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" disabled/>
+            </div>
+
+            <div class="form-item">
+                <label class="text-xl ">Titulo</label>
+                <input type="text" value="Promo del Mes [Dato de la promo]" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" disabled />
+            </div>
+
+            <div class="form-item w-full">
+                <label class="text-xl ">Contenido</label>
+                <textarea disabled cols="30" rows="10" class="w-full appearance-none text-black rounded py-1 px-2 mr-2 focus:outline-none  focus:border-blue-200 " disabled>
+                    Hola [Nombre del cliente],
+                    ¡Tenemos una oferta especial para ti!
+                    [Descripción breve y atractiva de la promoción]
+                    Detalles de la promoción:
+                    Oferta: [Descripción detallada de la oferta]
+                    Válido hasta: [Fecha límite de la promoción]
+                    Código de promoción: [código para acceder a la promoción] 
+                </textarea>
+            </div>
+            <div class="form-item w-full">
+                <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" disabled>Guardar</button>
+                <button type="submit" class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Salir</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--                  Final Modal de Crear Abono                        -->
+<!--                  Final Modales                        -->

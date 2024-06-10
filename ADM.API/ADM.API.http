@@ -1,0 +1,6 @@
+@ADM.API_HostAddress = http://localhost:5296
+
+GET {{ADM.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

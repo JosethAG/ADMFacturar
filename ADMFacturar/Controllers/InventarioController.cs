@@ -9,21 +9,39 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        public IActionResult Create()
+        public IActionResult AgregarInventario()
         {
             return View();
         }
 
-        public IActionResult Delete()
+        public IActionResult AgregarArticulos()
         {
             return View();
         }
 
-        public IActionResult Edit()
+        public IActionResult EditarInventario()
         {
             return View();
         }
 
+        public IActionResult DetallesInventario()
+        {
+            return View();
+        }
 
+        public IActionResult EditarArticulo()
+        {
+            return View();
+        }
+
+        public IActionResult EditarArticuloDesdeAgregarArticulos()
+        {
+            return View();
+        }
+
+        public IActionResult DetallesArticulo()
+        {
+            return View();
+        }
     }
 }
