@@ -544,8 +544,163 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+GO
+-------------------------------------------------
+					/*Vendedores*/
+-------------------------------------------------
+	GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarVendedores]    Script Date: 6/9/2024 9:40:49 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[sp_ListarVendedores]
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    SELECT 
+        PK_Vendedor,
+        Nombre,
+        Telefono,
+        Correo,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_VENDEDORES
+    ORDER BY 
+        Nombre;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarVendedoresxNombre]    Script Date: 6/9/2024 9:41:16 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
+ALTER PROCEDURE [dbo].[sp_ListarVendedoresxNombre]
+    @Nombre NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Vendedor,
+        Nombre,
+        Telefono,
+        Correo,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_VENDEDORES 
+    WHERE 
+        Nombre LIKE '%' + @Nombre + '%'
+    ORDER BY 
+        Nombre;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarModificarVendedores]    Script Date: 6/9/2024 9:41:30 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[sp_InsertarModificarVendedores]
+    @P_PK_Vendedor BIGINT,
+    @P_Nombre VARCHAR(200),
+    @P_Telefono VARCHAR(100),
+    @P_Correo VARCHAR(200),
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(50),
+    @P_FK_Usuario_Modificacion VARCHAR(50),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_InsertarModificarVendedores]
+    BEGIN TRY
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.TBL_VENDEDORES WITH (NOLOCK)
+            WHERE PK_Vendedor = @P_PK_Vendedor
+        )
+        BEGIN
+            UPDATE dbo.TBL_VENDEDORES
+            SET Nombre = @P_Nombre,
+                Telefono = @P_Telefono,
+                Correo = @P_Correo,
+                Estado = @P_Estado,
+                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+                Fecha_Modificacion = @P_Fecha_Modificacion
+            WHERE PK_Vendedor = @P_PK_Vendedor;
+        END
+        ELSE
+        BEGIN
+            INSERT INTO [dbo].[TBL_VENDEDORES]
+            (             
+                Nombre,
+                Telefono,
+                Correo,
+                Estado,
+                FK_Usuario_Creacion,
+                FK_Usuario_Modificacion,
+                Fecha_Creacion,
+                Fecha_Modificacion
+            )
+            VALUES
+            (
+                @P_Nombre,
+                @P_Telefono,
+                @P_Correo,
+                @P_Estado,
+                @P_FK_Usuario_Creacion,
+                @P_FK_Usuario_Modificacion,
+                @P_Fecha_Creacion,
+                @P_Fecha_Modificacion
+            );
+        END;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarVendedores]    Script Date: 6/9/2024 9:41:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[sp_EliminarVendedores]
+    @P_PK_Vendedor BIGINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_EliminarVendedores]
+    BEGIN TRY
+        UPDATE dbo.TBL_VENDEDORES SET ESTADO = 0 WHERE PK_Vendedor = @P_PK_Vendedor;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
@@ -1701,13 +1856,13 @@ VALUES
 
 
 INSERT INTO [dbo].[TBL_VENDEDORES] 
-(Nombre, Telefono, Correo, Estado)
+    (Nombre, Telefono, Correo, Estado, FK_Usuario_Creacion, Fecha_Creacion)
 VALUES 
-('Juan Perez', '1234567890', 'juan.perez@example.com', '1'),
-('Maria Lopez', '0987654321', 'maria.lopez@example.com', '1'),
-('Carlos Jimenez', '1122334455', 'carlos.jimenez@example.com', '1'),
-('Ana Gonzalez', '2233445566', 'ana.gonzalez@example.com', '1'),
-('Luis Fernandez', '3344556677', 'luis.fernandez@example.com', '1');
+    ('Juan Perez', '1234567890', 'juan.perez@example.com', 1, 'UsuarioCreador', GETDATE()),
+    ('Maria Lopez', '0987654321', 'maria.lopez@example.com', 1, 'UsuarioCreador', GETDATE()),
+    ('Carlos Jimenez', '1122334455', 'carlos.jimenez@example.com', 1, 'UsuarioCreador', GETDATE()),
+    ('Ana Gonzalez', '2233445566', 'ana.gonzalez@example.com', 1, 'UsuarioCreador', GETDATE()),
+    ('Luis Fernandez', '3344556677', 'luis.fernandez@example.com', 1, 'UsuarioCreador', GETDATE());
 
 
 INSERT INTO [dbo].[TBL_CLIENTES] 
