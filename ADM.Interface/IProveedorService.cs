@@ -9,7 +9,7 @@ namespace ADM.Interface
 {
     public interface IProveedorService
     {
-        IEnumerable<Proveedor> ListaProveedors(string? Nombre);
+        IEnumerable<Proveedor> ListaProveedores(string? Nombre);
         bool CrearUpdProveedor(Proveedor Proveedor);
         bool EliminarProveedor(string Id);
 

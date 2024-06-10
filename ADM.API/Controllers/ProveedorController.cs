@@ -51,7 +51,7 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Nombre", Proveedor.Nombre),
                 new DBParameter("@P_Telefono", Proveedor.Telefono),
                 new DBParameter("@P_Correo", Proveedor.Correo),
-                new DBParameter("@@P_Direccion", Proveedor.Direccion),
+                new DBParameter("@P_Direccion", Proveedor.Direccion),
                 new DBParameter("@P_Estado", Proveedor.Estado.ToString()),
                 new DBParameter("@P_FK_Usuario_Creacion", Proveedor.FK_Usuario_Creacion),
                 new DBParameter("@P_FK_Usuario_Modificacion", Proveedor.FK_Usuario_Modificacion),
@@ -59,7 +59,7 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Fecha_Modificacion", Proveedor.FechaModificacion.ToString())
             };
 
-            var result = DBData.Execute("sp_InsertarModificarProveedors", parameters);
+            var result = DBData.Execute("sp_InsertarModificarProveedores", parameters);
 
             return result;
         }
