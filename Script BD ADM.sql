@@ -95,6 +95,10 @@ CREATE TABLE [dbo].[TBL_VENDEDORES](
 	[Telefono] [varchar](100) NULL,
 	[Correo] [varchar](200) NULL,
 	[Estado] [bit],
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50)  NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime]  NULL,
 PRIMARY KEY CLUSTERED 
 (
     [PK_Vendedor] ASC
