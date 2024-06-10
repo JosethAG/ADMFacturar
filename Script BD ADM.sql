@@ -112,12 +112,12 @@ CREATE TABLE [dbo].[TBL_CLIENTES](
     [Identificacion] [int] NULL,
     [Nombre] [varchar](300) NOT NULL,
     [Telefono] [varchar](100) NULL,
-    [Correo] [varchar](500) NULL,
+    [Correo] [varchar](300) NULL,
     [Provincia] [varchar](10) NULL,
     [Canton] [varchar](10) NULL,
     [Distrito] [varchar](10) NULL,
     [OtrasSenas] [varchar](max) NULL,
-    [Estado] [bit],
+    [Estado] [bit] NOT NULL,
     [FK_CondicionPago] [int] NULL,
     [FK_Transporte] [bigint] NULL,  
     [FK_Vendedor] [bigint] NULL,
@@ -139,6 +139,32 @@ CREATE TABLE [dbo].[TBL_CLIENTES](
 GO
 
 
+/****** Table [dbo].[TBL_PROVEEDORES]  ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_PROVEEDORES](
+	[PK_Proveedor] [bigint] IDENTITY(1,1) NOT NULL,
+	[Nombre] [varchar](100) NOT NULL,
+	[Telefono] [varchar](100) NOT NULL,
+	[Correo] [varchar](50) NOT NULL,
+	[Direccion] [varchar](50) NOT NULL,
+	[Estado] [bit] NOT NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50)  NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime]  NULL,
+ CONSTRAINT [PK_TBL_COM_PROVEEDOR] PRIMARY KEY CLUSTERED 
+(
+	[PK_Proveedor] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+	
+GO
+
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
@@ -146,7 +172,8 @@ GO
 -------------------------------------------------
 					/*CLIENTES*/
 -------------------------------------------------
-
+GO
+	
 CREATE PROCEDURE dbo.sp_ListarClientes
 AS
 BEGIN
@@ -340,6 +367,182 @@ END;
 
 GO
 
+
+
+-------------------------------------------------
+					/*Proveedores*/
+-------------------------------------------------
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarProveedores]    Script Date: 6/9/2024 6:17:31 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarProveedores]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Proveedor,
+        Nombre,
+        Telefono,
+        Correo,
+        Direccion,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_PROVEEDORES
+    ORDER BY 
+        Nombre;
+END;
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarProveedoresxNombre]    Script Date: 6/9/2024 6:18:40 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarProveedoresxNombre]
+    @Nombre NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Proveedor,
+        Nombre,
+        Telefono,
+        Correo,
+        Direccion,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_PROVEEDORES 
+    WHERE 
+        Nombre LIKE '%' + @Nombre + '%'
+    ORDER BY 
+        Nombre;
+END;
+
+
+GO 
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarModificarProveedores]    Script Date: 6/9/2024 6:17:29 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarModificarProveedores]
+    @P_PK_Proveedor BIGINT,
+    @P_Nombre VARCHAR(100),
+    @P_Telefono VARCHAR(100),
+    @P_Correo VARCHAR(50),
+    @P_Direccion VARCHAR(50),
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(50),
+    @P_FK_Usuario_Modificacion VARCHAR(50),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_InsertarModificarProveedores]
+    BEGIN TRY
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.TBL_PROVEEDORES WITH (NOLOCK)
+            WHERE PK_Proveedor = @P_PK_Proveedor
+        )
+        BEGIN
+            UPDATE dbo.TBL_PROVEEDORES
+            SET Nombre = @P_Nombre,
+                Telefono = @P_Telefono,
+                Correo = @P_Correo,
+                Direccion = @P_Direccion,
+                Estado = @P_Estado,
+                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+                Fecha_Modificacion = @P_Fecha_Modificacion
+            WHERE PK_Proveedor = @P_PK_Proveedor;
+        END;
+        ELSE
+        BEGIN
+            INSERT INTO [dbo].[TBL_PROVEEDORES]
+            (
+                Nombre,
+                Telefono,
+                Correo,
+                Direccion,
+                Estado,
+                FK_Usuario_Creacion,
+                Fecha_Creacion
+            )
+            VALUES
+            (
+                @P_Nombre,
+                @P_Telefono,
+                @P_Correo,
+                @P_Direccion,
+                @P_Estado,
+                @P_FK_Usuario_Creacion,
+                @P_Fecha_Creacion
+            );
+        END;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+
+
+GO 
+
+
+/****** Object:  StoredProcedure [dbo].[sp_EliminarProveedores]    Script Date: 6/9/2024 6:17:23 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_EliminarProveedores]
+    @P_PK_Proveedor BIGINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_EliminarProveedores]
+    BEGIN TRY
+        -- Update the Estado to 0 for the specified provider
+        UPDATE dbo.TBL_PROVEEDORES
+        SET Estado = 0
+        WHERE PK_Proveedor = @P_PK_Proveedor;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+
+
+	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
 ----------------------------------------------------------------------------------------------------
@@ -1511,3 +1714,14 @@ VALUES
 ('C003', 'Fisico', 303030303, 'Empresa DEF', '654321098', 'contacto@empresadef.com', '3', '3', '3', 'Dirección 3', '1', 3, 1, 3, 'user3', NULL, GETDATE(), NULL),
 ('C004', 'Fisico', 404040404, 'Empresa GHI', '543210987', 'contacto@empresaghi.com', '1', '2', '3', 'Dirección 4', '1', 4, 2, 4, 'user4', NULL, GETDATE(), NULL),
 ('C005', 'Fisico', 505050505, 'Empresa JKL', '432109876', 'contacto@empresajkl.com', '4', '1', '1', 'Dirección 5', '1', 5, 1, 5, 'user5', NULL, GETDATE(), NULL);
+
+INSERT INTO [dbo].[TBL_PROVEEDORES]
+( Nombre, Telefono, Correo, Direccion, Estado, FK_Usuario_Creacion, Fecha_Creacion)
+VALUES
+ ('Proveedor 1', '123-456-7890', 'proveedor1@empresa.com', 'Calle 1, Ciudad A', 1, 'usuario_creacion1', GETDATE()),
+ ('Proveedor 2', '234-567-8901', 'proveedor2@empresa.com', 'Calle 2, Ciudad B', 1, 'usuario_creacion2', GETDATE()),
+ ('Proveedor 3', '345-678-9012', 'proveedor3@empresa.com', 'Calle 3, Ciudad C', 1, 'usuario_creacion3', GETDATE()),
+ ('Proveedor 4', '456-789-0123', 'proveedor4@empresa.com', 'Calle 4, Ciudad D', 1, 'usuario_creacion4', GETDATE()),
+ ('Proveedor 5', '567-890-1234', 'proveedor5@empresa.com', 'Calle 5, Ciudad E', 1, 'usuario_creacion5', GETDATE());
+
+
