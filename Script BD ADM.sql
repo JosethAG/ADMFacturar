@@ -412,7 +412,7 @@ END;
 GO
 
 
-CREATE PROCEDURE dbo.sp_InsertarModificarClientes
+CREATE PROCEDURE dbo.sp_InsertarClientes
     @P_PK_Cliente VARCHAR(50),
     @P_TipoIdentificacion VARCHAR(500),
     @P_Identificacion INT,
@@ -434,35 +434,9 @@ CREATE PROCEDURE dbo.sp_InsertarModificarClientes
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN [sp_InsertarModificarClientes]
+    BEGIN TRAN [sp_InsertarClientes]
     BEGIN TRY
-        IF EXISTS
-        (
-            SELECT 1
-            FROM dbo.TBL_CLIENTES WITH (NOLOCK)
-            WHERE PK_Cliente = @P_PK_Cliente
-        )
-        BEGIN
-            UPDATE dbo.TBL_CLIENTES
-            SET TipoIdentificacion = @P_TipoIdentificacion,
-                Identificacion = @P_Identificacion,
-                Nombre = @P_Nombre,
-                Telefono = @P_Telefono,
-                Correo = @P_Correo,
-                Provincia = @P_Provincia,
-                Canton = @P_Canton,
-                Distrito = @P_Distrito,
-                OtrasSenas = @P_OtrasSenas,
-                Estado = @P_Estado,
-                FK_CondicionPago = @P_FK_CondicionPago,
-                FK_Transporte = @P_FK_Transporte,
-                FK_Vendedor = @P_FK_Vendedor,
-                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
-                Fecha_Modificacion = @P_Fecha_Modificacion
-            WHERE PK_Cliente = @P_PK_Cliente;
-        END;
-        ELSE
-        BEGIN
+           BEGIN
             INSERT INTO [dbo].[TBL_CLIENTES]
             (
                 PK_Cliente,
@@ -480,7 +454,9 @@ BEGIN
                 FK_Transporte,
                 FK_Vendedor,
                 FK_Usuario_Creacion,
-                Fecha_Creacion
+				FK_Usuario_Modificacion,
+                Fecha_Creacion,
+				Fecha_Modificacion
             )
             VALUES
             (
@@ -499,7 +475,11 @@ BEGIN
                 @P_FK_Transporte,
                 @P_FK_Vendedor,
                 @P_FK_Usuario_Creacion,
-                @P_Fecha_Creacion
+				@P_FK_Usuario_Modificacion,
+				@P_Fecha_Creacion,
+				GETDATE()
+               
+				
             );
         END;
 
@@ -514,17 +494,47 @@ END;
 
 GO
 
-CREATE PROCEDURE [dbo].[sp_EliminarClientes]
-    @P_PK_Cliente VARCHAR(50)
+CREATE PROCEDURE dbo.sp_ModificarClientes
+    @P_PK_Cliente VARCHAR(50),
+    @P_TipoIdentificacion VARCHAR(500),
+    @P_Identificacion INT,
+    @P_Nombre VARCHAR(300),
+    @P_Telefono VARCHAR(100),
+    @P_Correo VARCHAR(500),
+    @P_Provincia VARCHAR(500),
+    @P_Canton VARCHAR(500),
+    @P_Distrito VARCHAR(500),
+    @P_OtrasSenas VARCHAR(MAX),
+    @P_Estado BIT,
+    @P_FK_CondicionPago INT,
+    @P_FK_Transporte BIGINT,
+    @P_FK_Vendedor BIGINT,
+    @P_FK_Usuario_Modificacion VARCHAR(500),
+    @P_Fecha_Modificacion DATETIME
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN [sp_EliminarClientes]
+    BEGIN TRAN [sp_ModificarClientes]
     BEGIN TRY
-        -- Update the Estado to 0 for the specified client
-        UPDATE dbo.TBL_CLIENTES
-        SET Estado = 0
-        WHERE PK_Cliente = @P_PK_Cliente;
+        UPDATE [dbo].[TBL_CLIENTES]
+        SET
+            TipoIdentificacion = @P_TipoIdentificacion,
+            Identificacion = @P_Identificacion,
+            Nombre = @P_Nombre,
+            Telefono = @P_Telefono,
+            Correo = @P_Correo,
+            Provincia = @P_Provincia,
+            Canton = @P_Canton,
+            Distrito = @P_Distrito,
+            OtrasSenas = @P_OtrasSenas,
+            Estado = @P_Estado,
+            FK_CondicionPago = @P_FK_CondicionPago,
+            FK_Transporte = @P_FK_Transporte,
+            FK_Vendedor = @P_FK_Vendedor,
+            FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+            Fecha_Modificacion = GETDATE()
+        WHERE
+            PK_Cliente = @P_PK_Cliente;
 
         COMMIT TRANSACTION
         RETURN 1
@@ -534,7 +544,6 @@ BEGIN
         RETURN 0
     END CATCH
 END;
-
 GO
 
 
