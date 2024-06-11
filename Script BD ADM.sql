@@ -246,7 +246,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [dbo].[sp_ListarArticulosxNombre]
+CREATE PROCEDURE [dbo].[sp_ListarArticulosxNombre]
     @Descripcion NVARCHAR(500)
 AS
 BEGIN
