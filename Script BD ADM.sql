@@ -621,7 +621,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [dbo].[sp_InsertarProveedores]
+CREATE PROCEDURE [dbo].[sp_InsertarProveedores]
     @P_PK_Proveedor bigint,
     @P_Nombre VARCHAR(100),
     @P_Telefono VARCHAR(100),
@@ -679,7 +679,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [dbo].[sp_ModificarProveedores]
+CREATE PROCEDURE [dbo].[sp_ModificarProveedores]
     @P_PK_Proveedor BIGINT,
     @P_Nombre VARCHAR(100),
     @P_Telefono VARCHAR(100),
