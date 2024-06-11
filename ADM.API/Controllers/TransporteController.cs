@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ADM.API.Controllers
 {
@@ -14,11 +15,29 @@ namespace ADM.API.Controllers
     {
         [HttpGet]
         [Route("Listar")]
-        public IEnumerable<Transporte> ListarTransportes()
+        public IEnumerable<Transporte> ListarTransportes(string? Nombre)
         {
-            DataTable tTransporte = DBData.List("sp_ListarTransportes");
-            string jsonTransportes = JsonConvert.SerializeObject(tTransporte);
-            var result = JsonProvider.DeserializeSimple<IEnumerable<Transporte>>(jsonTransportes);
+            //DataTable tTransporte = DBData.List("sp_ListarTransportes");
+            //string jsonTransportes = JsonConvert.SerializeObject(tTransporte);
+            //var result = JsonProvider.DeserializeSimple<IEnumerable<Transporte>>(jsonTransportes);
+            //return result;
+
+            DataTable tTransporte = null;
+
+            if (Nombre == null)
+            {
+                tTransporte = DBData.List("sp_ListarTransportes");
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@Descripcion", Nombre)
+                    };
+                tTransporte = DBData.List("sp_ListarTransportesxNombre", parameters);
+            }
+            string jsonArticle = JsonConvert.SerializeObject(tTransporte);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<Transporte>>(jsonArticle);
             return result;
         }
 
@@ -37,7 +56,7 @@ namespace ADM.API.Controllers
             new DBParameter("@P_Fecha_Modificacion", transporte.Fecha_Modificacion.ToString())
         };
 
-            var result = DBData.Execute("sp_InsertarTransporte", parameters);
+            var result = DBData.Execute("sp_InsertarTransportes", parameters);
 
             return result;
         }
@@ -57,7 +76,7 @@ namespace ADM.API.Controllers
             new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString())
         };
 
-            var result = DBData.Execute("sp_InsertarModificarTransportes", parameters);
+            var result = DBData.Execute("sp_ModificarTransportes", parameters);
 
             return result;
         }

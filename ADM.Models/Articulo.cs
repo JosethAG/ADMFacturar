@@ -10,6 +10,10 @@
         public int Cantidad { get; set; }
         public double Costo { get; set; }
         public double Precio_Unitario { get; set; }
-        
+        public string FK_Usuario_Creacion { get; set; }
+        public string? FK_Usuario_Modificacion { get; set; }
+        public DateTime Fecha_Creacion { get; set; }
+        public DateTime? Fecha_Modificacion { get; set; }
+
     }
 }

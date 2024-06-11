@@ -54,8 +54,8 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Estado", Vendedor.Estado.ToString()),
                 new DBParameter("@P_FK_Usuario_Creacion", Vendedor.FK_Usuario_Creacion),
                 new DBParameter("@P_FK_Usuario_Modificacion", Vendedor.FK_Usuario_Modificacion),
-                new DBParameter("@P_Fecha_Creacion", Vendedor.FechaCreacion.ToString()),
-                new DBParameter("@P_Fecha_Modificacion", Vendedor.FechaModificacion.ToString())
+                new DBParameter("@P_Fecha_Creacion", Vendedor.Fecha_Creacion.ToString()),
+                new DBParameter("@P_Fecha_Modificacion", Vendedor.Fecha_Modificacion.ToString())
             };
 
             var result = DBData.Execute("sp_InsertarVendedores", parameters);
@@ -76,8 +76,8 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Estado", Vendedor.Estado.ToString()),
                 new DBParameter("@P_FK_Usuario_Creacion", Vendedor.FK_Usuario_Creacion),
                 new DBParameter("@P_FK_Usuario_Modificacion", Vendedor.FK_Usuario_Modificacion),
-                new DBParameter("@P_Fecha_Creacion", Vendedor.FechaCreacion.ToString()),
-                new DBParameter("@P_Fecha_Modificacion", Vendedor.FechaModificacion.ToString())
+                new DBParameter("@P_Fecha_Creacion", Vendedor.Fecha_Creacion.ToString()),
+                new DBParameter("@P_Fecha_Modificacion", Vendedor.Fecha_Modificacion.ToString())
             };
 
             var result = DBData.Execute("sp_ModificarVendedores", parameters);
