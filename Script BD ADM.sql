@@ -184,6 +184,10 @@ CREATE TABLE [dbo].[TBL_ARTICULO](
 	[Cantidad] [int] NOT NULL,
 	[Costo] [decimal](18, 2) NOT NULL,
 	[Precio_Unitario] [decimal](18, 2) NOT NULL,
+	[FK_Usuario_Creacion] [varchar](100) NOT NULL,
+    	[FK_Usuario_Modificacion] [varchar](100) NULL,
+    	[Fecha_Creacion] [datetime] NOT NULL,
+    	[Fecha_Modificacion] [datetime] NULL,
  CONSTRAINT [PK_TBL_INV_ARTICULO] PRIMARY KEY CLUSTERED 
 (
 	[PK_Articulo] ASC
@@ -194,9 +198,70 @@ GO
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
 
+
 -------------------------------------------------
 					/*ARTICULOS*/
 -------------------------------------------------
+
+CREATE PROCEDURE dbo.sp_InsertarArticulos
+    @P_PK_Articulo VARCHAR(50),
+    @P_Nombre VARCHAR(100),
+    @P_Descripcion VARCHAR(500),
+    @P_Codigo_Barras VARCHAR(50),
+    @P_FK_Proveedor VARCHAR(50),
+    @P_Cantidad INT,
+    @P_Costo DECIMAL(18, 2),
+    @P_Precio_Unitario DECIMAL(18, 2),
+    @P_FK_Usuario_Creacion VARCHAR(100),
+    @P_FK_Usuario_Modificacion VARCHAR(100),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_InsertarArticulos]
+    BEGIN TRY
+        INSERT INTO [dbo].[TBL_ARTICULO]
+        (
+            PK_Articulo,
+            Nombre,
+            Descripcion,
+            Codigo_Barras,
+            FK_Proveedor,
+            Cantidad,
+            Costo,
+            Precio_Unitario,
+            FK_Usuario_Creacion,
+            FK_Usuario_Modificacion,
+            Fecha_Creacion,
+            Fecha_Modificacion
+        )
+        VALUES
+        (
+            @P_PK_Articulo,
+            @P_Nombre,
+            @P_Descripcion,
+            @P_Codigo_Barras,
+            @P_FK_Proveedor,
+            @P_Cantidad,
+            @P_Costo,
+            @P_Precio_Unitario,
+            @P_FK_Usuario_Creacion,
+            @P_FK_Usuario_Modificacion,
+            @P_Fecha_Creacion,
+            @P_Fecha_Modificacion
+        );
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+
 
 -- Listar todos los artículos
 GO
@@ -213,7 +278,11 @@ BEGIN
         FK_Proveedor,
         Cantidad,
         Costo,
-        Precio_Unitario
+        Precio_Unitario,
+		FK_Usuario_Creacion,
+		FK_Usuario_Modificacion,
+		Fecha_Creacion,
+		Fecha_Modificacion
     FROM 
         dbo.TBL_ARTICULO
     ORDER BY 
@@ -236,81 +305,17 @@ BEGIN
         FK_Proveedor,
         Cantidad,
         Costo,
-        Precio_Unitario
+        Precio_Unitario,
+		FK_Usuario_Creacion,
+		FK_Usuario_Modificacion,
+		Fecha_Creacion,
+		Fecha_Modificacion
     FROM 
         dbo.TBL_ARTICULO 
     WHERE 
         Nombre LIKE '%' + @Nombre + '%'
     ORDER BY 
         Nombre;
-END;
-GO
-
--- Insertar o modificar artículos
-CREATE PROCEDURE dbo.sp_InsertarModificarArticulos
-    @P_PK_Articulo VARCHAR(50),
-    @P_Nombre VARCHAR(100),
-    @P_Descripcion VARCHAR(500),
-    @P_Codigo_Barras VARCHAR(50),
-    @P_FK_Proveedor VARCHAR(50),
-    @P_Cantidad INT,
-    @P_Costo DECIMAL(18, 2),
-    @P_Precio_Unitario DECIMAL(18, 2)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    BEGIN TRAN [sp_InsertarModificarArticulos]
-    BEGIN TRY
-        IF EXISTS
-        (
-            SELECT 1
-            FROM dbo.TBL_ARTICULO WITH (NOLOCK)
-            WHERE PK_Articulo = @P_PK_Articulo
-        )
-        BEGIN
-            UPDATE dbo.TBL_ARTICULO
-            SET Nombre = @P_Nombre,
-                Descripcion = @P_Descripcion,
-                Codigo_Barras = @P_Codigo_Barras,
-                FK_Proveedor = @P_FK_Proveedor,
-                Cantidad = @P_Cantidad,
-                Costo = @P_Costo,
-                Precio_Unitario = @P_Precio_Unitario
-            WHERE PK_Articulo = @P_PK_Articulo;
-        END;
-        ELSE
-        BEGIN
-            INSERT INTO dbo.TBL_ARTICULO
-            (
-                PK_Articulo,
-                Nombre,
-                Descripcion,
-                Codigo_Barras,
-                FK_Proveedor,
-                Cantidad,
-                Costo,
-                Precio_Unitario
-            )
-            VALUES
-            (
-                @P_PK_Articulo,
-                @P_Nombre,
-                @P_Descripcion,
-                @P_Codigo_Barras,
-                @P_FK_Proveedor,
-                @P_Cantidad,
-                @P_Costo,
-                @P_Precio_Unitario
-            );
-        END;
-
-        COMMIT TRANSACTION
-        RETURN 1
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION
-        RETURN 0
-    END CATCH
 END;
 GO
 
@@ -337,6 +342,45 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE dbo.sp_ModificarArticulos
+    @P_PK_Articulo VARCHAR(50),
+    @P_Nombre VARCHAR(100),
+    @P_Descripcion VARCHAR(500),
+    @P_Codigo_Barras VARCHAR(50),
+    @P_FK_Proveedor VARCHAR(50),
+    @P_Cantidad INT,
+    @P_Costo DECIMAL(18, 2),
+    @P_Precio_Unitario DECIMAL(18, 2),
+    @P_FK_Usuario_Modificacion VARCHAR(100),
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_ModificarArticulos]
+    BEGIN TRY
+        UPDATE [dbo].[TBL_ARTICULO]
+        SET
+            Nombre = @P_Nombre,
+            Descripcion = @P_Descripcion,
+            Codigo_Barras = @P_Codigo_Barras,
+            FK_Proveedor = @P_FK_Proveedor,
+            Cantidad = @P_Cantidad,
+            Costo = @P_Costo,
+            Precio_Unitario = @P_Precio_Unitario,
+            FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+            Fecha_Modificacion = @P_Fecha_Modificacion
+        WHERE
+            PK_Articulo = @P_PK_Articulo;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
 
 
 -------------------------------------------------
@@ -614,21 +658,19 @@ BEGIN
         PK_Proveedor;
 END;
 
-
-GO 
-
-/****** Object:  StoredProcedure [dbo].[sp_InsertarModificarProveedores]    Script Date: 6/9/2024 6:17:29 PM ******/
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarProveedores]    Script Date: 6/10/2024 10:41:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_InsertarModificarProveedores]
-    @P_PK_Proveedor BIGINT,
+CREATE PROCEDURE [dbo].[sp_InsertarProveedores]
+    @P_PK_Proveedor bigint,
     @P_Nombre VARCHAR(100),
     @P_Telefono VARCHAR(100),
-    @P_Correo VARCHAR(50),
-    @P_Direccion VARCHAR(50),
+    @P_Correo VARCHAR(200),
+    @P_Direccion VARCHAR(300),
     @P_Estado BIT,
     @P_FK_Usuario_Creacion VARCHAR(50),
     @P_FK_Usuario_Modificacion VARCHAR(50),
@@ -637,53 +679,32 @@ CREATE PROCEDURE [dbo].[sp_InsertarModificarProveedores]
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN [sp_InsertarModificarProveedores]
+    BEGIN TRAN [sp_InsertarProveedor]
     BEGIN TRY
-        IF EXISTS
+        INSERT INTO [dbo].[TBL_PROVEEDORES]
         (
-            SELECT 1
-            FROM dbo.TBL_PROVEEDORES WITH (NOLOCK)
-            WHERE PK_Proveedor = @P_PK_Proveedor
+            Nombre,
+            Telefono,
+            Correo,
+            Direccion,
+            Estado,
+            FK_Usuario_Creacion,
+            FK_Usuario_Modificacion,
+            Fecha_Creacion,
+            Fecha_Modificacion
         )
-        BEGIN
-            UPDATE dbo.TBL_PROVEEDORES
-            SET Nombre = @P_Nombre,
-				Telefono = @P_Telefono,
-				Correo = @P_Correo,
-				Direccion = @P_Direccion,
-				Estado = @P_Estado, 
-				FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
-				Fecha_Modificacion = @P_Fecha_Modificacion  
-       
-            WHERE PK_Proveedor = @P_PK_Proveedor;
-        END;
-        ELSE
-        BEGIN
-            INSERT INTO [dbo].[TBL_PROVEEDORES]
-            (
-				Nombre,
-				Telefono,
-				Correo,
-				Direccion,
-				Estado,
-				FK_Usuario_Creacion,
-				FK_Usuario_Modificacion,
-				Fecha_Creacion,
-				Fecha_Modificacion
-            )
-            VALUES
-            (
-                @P_Nombre,
-                @P_Telefono,
-                @P_Correo,
-                @P_Direccion,
-                @P_Estado,
-                @P_FK_Usuario_Creacion,
-				@P_FK_Usuario_Modificacion,
-                @P_Fecha_Creacion,
-				@P_Fecha_Modificacion 
-            );
-        END;
+        VALUES
+        (
+            @P_Nombre,
+            @P_Telefono,
+            @P_Correo,
+            @P_Direccion,
+            @P_Estado,
+            @P_FK_Usuario_Creacion,
+            @P_FK_Usuario_Modificacion,
+            GETDATE(),
+			GETDATE()
+        );
 
         COMMIT TRANSACTION
         RETURN 1
@@ -694,10 +715,52 @@ BEGIN
     END CATCH
 END;
 
+GO
 
-GO 
+/****** Object:  StoredProcedure [dbo].[sp_ModificarProveedores]    Script Date: 6/10/2024 10:41:56 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
+CREATE PROCEDURE [dbo].[sp_ModificarProveedores]
+    @P_PK_Proveedor BIGINT,
+    @P_Nombre VARCHAR(100),
+    @P_Telefono VARCHAR(100),
+    @P_Correo VARCHAR(200),
+    @P_Direccion VARCHAR(300),
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(50),
+    @P_FK_Usuario_Modificacion VARCHAR(50),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_ModificarProveedor]
+    BEGIN TRY
+        UPDATE [dbo].[TBL_PROVEEDORES]
+        SET
+            Nombre = @P_Nombre,
+            Telefono = @P_Telefono,
+            Correo = @P_Correo,
+            Direccion = @P_Direccion,
+            Estado = @P_Estado,
+            FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+            Fecha_Modificacion = GETDATE()
+        WHERE
+            PK_Proveedor = @P_PK_Proveedor;
 
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+	
 /****** Object:  StoredProcedure [dbo].[sp_EliminarProveedores]    Script Date: 6/9/2024 6:17:23 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -725,6 +788,8 @@ BEGIN
     END CATCH
 END;
 GO
+
+	
 -------------------------------------------------
 					/*Vendedores*/
 -------------------------------------------------
@@ -784,14 +849,15 @@ BEGIN
     ORDER BY 
         Nombre;
 END;
+
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarModificarVendedores]    Script Date: 6/9/2024 9:41:30 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_InsertarVendedores]    Script Date: 6/10/2024 10:35:01 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_InsertarModificarVendedores]
+CREATE PROCEDURE [dbo].[sp_InsertarVendedores]
     @P_PK_Vendedor BIGINT,
     @P_Nombre VARCHAR(200),
     @P_Telefono VARCHAR(100),
@@ -804,7 +870,7 @@ CREATE PROCEDURE [dbo].[sp_InsertarModificarVendedores]
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN [sp_InsertarModificarVendedores]
+    BEGIN TRAN [sp_InsertarVendedores]
     BEGIN TRY
         IF EXISTS
         (
@@ -856,6 +922,47 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ModificarVendedores]    Script Date: 6/10/2024 10:35:07 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ModificarVendedores]
+    @P_PK_Vendedor BIGINT,
+    @P_Nombre VARCHAR(200),
+    @P_Telefono VARCHAR(100),
+    @P_Correo VARCHAR(200),
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(50),
+    @P_FK_Usuario_Modificacion VARCHAR(50),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_ModificarVendedores]
+    BEGIN TRY
+        UPDATE dbo.TBL_VENDEDORES
+            SET Nombre = @P_Nombre,
+                Telefono = @P_Telefono,
+                Correo = @P_Correo,
+                Estado = @P_Estado,
+                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+                Fecha_Modificacion = @P_Fecha_Modificacion
+            WHERE PK_Vendedor = @P_PK_Vendedor;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+
 GO
 /****** Object:  StoredProcedure [dbo].[sp_EliminarVendedores]    Script Date: 6/9/2024 9:41:44 PM ******/
 SET ANSI_NULLS ON
@@ -908,16 +1015,45 @@ BEGIN
     ORDER BY 
         Descripcion;
 END;
-GO
 
-/*Crear y actualizar un transporte*/
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarTransportesxNombre]    Script Date: 6/10/2024 11:20:17 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_InsertarModificarTransportes]
-    @P_PK_Medio_Transporte BIGINT,
+CREATE PROCEDURE [dbo].[sp_ListarTransportesxNombre]
+    @Descripcion NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+	PK_Medio_Transporte,
+    Descripcion,
+    Estado,
+    FK_Usuario_Creacion,
+	FK_Usuario_Modificacion,
+    Fecha_Creacion,
+	Fecha_Modificacion
+    FROM 
+        dbo.TBL_TRANSPORTES
+    WHERE 
+        Descripcion LIKE '%' + @Descripcion + '%'
+    ORDER BY 
+        PK_Medio_Transporte;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarTransportes]    Script Date: 6/10/2024 11:20:22 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarTransportes]
+	@P_PK_Medio_Transporte BIGINT,
     @P_Descripcion VARCHAR(100),
     @P_Estado BIT,
     @P_FK_Usuario_Creacion VARCHAR(50),
@@ -927,41 +1063,28 @@ CREATE PROCEDURE [dbo].[sp_InsertarModificarTransportes]
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN [sp_InsertarModificarTransportes]
+    BEGIN TRAN [sp_InsertarTransportes]
     BEGIN TRY
-        IF EXISTS
-        (
-            SELECT 1
-            FROM dbo.TBL_TRANSPORTES WITH (NOLOCK)
-            WHERE PK_Medio_Transporte = @P_PK_Medio_Transporte
-        )
-        BEGIN
-            UPDATE dbo.TBL_TRANSPORTES
-            SET Descripcion = @P_Descripcion,
-                Estado = @P_Estado,
-                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
-                Fecha_Modificacion = @P_Fecha_Modificacion
-            WHERE PK_Medio_Transporte = @P_PK_Medio_Transporte;
-        END
-        ELSE
-        BEGIN
+         BEGIN
             INSERT INTO [dbo].[TBL_TRANSPORTES]
-            (             
+            (
                 Descripcion,
                 Estado,
                 FK_Usuario_Creacion,
-                FK_Usuario_Modificacion,
+				FK_Usuario_Modificacion,
                 Fecha_Creacion,
-                Fecha_Modificacion
+				Fecha_Modificacion
             )
             VALUES
             (
                 @P_Descripcion,
                 @P_Estado,
                 @P_FK_Usuario_Creacion,
-                @P_FK_Usuario_Modificacion,
-                @P_Fecha_Creacion,
-                @P_Fecha_Modificacion
+				@P_FK_Usuario_Modificacion,
+				@P_Fecha_Creacion,
+				GETDATE()
+               
+				
             );
         END;
 
@@ -973,6 +1096,46 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ModificarTransportes]    Script Date: 6/10/2024 11:20:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ModificarTransportes]
+    @P_PK_Medio_Transporte BIGINT,
+    @P_Descripcion VARCHAR(100),
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(50),
+    @P_FK_Usuario_Modificacion VARCHAR(50),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_ModificarTransportes]
+    BEGIN TRY
+        UPDATE [dbo].[TBL_TRANSPORTES]
+        SET
+            Descripcion = @P_Descripcion,
+            Estado = @P_Estado,
+            FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+            Fecha_Modificacion = GETDATE()
+        WHERE
+            PK_Medio_Transporte = @P_PK_Medio_Transporte;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+
+
 GO
 
 /*Eliminar un transporte*/
@@ -989,7 +1152,7 @@ BEGIN
     SET NOCOUNT ON;
     BEGIN TRAN [sp_EliminarTransporte]
     BEGIN TRY
-        DELETE FROM dbo.TBL_TRANSPORTES
+        UPDATE  dbo.TBL_TRANSPORTES SET Estado = 0
         WHERE PK_Medio_Transporte = @P_PK_Medio_Transporte;
 
         COMMIT TRANSACTION
