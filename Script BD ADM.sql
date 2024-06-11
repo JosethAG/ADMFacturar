@@ -169,9 +169,175 @@ CREATE TABLE [dbo].[TBL_PROVEEDORES](
 	
 GO
 
+/****** Table [dbo].[TBL_ARTICULOS]  ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_ARTICULO](
+	[PK_Articulo] [varchar](50) NOT NULL,
+	[Nombre] [varchar](100) NOT NULL,
+	[Descripcion] [varchar](500) NOT NULL,
+	[Codigo_Barras] [varchar](50) NULL,
+	[FK_Proveedor] [varchar](50) NULL,
+	[Cantidad] [int] NOT NULL,
+	[Costo] [decimal](18, 2) NOT NULL,
+	[Precio_Unitario] [decimal](18, 2) NOT NULL,
+ CONSTRAINT [PK_TBL_INV_ARTICULO] PRIMARY KEY CLUSTERED 
+(
+	[PK_Articulo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] 
+GO
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
+
+-------------------------------------------------
+					/*ARTICULOS*/
+-------------------------------------------------
+
+-- Listar todos los artículos
+GO
+CREATE PROCEDURE dbo.sp_ListarArticulos
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Articulo,
+        Nombre,
+        Descripcion,
+        Codigo_Barras,
+        FK_Proveedor,
+        Cantidad,
+        Costo,
+        Precio_Unitario
+    FROM 
+        dbo.TBL_ARTICULO
+    ORDER BY 
+        Nombre;
+END
+GO
+
+-- Listar artículos por nombre
+CREATE PROCEDURE dbo.sp_ListarArticulosxNombre
+    @Nombre NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Articulo,
+        Nombre,
+        Descripcion,
+        Codigo_Barras,
+        FK_Proveedor,
+        Cantidad,
+        Costo,
+        Precio_Unitario
+    FROM 
+        dbo.TBL_ARTICULO 
+    WHERE 
+        Nombre LIKE '%' + @Nombre + '%'
+    ORDER BY 
+        Nombre;
+END;
+GO
+
+-- Insertar o modificar artículos
+CREATE PROCEDURE dbo.sp_InsertarModificarArticulos
+    @P_PK_Articulo VARCHAR(50),
+    @P_Nombre VARCHAR(100),
+    @P_Descripcion VARCHAR(500),
+    @P_Codigo_Barras VARCHAR(50),
+    @P_FK_Proveedor VARCHAR(50),
+    @P_Cantidad INT,
+    @P_Costo DECIMAL(18, 2),
+    @P_Precio_Unitario DECIMAL(18, 2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_InsertarModificarArticulos]
+    BEGIN TRY
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.TBL_ARTICULO WITH (NOLOCK)
+            WHERE PK_Articulo = @P_PK_Articulo
+        )
+        BEGIN
+            UPDATE dbo.TBL_ARTICULO
+            SET Nombre = @P_Nombre,
+                Descripcion = @P_Descripcion,
+                Codigo_Barras = @P_Codigo_Barras,
+                FK_Proveedor = @P_FK_Proveedor,
+                Cantidad = @P_Cantidad,
+                Costo = @P_Costo,
+                Precio_Unitario = @P_Precio_Unitario
+            WHERE PK_Articulo = @P_PK_Articulo;
+        END;
+        ELSE
+        BEGIN
+            INSERT INTO dbo.TBL_ARTICULO
+            (
+                PK_Articulo,
+                Nombre,
+                Descripcion,
+                Codigo_Barras,
+                FK_Proveedor,
+                Cantidad,
+                Costo,
+                Precio_Unitario
+            )
+            VALUES
+            (
+                @P_PK_Articulo,
+                @P_Nombre,
+                @P_Descripcion,
+                @P_Codigo_Barras,
+                @P_FK_Proveedor,
+                @P_Cantidad,
+                @P_Costo,
+                @P_Precio_Unitario
+            );
+        END;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+
+-- Eliminar (desactivar) artículos
+CREATE PROCEDURE [dbo].[sp_EliminarArticulos]
+    @P_PK_Articulo VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_EliminarArticulos]
+    BEGIN TRY
+        -- Suponiendo que "Eliminar" signifique establecer Cantidad a 0
+        UPDATE dbo.TBL_ARTICULO
+        SET Cantidad = 0
+        WHERE PK_Articulo = @P_PK_Articulo;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+
+
 
 -------------------------------------------------
 					/*CLIENTES*/
@@ -2009,3 +2175,12 @@ VALUES
  ('Proveedor 4', '456-789-0123', 'proveedor4@empresa.com', 'Calle 4, Ciudad D', 1, 'usuario_creacion4', GETDATE()),
  ('Proveedor 5', '567-890-1234', 'proveedor5@empresa.com', 'Calle 5, Ciudad E', 1, 'usuario_creacion5', GETDATE());
 
+
+ INSERT INTO [dbo].[TBL_ARTICULO] 
+(PK_Articulo, Nombre, Descripcion, Codigo_Barras, FK_Proveedor, Cantidad, Costo, Precio_Unitario)
+VALUES 
+('A001', 'Artículo 1', 'Descripción del artículo 1', '123456789012', 'P001', 100, 10.50, 15.75),
+('A002', 'Artículo 2', 'Descripción del artículo 2', '223456789012', 'P002', 200, 20.50, 25.75),
+('A003', 'Artículo 3', 'Descripción del artículo 3', '323456789012', 'P003', 150, 15.75, 20.90),
+('A004', 'Artículo 4', 'Descripción del artículo 4', '423456789012', 'P004', 250, 30.00, 40.00),
+('A005', 'Artículo 5', 'Descripción del artículo 5', '523456789012', 'P005', 300, 12.35, 18.45);
