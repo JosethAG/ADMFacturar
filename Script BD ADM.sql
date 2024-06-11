@@ -971,16 +971,45 @@ BEGIN
     ORDER BY 
         Descripcion;
 END;
-GO
 
-/*Crear y actualizar un transporte*/
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarTransportesxNombre]    Script Date: 6/10/2024 11:20:17 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_InsertarModificarTransportes]
-    @P_PK_Medio_Transporte BIGINT,
+CREATE PROCEDURE [dbo].[sp_ListarTransportesxNombre]
+    @Descripcion NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+	PK_Medio_Transporte,
+    Descripcion,
+    Estado,
+    FK_Usuario_Creacion,
+	FK_Usuario_Modificacion,
+    Fecha_Creacion,
+	Fecha_Modificacion
+    FROM 
+        dbo.TBL_TRANSPORTES
+    WHERE 
+        Descripcion LIKE '%' + @Descripcion + '%'
+    ORDER BY 
+        PK_Medio_Transporte;
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarTransportes]    Script Date: 6/10/2024 11:20:22 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarTransportes]
+	@P_PK_Medio_Transporte BIGINT,
     @P_Descripcion VARCHAR(100),
     @P_Estado BIT,
     @P_FK_Usuario_Creacion VARCHAR(50),
@@ -990,41 +1019,28 @@ CREATE PROCEDURE [dbo].[sp_InsertarModificarTransportes]
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN [sp_InsertarModificarTransportes]
+    BEGIN TRAN [sp_InsertarTransportes]
     BEGIN TRY
-        IF EXISTS
-        (
-            SELECT 1
-            FROM dbo.TBL_TRANSPORTES WITH (NOLOCK)
-            WHERE PK_Medio_Transporte = @P_PK_Medio_Transporte
-        )
-        BEGIN
-            UPDATE dbo.TBL_TRANSPORTES
-            SET Descripcion = @P_Descripcion,
-                Estado = @P_Estado,
-                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
-                Fecha_Modificacion = @P_Fecha_Modificacion
-            WHERE PK_Medio_Transporte = @P_PK_Medio_Transporte;
-        END
-        ELSE
-        BEGIN
+         BEGIN
             INSERT INTO [dbo].[TBL_TRANSPORTES]
-            (             
+            (
                 Descripcion,
                 Estado,
                 FK_Usuario_Creacion,
-                FK_Usuario_Modificacion,
+				FK_Usuario_Modificacion,
                 Fecha_Creacion,
-                Fecha_Modificacion
+				Fecha_Modificacion
             )
             VALUES
             (
                 @P_Descripcion,
                 @P_Estado,
                 @P_FK_Usuario_Creacion,
-                @P_FK_Usuario_Modificacion,
-                @P_Fecha_Creacion,
-                @P_Fecha_Modificacion
+				@P_FK_Usuario_Modificacion,
+				@P_Fecha_Creacion,
+				GETDATE()
+               
+				
             );
         END;
 
@@ -1036,6 +1052,46 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ModificarTransportes]    Script Date: 6/10/2024 11:20:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ModificarTransportes]
+    @P_PK_Medio_Transporte BIGINT,
+    @P_Descripcion VARCHAR(100),
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(50),
+    @P_FK_Usuario_Modificacion VARCHAR(50),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_ModificarTransportes]
+    BEGIN TRY
+        UPDATE [dbo].[TBL_TRANSPORTES]
+        SET
+            Descripcion = @P_Descripcion,
+            Estado = @P_Estado,
+            FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+            Fecha_Modificacion = GETDATE()
+        WHERE
+            PK_Medio_Transporte = @P_PK_Medio_Transporte;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+
+
 GO
 
 /*Eliminar un transporte*/
@@ -1052,7 +1108,7 @@ BEGIN
     SET NOCOUNT ON;
     BEGIN TRAN [sp_EliminarTransporte]
     BEGIN TRY
-        DELETE FROM dbo.TBL_TRANSPORTES
+        UPDATE  dbo.TBL_TRANSPORTES SET Estado = 0
         WHERE PK_Medio_Transporte = @P_PK_Medio_Transporte;
 
         COMMIT TRANSACTION
