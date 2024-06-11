@@ -10,6 +10,22 @@
         <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-3">
 
             <div class="sm:col-span-1">
+                <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Inicio</label>
+                <div class="mt-2">
+                    <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+
+            <div class="sm:col-span-1">
+                <label for="expiry_date" class="block text-sm font-medium leading-6 text-white">Fecha Vencimiento</label>
+                <div class="mt-2">
+                    <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+            <div class="sm:col-span-1">
+            </div>
+
+            <div class="sm:col-span-1">
                 <label for="provider" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
                 <div class="mt-2">
                     <select id="provider" name="provider" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
@@ -20,20 +36,6 @@
                         <option value="Proveedor C">Proveedor C</option>
 
                     </select>
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Emisión</label>
-                <div class="mt-2">
-                    <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="expiry_date" class="block text-sm font-medium leading-6 text-white">Fecha Vencimiento</label>
-                <div class="mt-2">
-                    <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
             </div>
 
@@ -51,10 +53,10 @@
 <div class="w-full">
     <div class="flex justify-between items-center px-6 py-4 border-b">
         <p class="text-xl pb-3 flex items-center text-white">
-            <i class="fas fa-list mr-3"></i> Listado de Proveedores
+            <i class="fas fa-list mr-3"></i> Listado de Ingresos
         </p>
         <div>
-            <a asp-action="AgregarInventario" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white" onclick="abrirModal('modalCrearUsuario')">Crear Ingreso de Productos</a>
+            <a asp-action="AgregarInventario" class="max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Crear Ingreso de Mercadería</a>
         </div>
     </div>
     <div class="bg-white overflow-auto">
@@ -79,14 +81,14 @@
                     <td class="p-3 border border-gray-300">Efectivo</td>
                     <td class="p-3 border border-gray-300">25000</td>
                     <td class="p-3 border border-gray-300">
-                        <button class ="btn btnEditar"  title="Editar">
-                            <a asp-action="EditarInventario">
+                        <button class="btn btnEditar" title="Editar">
+                            <a asp-action="AgregarInventario">
                                 <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d=" M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
 
                             </a>
                         </button>
                         <button class="btn VerDetalles" title="Detalles">
-                            <a asp-action="DetallesInventario">
+                            <a asp-action="AgregarInventario">
                                 <svg class="svg-inline--fa fa-eye fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path> </svg>
                             </a>
                         </button>

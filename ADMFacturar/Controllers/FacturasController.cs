@@ -44,6 +44,10 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        
+        public IActionResult DetallesFactura()
+        {
+            return View();
+        }
+
     }
 }
