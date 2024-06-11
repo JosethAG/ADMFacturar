@@ -55,11 +55,11 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Estado", Proveedor.Estado.ToString()),
                 new DBParameter("@P_FK_Usuario_Creacion", Proveedor.FK_Usuario_Creacion),
                 new DBParameter("@P_FK_Usuario_Modificacion", Proveedor.FK_Usuario_Modificacion),
-                new DBParameter("@P_Fecha_Creacion", Proveedor.FechaCreacion.ToString()),
-                new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString())
+                new DBParameter("@P_Fecha_Creacion", Proveedor.Fecha_Creacion.ToString()),
+                new DBParameter("@P_Fecha_Modificacion", Proveedor.Fecha_Modificacion.ToString())
             };
 
-            var result = DBData.Execute("sp_InsertarModificarProveedores", parameters);
+            var result = DBData.Execute("sp_InsertarProveedores", parameters);
 
             return result;
         }
@@ -78,8 +78,8 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Estado", Proveedor.Estado.ToString()),
                 new DBParameter("@P_FK_Usuario_Creacion", Proveedor.FK_Usuario_Creacion),
                 new DBParameter("@P_FK_Usuario_Modificacion", Proveedor.FK_Usuario_Modificacion),
-                new DBParameter("@P_Fecha_Creacion", Proveedor.FechaCreacion.ToString()),
-                new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString())
+                new DBParameter("@P_Fecha_Creacion", Proveedor.Fecha_Creacion.ToString()),
+                new DBParameter("@P_Fecha_Modificacion", Proveedor.Fecha_Modificacion.ToString())
             };
 
             var result = DBData.Execute("sp_ModificarProveedores", parameters);
