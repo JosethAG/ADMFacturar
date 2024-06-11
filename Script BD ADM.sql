@@ -2347,12 +2347,12 @@ VALUES
  ('Proveedor 4', '456-789-0123', 'proveedor4@empresa.com', 'Calle 4, Ciudad D', 1, 'usuario_creacion4', GETDATE()),
  ('Proveedor 5', '567-890-1234', 'proveedor5@empresa.com', 'Calle 5, Ciudad E', 1, 'usuario_creacion5', GETDATE());
 
-
- INSERT INTO [dbo].[TBL_ARTICULO] 
-(PK_Articulo, Nombre, Descripcion, Codigo_Barras, FK_Proveedor, Cantidad, Costo, Precio_Unitario)
-VALUES 
-('A001', 'Artículo 1', 'Descripción del artículo 1', '123456789012', 'P001', 100, 10.50, 15.75),
-('A002', 'Artículo 2', 'Descripción del artículo 2', '223456789012', 'P002', 200, 20.50, 25.75),
-('A003', 'Artículo 3', 'Descripción del artículo 3', '323456789012', 'P003', 150, 15.75, 20.90),
-('A004', 'Artículo 4', 'Descripción del artículo 4', '423456789012', 'P004', 250, 30.00, 40.00),
-('A005', 'Artículo 5', 'Descripción del artículo 5', '523456789012', 'P005', 300, 12.35, 18.45);
+-- Insertar datos de ejemplo en la tabla TBL_ARTICULO
+INSERT INTO [dbo].[TBL_ARTICULO] 
+    ([PK_Articulo], [Nombre], [Descripcion], [Codigo_Barras], [FK_Proveedor], [Cantidad], [Costo], [Precio_Unitario], [FK_Usuario_Creacion], [FK_Usuario_Modificacion], [Fecha_Creacion], [Fecha_Modificacion])
+VALUES
+    ('ART001', 'Laptop', 'Laptop de 15 pulgadas', '1234567890123', '1', 10, 500.00, 700.00, 'user1', NULL, GETDATE(), NULL),
+    ('ART002', 'Teclado', 'Teclado mecánico', '9876543210987', '2', 50, 30.00, 45.00, 'user1', NULL, GETDATE(), NULL),
+    ('ART003', 'Mouse', 'Mouse inalámbrico', '1231231231231', '3', 30, 20.00, 35.00, 'user1', NULL, GETDATE(), NULL),
+    ('ART004', 'Monitor', 'Monitor de 24 pulgadas', '3213213213213', '4', 15, 150.00, 200.00, 'user1', NULL, GETDATE(), NULL),
+    ('ART005', 'Impresora', 'Impresora láser', '4564564564564', '5', 8, 100.00, 150.00, 'user1', NULL, GETDATE(), NULL);
