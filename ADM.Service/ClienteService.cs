@@ -39,7 +39,7 @@ namespace ADM.Service
             {
                 new DBParameter("@P_PK_Cliente", cliente.PK_Cliente),
                 new DBParameter("@P_TipoIdentificacion", cliente.TipoIdentificacion),
-                new DBParameter("@P_Identificacion", cliente.NumeroIdentificacion.ToString()),
+                new DBParameter("@P_Identificacion", cliente.Identificacion.ToString()),
                 new DBParameter("@P_Nombre", cliente.Nombre),
                 new DBParameter("@P_Telefono", cliente.Telefono),
                 new DBParameter("@P_Correo", cliente.Correo),
@@ -51,10 +51,10 @@ namespace ADM.Service
                 new DBParameter("@P_FK_CondicionPago", cliente.FK_CondicionPago.ToString()),
                 new DBParameter("@P_FK_Transporte", cliente.FK_Transporte.ToString()),
                 new DBParameter("@P_FK_Vendedor", cliente.FK_Vendedor.ToString()),
-                new DBParameter("@P_FK_Usuario_Creacion", cliente.UsuarioCreacion.ToString()),
-                new DBParameter("@P_FK_Usuario_Modificacion", cliente.UsuarioModificacion.ToString()),
-                new DBParameter("@P_Fecha_Creacion", cliente.FechaCreacion.ToString()),
-                new DBParameter("@P_Fecha_Modificacion", cliente.FechaModificacion.ToString())
+                new DBParameter("@P_FK_Usuario_Creacion", cliente.FK_Usuario_Creacion.ToString()),
+                new DBParameter("@P_FK_Usuario_Modificacion", cliente.FK_Usuario_Modificacion.ToString()),
+                new DBParameter("@P_Fecha_Creacion", cliente.Fecha_Creacion.ToString()),
+                new DBParameter("@P_Fecha_Modificacion", cliente.Fecha_Modificacion.ToString())
             };
 
             var result = DBData.Execute("sp_InsertarModificarClientes", parameters);
