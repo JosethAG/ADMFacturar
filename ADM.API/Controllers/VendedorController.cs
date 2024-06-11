@@ -58,7 +58,29 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Fecha_Modificacion", Vendedor.FechaModificacion.ToString())
             };
 
-            var result = DBData.Execute("sp_InsertarModificarVendedores", parameters);
+            var result = DBData.Execute("sp_InsertarVendedores", parameters);
+
+            return result;
+        }
+
+        [HttpPut]
+        [Route("Actualizar")]
+        public bool ActualizarVendedor(Vendedor Vendedor)
+        {
+            List<DBParameter> parameters = new List<DBParameter>
+            {
+                new DBParameter("@P_PK_Vendedor", Vendedor.PK_Vendedor.ToString()),
+                new DBParameter("@P_Nombre", Vendedor.Nombre),
+                new DBParameter("@P_Telefono", Vendedor.Telefono),
+                new DBParameter("@P_Correo", Vendedor.Correo),
+                new DBParameter("@P_Estado", Vendedor.Estado.ToString()),
+                new DBParameter("@P_FK_Usuario_Creacion", Vendedor.FK_Usuario_Creacion),
+                new DBParameter("@P_FK_Usuario_Modificacion", Vendedor.FK_Usuario_Modificacion),
+                new DBParameter("@P_Fecha_Creacion", Vendedor.FechaCreacion.ToString()),
+                new DBParameter("@P_Fecha_Modificacion", Vendedor.FechaModificacion.ToString())
+            };
+
+            var result = DBData.Execute("sp_ModificarVendedores", parameters);
 
             return result;
         }
