@@ -37,6 +37,26 @@ namespace ADM.API.Controllers
             new DBParameter("@P_Fecha_Modificacion", transporte.Fecha_Modificacion.ToString())
         };
 
+            var result = DBData.Execute("sp_InsertarTransporte", parameters);
+
+            return result;
+        }
+
+        [HttpPut]
+        [Route("Actualizar")]
+        public bool ActualizarTransporte(Transporte transporte)
+        {
+            List<DBParameter> parameters = new List<DBParameter>
+        {
+            new DBParameter("@P_PK_Medio_Transporte", transporte.PK_Medio_Transporte.ToString()),
+            new DBParameter("@P_Descripcion", transporte.Descripcion),
+            new DBParameter("@P_Estado", transporte.Estado.ToString()),
+            new DBParameter("@P_FK_Usuario_Creacion", transporte.FK_Usuario_Creacion),
+            new DBParameter("@P_FK_Usuario_Modificacion", transporte.FK_Usuario_Modificacion),
+            new DBParameter("@P_Fecha_Creacion", transporte.Fecha_Creacion.ToString()),
+            new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString())
+        };
+
             var result = DBData.Execute("sp_InsertarModificarTransportes", parameters);
 
             return result;
