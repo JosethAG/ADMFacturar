@@ -2384,10 +2384,156 @@ VALUES
 
 -- Insertar datos de ejemplo en la tabla TBL_ARTICULO
 INSERT INTO [dbo].[TBL_ARTICULO] 
-    ([PK_Articulo], [Nombre], [Descripcion], [Codigo_Barras], [FK_Proveedor], [Cantidad], [Costo], [Precio_Unitario], [FK_Usuario_Creacion], [FK_Usuario_Modificacion], [Fecha_Creacion], [Fecha_Modificacion])
-VALUES
-    ('ART001', 'Laptop', 'Laptop de 15 pulgadas', '1234567890123', '1', 10, 500.00, 700.00, 'user1', NULL, GETDATE(), NULL),
-    ('ART002', 'Teclado', 'Teclado mecánico', '9876543210987', '2', 50, 30.00, 45.00, 'user1', NULL, GETDATE(), NULL),
-    ('ART003', 'Mouse', 'Mouse inalámbrico', '1231231231231', '3', 30, 20.00, 35.00, 'user1', NULL, GETDATE(), NULL),
-    ('ART004', 'Monitor', 'Monitor de 24 pulgadas', '3213213213213', '4', 15, 150.00, 200.00, 'user1', NULL, GETDATE(), NULL),
-    ('ART005', 'Impresora', 'Impresora láser', '4564564564564', '5', 8, 100.00, 150.00, 'user1', NULL, GETDATE(), NULL);
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART001', 
+    'Camiseta de Algodón Blanca', 
+    '123456789012', 
+    'PROV001', 
+    100, 
+    5.00, 
+    10.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART002', 
+    'Jeans Denim Azul', 
+    '123456789013', 
+    'PROV002', 
+    50, 
+    20.00, 
+    40.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART003', 
+    'Chaqueta de Cuero Negra', 
+    '123456789014', 
+    'PROV003', 
+    30, 
+    50.00, 
+    100.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART004', 
+    'Falda Plisada Roja', 
+    '123456789015', 
+    'PROV004', 
+    75, 
+    15.00, 
+    30.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART005', 
+    'Suéter de Lana Gris', 
+    '123456789016', 
+    'PROV005', 
+    60, 
+    25.00, 
+    50.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
