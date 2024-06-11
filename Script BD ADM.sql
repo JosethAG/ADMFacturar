@@ -184,6 +184,10 @@ CREATE TABLE [dbo].[TBL_ARTICULO](
 	[Cantidad] [int] NOT NULL,
 	[Costo] [decimal](18, 2) NOT NULL,
 	[Precio_Unitario] [decimal](18, 2) NOT NULL,
+	[FK_Usuario_Creacion] [varchar](100) NOT NULL,
+    	[FK_Usuario_Modificacion] [varchar](100) NULL,
+    	[Fecha_Creacion] [datetime] NOT NULL,
+    	[Fecha_Modificacion] [datetime] NULL,
  CONSTRAINT [PK_TBL_INV_ARTICULO] PRIMARY KEY CLUSTERED 
 (
 	[PK_Articulo] ASC
@@ -194,9 +198,70 @@ GO
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
 
+
 -------------------------------------------------
 					/*ARTICULOS*/
 -------------------------------------------------
+
+CREATE PROCEDURE dbo.sp_InsertarArticulos
+    @P_PK_Articulo VARCHAR(50),
+    @P_Nombre VARCHAR(100),
+    @P_Descripcion VARCHAR(500),
+    @P_Codigo_Barras VARCHAR(50),
+    @P_FK_Proveedor VARCHAR(50),
+    @P_Cantidad INT,
+    @P_Costo DECIMAL(18, 2),
+    @P_Precio_Unitario DECIMAL(18, 2),
+    @P_FK_Usuario_Creacion VARCHAR(100),
+    @P_FK_Usuario_Modificacion VARCHAR(100),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_InsertarArticulos]
+    BEGIN TRY
+        INSERT INTO [dbo].[TBL_ARTICULO]
+        (
+            PK_Articulo,
+            Nombre,
+            Descripcion,
+            Codigo_Barras,
+            FK_Proveedor,
+            Cantidad,
+            Costo,
+            Precio_Unitario,
+            FK_Usuario_Creacion,
+            FK_Usuario_Modificacion,
+            Fecha_Creacion,
+            Fecha_Modificacion
+        )
+        VALUES
+        (
+            @P_PK_Articulo,
+            @P_Nombre,
+            @P_Descripcion,
+            @P_Codigo_Barras,
+            @P_FK_Proveedor,
+            @P_Cantidad,
+            @P_Costo,
+            @P_Precio_Unitario,
+            @P_FK_Usuario_Creacion,
+            @P_FK_Usuario_Modificacion,
+            @P_Fecha_Creacion,
+            @P_Fecha_Modificacion
+        );
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+
 
 -- Listar todos los artículos
 GO
@@ -213,7 +278,11 @@ BEGIN
         FK_Proveedor,
         Cantidad,
         Costo,
-        Precio_Unitario
+        Precio_Unitario,
+		FK_Usuario_Creacion,
+		FK_Usuario_Modificacion,
+		Fecha_Creacion,
+		Fecha_Modificacion
     FROM 
         dbo.TBL_ARTICULO
     ORDER BY 
@@ -236,81 +305,17 @@ BEGIN
         FK_Proveedor,
         Cantidad,
         Costo,
-        Precio_Unitario
+        Precio_Unitario,
+		FK_Usuario_Creacion,
+		FK_Usuario_Modificacion,
+		Fecha_Creacion,
+		Fecha_Modificacion
     FROM 
         dbo.TBL_ARTICULO 
     WHERE 
         Nombre LIKE '%' + @Nombre + '%'
     ORDER BY 
         Nombre;
-END;
-GO
-
--- Insertar o modificar artículos
-CREATE PROCEDURE dbo.sp_InsertarModificarArticulos
-    @P_PK_Articulo VARCHAR(50),
-    @P_Nombre VARCHAR(100),
-    @P_Descripcion VARCHAR(500),
-    @P_Codigo_Barras VARCHAR(50),
-    @P_FK_Proveedor VARCHAR(50),
-    @P_Cantidad INT,
-    @P_Costo DECIMAL(18, 2),
-    @P_Precio_Unitario DECIMAL(18, 2)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    BEGIN TRAN [sp_InsertarModificarArticulos]
-    BEGIN TRY
-        IF EXISTS
-        (
-            SELECT 1
-            FROM dbo.TBL_ARTICULO WITH (NOLOCK)
-            WHERE PK_Articulo = @P_PK_Articulo
-        )
-        BEGIN
-            UPDATE dbo.TBL_ARTICULO
-            SET Nombre = @P_Nombre,
-                Descripcion = @P_Descripcion,
-                Codigo_Barras = @P_Codigo_Barras,
-                FK_Proveedor = @P_FK_Proveedor,
-                Cantidad = @P_Cantidad,
-                Costo = @P_Costo,
-                Precio_Unitario = @P_Precio_Unitario
-            WHERE PK_Articulo = @P_PK_Articulo;
-        END;
-        ELSE
-        BEGIN
-            INSERT INTO dbo.TBL_ARTICULO
-            (
-                PK_Articulo,
-                Nombre,
-                Descripcion,
-                Codigo_Barras,
-                FK_Proveedor,
-                Cantidad,
-                Costo,
-                Precio_Unitario
-            )
-            VALUES
-            (
-                @P_PK_Articulo,
-                @P_Nombre,
-                @P_Descripcion,
-                @P_Codigo_Barras,
-                @P_FK_Proveedor,
-                @P_Cantidad,
-                @P_Costo,
-                @P_Precio_Unitario
-            );
-        END;
-
-        COMMIT TRANSACTION
-        RETURN 1
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION
-        RETURN 0
-    END CATCH
 END;
 GO
 
@@ -337,6 +342,45 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE dbo.sp_ModificarArticulos
+    @P_PK_Articulo VARCHAR(50),
+    @P_Nombre VARCHAR(100),
+    @P_Descripcion VARCHAR(500),
+    @P_Codigo_Barras VARCHAR(50),
+    @P_FK_Proveedor VARCHAR(50),
+    @P_Cantidad INT,
+    @P_Costo DECIMAL(18, 2),
+    @P_Precio_Unitario DECIMAL(18, 2),
+    @P_FK_Usuario_Modificacion VARCHAR(100),
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_ModificarArticulos]
+    BEGIN TRY
+        UPDATE [dbo].[TBL_ARTICULO]
+        SET
+            Nombre = @P_Nombre,
+            Descripcion = @P_Descripcion,
+            Codigo_Barras = @P_Codigo_Barras,
+            FK_Proveedor = @P_FK_Proveedor,
+            Cantidad = @P_Cantidad,
+            Costo = @P_Costo,
+            Precio_Unitario = @P_Precio_Unitario,
+            FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+            Fecha_Modificacion = @P_Fecha_Modificacion
+        WHERE
+            PK_Articulo = @P_PK_Articulo;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
 
 
 -------------------------------------------------
