@@ -79,7 +79,9 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_FK_Proveedor", articulo.FK_Proveedor),
                 new DBParameter("@P_Cantidad", articulo.Cantidad.ToString()),
                 new DBParameter("@P_Costo", articulo.Costo.ToString()),
-                new DBParameter("@P_Precio_Unitario", articulo.Precio_Unitario.ToString())
+                new DBParameter("@P_Precio_Unitario", articulo.Precio_Unitario.ToString()),
+                new DBParameter("@P_FK_Usuario_Modificacion", articulo.FK_Usuario_Modificacion),
+                new DBParameter("@P_Fecha_Modificacion", articulo.Fecha_Modificacion.ToString())
             };
 
             var result = DBData.Execute("sp_ModificarArticulos", parameters);
