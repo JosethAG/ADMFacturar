@@ -31,7 +31,7 @@ namespace ADM.API.Controllers
             {
                 List<DBParameter> parameters = new List<DBParameter>
                     {
-                        new DBParameter("@Nombre", Nombre)
+                        new DBParameter("@Descripcion", Nombre)
                     };
                 tArticulo = DBData.List("sp_ListarArticulosxNombre", parameters);
             }
@@ -47,13 +47,13 @@ namespace ADM.API.Controllers
             List<DBParameter> parameters = new List<DBParameter>
             {
                 new DBParameter("@P_PK_Articulo", articulo.PK_Articulo),
-                new DBParameter("@P_Nombre", articulo.Nombre),
                 new DBParameter("@P_Descripcion", articulo.Descripcion),
                 new DBParameter("@P_Codigo_Barras", articulo.Codigo_Barras),
                 new DBParameter("@P_FK_Proveedor", articulo.FK_Proveedor),
                 new DBParameter("@P_Cantidad", articulo.Cantidad.ToString()),
                 new DBParameter("@P_Costo", articulo.Costo.ToString()),
-                new DBParameter("@P_Precio_Unitario", articulo.Precio_Unitario.ToString()),
+                new DBParameter("@P_Precio", articulo.Precio.ToString()),
+                new DBParameter("@P_Estado", articulo.Estado.ToString()),
                 new DBParameter("@P_FK_Usuario_Creacion", articulo.FK_Usuario_Creacion),
                 new DBParameter("@P_FK_Usuario_Modificacion", articulo.FK_Usuario_Modificacion),
                 new DBParameter("@P_Fecha_Creacion", articulo.Fecha_Creacion.ToString()),
@@ -73,13 +73,17 @@ namespace ADM.API.Controllers
             List<DBParameter> parameters = new List<DBParameter>
             {
                 new DBParameter("@P_PK_Articulo", articulo.PK_Articulo),
-                new DBParameter("@P_Nombre", articulo.Nombre),
                 new DBParameter("@P_Descripcion", articulo.Descripcion),
                 new DBParameter("@P_Codigo_Barras", articulo.Codigo_Barras),
                 new DBParameter("@P_FK_Proveedor", articulo.FK_Proveedor),
                 new DBParameter("@P_Cantidad", articulo.Cantidad.ToString()),
                 new DBParameter("@P_Costo", articulo.Costo.ToString()),
-                new DBParameter("@P_Precio_Unitario", articulo.Precio_Unitario.ToString())
+                new DBParameter("@P_Precio", articulo.Precio.ToString()),
+                new DBParameter("@P_Estado", articulo.Estado.ToString()),
+                new DBParameter("@P_FK_Usuario_Creacion", articulo.FK_Usuario_Creacion),
+                new DBParameter("@P_FK_Usuario_Modificacion", articulo.FK_Usuario_Modificacion),
+                new DBParameter("@P_Fecha_Creacion", articulo.Fecha_Creacion.ToString()),
+                new DBParameter("@P_Fecha_Modificacion", articulo.Fecha_Modificacion.ToString())
             };
 
             var result = DBData.Execute("sp_ModificarArticulos", parameters);
