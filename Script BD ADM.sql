@@ -623,7 +623,34 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+
 GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarClientes]    Script Date: 6/11/2024 7:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_EliminarClientes]
+    @P_PK_Cliente BIGINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_EliminarClientes]
+    BEGIN TRY
+        -- Update the Estado to 0 for the specified provider
+        UPDATE dbo.TBL_CLIENTES
+        SET Estado = 0
+        WHERE PK_Cliente = @P_PK_Cliente;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
 
 
 
