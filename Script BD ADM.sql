@@ -173,27 +173,30 @@ GO
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE TABLE [dbo].[TBL_ARTICULO](
 	[PK_Articulo] [varchar](50) NOT NULL,
-	[Nombre] [varchar](100) NOT NULL,
 	[Descripcion] [varchar](500) NOT NULL,
 	[Codigo_Barras] [varchar](50) NULL,
 	[FK_Proveedor] [varchar](50) NULL,
 	[Cantidad] [int] NOT NULL,
 	[Costo] [decimal](18, 2) NOT NULL,
-	[Precio_Unitario] [decimal](18, 2) NOT NULL,
+	[Precio] [decimal](18, 2) NOT NULL,
+	[Estado] [bit] NOT NULL,
 	[FK_Usuario_Creacion] [varchar](100) NOT NULL,
-    	[FK_Usuario_Modificacion] [varchar](100) NULL,
-    	[Fecha_Creacion] [datetime] NOT NULL,
-    	[Fecha_Modificacion] [datetime] NULL,
+	[FK_Usuario_Modificacion] [varchar](100) NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NULL,
  CONSTRAINT [PK_TBL_INV_ARTICULO] PRIMARY KEY CLUSTERED 
 (
 	[PK_Articulo] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] 
+) ON [PRIMARY]
 GO
+
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
@@ -203,15 +206,90 @@ GO
 					/*ARTICULOS*/
 -------------------------------------------------
 
-CREATE PROCEDURE dbo.sp_InsertarArticulos
+
+
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarArticulos]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Articulo,
+        Descripcion,
+        Codigo_Barras,
+        FK_Proveedor,
+        Cantidad,
+        Costo,
+        Precio,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_ARTICULO
+    ORDER BY 
+        PK_Articulo;
+END;
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarArticulosxDescripcion]    Script Date: 6/11/2024 8:56:30 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarArticulosxNombre]
+    @Descripcion NVARCHAR(500)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Articulo,
+        Descripcion,
+        Codigo_Barras,
+        FK_Proveedor,
+        Cantidad,
+        Costo,
+        Precio,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_ARTICULO 
+    WHERE 
+        Descripcion LIKE '%' + @Descripcion + '%'
+    ORDER BY 
+        PK_Articulo;
+END;
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarArticulos]
     @P_PK_Articulo VARCHAR(50),
-    @P_Nombre VARCHAR(100),
     @P_Descripcion VARCHAR(500),
     @P_Codigo_Barras VARCHAR(50),
     @P_FK_Proveedor VARCHAR(50),
     @P_Cantidad INT,
     @P_Costo DECIMAL(18, 2),
-    @P_Precio_Unitario DECIMAL(18, 2),
+    @P_Precio DECIMAL(18, 2),
+    @P_Estado BIT,
     @P_FK_Usuario_Creacion VARCHAR(100),
     @P_FK_Usuario_Modificacion VARCHAR(100),
     @P_Fecha_Creacion DATETIME,
@@ -219,18 +297,18 @@ CREATE PROCEDURE dbo.sp_InsertarArticulos
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN [sp_InsertarArticulos]
+    BEGIN TRAN [sp_InsertarArticulo]
     BEGIN TRY
         INSERT INTO [dbo].[TBL_ARTICULO]
         (
             PK_Articulo,
-            Nombre,
             Descripcion,
             Codigo_Barras,
             FK_Proveedor,
             Cantidad,
             Costo,
-            Precio_Unitario,
+            Precio,
+            Estado,
             FK_Usuario_Creacion,
             FK_Usuario_Modificacion,
             Fecha_Creacion,
@@ -239,17 +317,17 @@ BEGIN
         VALUES
         (
             @P_PK_Articulo,
-            @P_Nombre,
             @P_Descripcion,
             @P_Codigo_Barras,
             @P_FK_Proveedor,
             @P_Cantidad,
             @P_Costo,
-            @P_Precio_Unitario,
+            @P_Precio,
+            @P_Estado,
             @P_FK_Usuario_Creacion,
             @P_FK_Usuario_Modificacion,
-            @P_Fecha_Creacion,
-            @P_Fecha_Modificacion
+            GETDATE(),
+            GETDATE()
         );
 
         COMMIT TRANSACTION
@@ -263,74 +341,43 @@ END;
 GO
 
 
--- Listar todos los artículos
+/****** Object:  StoredProcedure [dbo].[sp_ModificarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
+SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE dbo.sp_ListarArticulos
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ModificarArticulos]
+    @P_PK_Articulo VARCHAR(50),
+    @P_Descripcion VARCHAR(500),
+    @P_Codigo_Barras VARCHAR(50),
+    @P_FK_Proveedor VARCHAR(50),
+    @P_Cantidad INT,
+    @P_Costo DECIMAL(18, 2),
+    @P_Precio DECIMAL(18, 2),
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(100),
+    @P_FK_Usuario_Modificacion VARCHAR(100),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    SELECT 
-        PK_Articulo,
-        Nombre,
-        Descripcion,
-        Codigo_Barras,
-        FK_Proveedor,
-        Cantidad,
-        Costo,
-        Precio_Unitario,
-		FK_Usuario_Creacion,
-		FK_Usuario_Modificacion,
-		Fecha_Creacion,
-		Fecha_Modificacion
-    FROM 
-        dbo.TBL_ARTICULO
-    ORDER BY 
-        Nombre;
-END
-GO
-
--- Listar artículos por nombre
-CREATE PROCEDURE dbo.sp_ListarArticulosxNombre
-    @Nombre NVARCHAR(255)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT 
-        PK_Articulo,
-        Nombre,
-        Descripcion,
-        Codigo_Barras,
-        FK_Proveedor,
-        Cantidad,
-        Costo,
-        Precio_Unitario,
-		FK_Usuario_Creacion,
-		FK_Usuario_Modificacion,
-		Fecha_Creacion,
-		Fecha_Modificacion
-    FROM 
-        dbo.TBL_ARTICULO 
-    WHERE 
-        Nombre LIKE '%' + @Nombre + '%'
-    ORDER BY 
-        Nombre;
-END;
-GO
-
--- Eliminar (desactivar) artículos
-CREATE PROCEDURE [dbo].[sp_EliminarArticulos]
-    @P_PK_Articulo VARCHAR(50)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    BEGIN TRAN [sp_EliminarArticulos]
+    BEGIN TRAN [sp_ModificarArticulo]
     BEGIN TRY
-        -- Suponiendo que "Eliminar" signifique establecer Cantidad a 0
-        UPDATE dbo.TBL_ARTICULO
-        SET Cantidad = 0
-        WHERE PK_Articulo = @P_PK_Articulo;
+        UPDATE [dbo].[TBL_ARTICULO]
+        SET
+            Descripcion = @P_Descripcion,
+            Codigo_Barras = @P_Codigo_Barras,
+            FK_Proveedor = @P_FK_Proveedor,
+            Cantidad = @P_Cantidad,
+            Costo = @P_Costo,
+            Precio = @P_Precio,
+            Estado = @P_Estado,
+            FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+            Fecha_Modificacion = GETDATE()
+        WHERE
+            PK_Articulo = @P_PK_Articulo;
 
         COMMIT TRANSACTION
         RETURN 1
@@ -342,35 +389,23 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE dbo.sp_ModificarArticulos
-    @P_PK_Articulo VARCHAR(50),
-    @P_Nombre VARCHAR(100),
-    @P_Descripcion VARCHAR(500),
-    @P_Codigo_Barras VARCHAR(50),
-    @P_FK_Proveedor VARCHAR(50),
-    @P_Cantidad INT,
-    @P_Costo DECIMAL(18, 2),
-    @P_Precio_Unitario DECIMAL(18, 2),
-    @P_FK_Usuario_Modificacion VARCHAR(100),
-    @P_Fecha_Modificacion DATETIME
+/****** Object:  StoredProcedure [dbo].[sp_EliminarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_EliminarArticulos]
+    @P_PK_Articulo VARCHAR(50)
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN [sp_ModificarArticulos]
+    BEGIN TRAN [sp_EliminarArticulos]
     BEGIN TRY
-        UPDATE [dbo].[TBL_ARTICULO]
-        SET
-            Nombre = @P_Nombre,
-            Descripcion = @P_Descripcion,
-            Codigo_Barras = @P_Codigo_Barras,
-            FK_Proveedor = @P_FK_Proveedor,
-            Cantidad = @P_Cantidad,
-            Costo = @P_Costo,
-            Precio_Unitario = @P_Precio_Unitario,
-            FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
-            Fecha_Modificacion = @P_Fecha_Modificacion
-        WHERE
-            PK_Articulo = @P_PK_Articulo;
+        -- Update the Estado to 0 for the specified article
+        UPDATE dbo.TBL_ARTICULO
+        SET Estado = 0
+        WHERE PK_Articulo = @P_PK_Articulo;
 
         COMMIT TRANSACTION
         RETURN 1
@@ -588,7 +623,34 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+
 GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarClientes]    Script Date: 6/11/2024 7:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_EliminarClientes]
+      @P_PK_Cliente VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_EliminarClientes]
+    BEGIN TRY
+        -- Update the Estado to 0 for the specified provider
+        UPDATE dbo.TBL_CLIENTES
+        SET Estado = 0
+        WHERE PK_Cliente = @P_PK_Cliente;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
 
 
 
@@ -2347,12 +2409,158 @@ VALUES
  ('Proveedor 4', '456-789-0123', 'proveedor4@empresa.com', 'Calle 4, Ciudad D', 1, 'usuario_creacion4', GETDATE()),
  ('Proveedor 5', '567-890-1234', 'proveedor5@empresa.com', 'Calle 5, Ciudad E', 1, 'usuario_creacion5', GETDATE());
 
-
- INSERT INTO [dbo].[TBL_ARTICULO] 
-(PK_Articulo, Nombre, Descripcion, Codigo_Barras, FK_Proveedor, Cantidad, Costo, Precio_Unitario)
+-- Insertar datos de ejemplo en la tabla TBL_ARTICULO
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
 VALUES 
-('A001', 'Artículo 1', 'Descripción del artículo 1', '123456789012', 'P001', 100, 10.50, 15.75),
-('A002', 'Artículo 2', 'Descripción del artículo 2', '223456789012', 'P002', 200, 20.50, 25.75),
-('A003', 'Artículo 3', 'Descripción del artículo 3', '323456789012', 'P003', 150, 15.75, 20.90),
-('A004', 'Artículo 4', 'Descripción del artículo 4', '423456789012', 'P004', 250, 30.00, 40.00),
-('A005', 'Artículo 5', 'Descripción del artículo 5', '523456789012', 'P005', 300, 12.35, 18.45);
+(
+    'ART001', 
+    'Camiseta de Algodón Blanca', 
+    '123456789012', 
+    'PROV001', 
+    100, 
+    5.00, 
+    10.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART002', 
+    'Jeans Denim Azul', 
+    '123456789013', 
+    'PROV002', 
+    50, 
+    20.00, 
+    40.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART003', 
+    'Chaqueta de Cuero Negra', 
+    '123456789014', 
+    'PROV003', 
+    30, 
+    50.00, 
+    100.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART004', 
+    'Falda Plisada Roja', 
+    '123456789015', 
+    'PROV004', 
+    75, 
+    15.00, 
+    30.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    PK_Articulo, 
+    Descripcion, 
+    Codigo_Barras, 
+    FK_Proveedor, 
+    Cantidad, 
+    Costo, 
+    Precio, 
+    Estado, 
+    FK_Usuario_Creacion, 
+    FK_Usuario_Modificacion, 
+    Fecha_Creacion, 
+    Fecha_Modificacion
+) 
+VALUES 
+(
+    'ART005', 
+    'Suéter de Lana Gris', 
+    '123456789016', 
+    'PROV005', 
+    60, 
+    25.00, 
+    50.00, 
+    1, 
+    'Usuario1', 
+    'Usuario1', 
+    GETDATE(), 
+    GETDATE()
+);

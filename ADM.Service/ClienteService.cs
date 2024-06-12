@@ -2,38 +2,28 @@
 using ADM.Architecture;
 using ADM.Interface;
 using ADM.Models;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Data;
 
 namespace ADM.Service
 {
-    public class ClienteService : IClienteService
+    public class ClienteService
     {
-        public ClienteService() { }
+        private IConfiguration _config;
 
-        IEnumerable<Cliente> IClienteService.ListaClientes(string? Nombre)
+        public ClienteService(IConfiguration config) 
         {
-            DataTable tCliente = null;
-
-            if (Nombre == null)
-            {
-                tCliente = DBData.List("sp_ListarClientes");
-            }
-            else
-            {
-                List<DBParameter> parameters = new List<DBParameter>
-                    {
-                        new DBParameter("@Nombre", Nombre)
-                    };
-                tCliente = DBData.List("sp_ListarClientesxNombre", parameters);
-            }
-            string jsonArticle = JsonConvert.SerializeObject(tCliente);
-            var result = JsonProvider.DeserializeSimple<IEnumerable<Cliente>>(jsonArticle);
-            return result;
+            _config = config;
         }
 
+        //public async Task<IEnumerable<Cliente>> ListaClientes(string? Nombre)
+        //{
+            
+        //}
 
-        bool IClienteService.CrearUpdCliente(Cliente cliente)
+
+        bool CrearUpdCliente(Cliente cliente)
         {
             List<DBParameter> parameters = new List<DBParameter>
             {
@@ -62,7 +52,7 @@ namespace ADM.Service
             return result;
         }
 
-        bool IClienteService.EliminarCliente(string Id)
+        bool EliminarCliente(string Id)
         {
             if (Id == null || Id.Length == 0)
             {

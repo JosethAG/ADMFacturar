@@ -8,6 +8,7 @@ using ADM.Interface;
 using ADM.Architectur;
 using ADM.Architecture;
 using Newtonsoft.Json;
+using ADM.API.Models;
 
 
 namespace ADM.API.Controllers
@@ -38,6 +39,16 @@ namespace ADM.API.Controllers
             }
             string jsonArticle = JsonConvert.SerializeObject(tCliente);
             var result = JsonProvider.DeserializeSimple<IEnumerable<Cliente>>(jsonArticle);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("Listar2")]
+        public IEnumerable<ClienteViewModel> ListaClientes2(string? Nombre)
+        {
+            DataTable tCliente = DBData.List("sp_ListarVM");
+            string jsonArticle = JsonConvert.SerializeObject(tCliente);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<ClienteViewModel>>(jsonArticle);
             return result;
         }
 
