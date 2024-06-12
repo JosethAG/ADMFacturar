@@ -632,7 +632,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE PROCEDURE [dbo].[sp_EliminarClientes]
-    @P_PK_Cliente BIGINT
+      @P_PK_Cliente VARCHAR(50)
 AS
 BEGIN
     SET NOCOUNT ON;
