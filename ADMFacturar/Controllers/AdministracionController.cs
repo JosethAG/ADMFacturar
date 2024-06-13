@@ -45,10 +45,21 @@ namespace ADMFacturar.Controllers
             return View(new List<ClienteViewModel>());
         }
 
-        public IActionResult ListProvedores()
+        public async Task<IActionResult> ListProvedores()
         {
-            return View();
-        }
+			{
+				var resp = await _httpClient.GetAsync("api/Proveedor/Listar");
+
+				if (resp.IsSuccessStatusCode)
+				{
+					var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+					var proveedores = JsonConvert.DeserializeObject<IEnumerable<Proveedor>>(content);
+					return View("ListProvedores", proveedores); 
+				}
+
+				return View(new List<Proveedor>());
+			}
+		}
 
         public IActionResult ListArticulos()
         {
@@ -59,10 +70,20 @@ namespace ADMFacturar.Controllers
         {
             return View();
         }
-        public IActionResult ListTransportes()
-        {
-            return View();
-        }
+        public async Task<IActionResult> ListTransportes()
+		{
+			{
+				var resp = await _httpClient.GetAsync("api/Transporte/Listar");
 
-    }
+				if (resp.IsSuccessStatusCode)
+				{
+					var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+					var transportes = JsonConvert.DeserializeObject<IEnumerable<Transporte>>(content);
+					return View("ListTransportes", transportes);
+				}
+
+				return View(new List<Transporte>());
+			}
+		}
+	}
 }
