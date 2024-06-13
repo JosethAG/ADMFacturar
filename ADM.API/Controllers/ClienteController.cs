@@ -41,6 +41,17 @@ namespace ADM.API.Controllers
             return result;
         }
 
+
+        [HttpGet]
+        [Route("ListarVM")]
+        public IEnumerable<ClienteViewModel> ListaClientesVM()
+        {
+            DataTable tCliente = DBData.List("sp_ListarVM");
+            string jsonArticle = JsonConvert.SerializeObject(tCliente);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<ClienteViewModel>>(jsonArticle);
+            return result;
+        }
+
         [HttpPost]
         [Route("Crear")]
         public bool CrearCliente(Cliente cliente)
