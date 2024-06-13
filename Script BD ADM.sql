@@ -516,13 +516,13 @@ BEGIN
 END;
 
 GO
-/** Object:  StoredProcedure [dbo].[sp_ListarVM]    Script Date: 6/11/2024 9:20:20 PM **/
+/** Object:  StoredProcedure [dbo].[sp_ListarClientesVM]   Script Date: 6/11/2024 9:20:20 PM **/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_ListarVM] 
+CREATE PROCEDURE [dbo].[sp_ListarClientesVM] 
 AS
 BEGIN
     SET NOCOUNT ON;
