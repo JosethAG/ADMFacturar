@@ -1,4 +1,4 @@
-﻿using ADM.Cliente.Models;
+﻿using ADM.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -33,7 +33,7 @@ namespace ADMFacturar.Controllers
         //}
         public async Task<IActionResult> ListClientes()
         {
-            var resp = await _httpClient.GetAsync("api/Cliente/Listar2");
+            var resp = await _httpClient.GetAsync("api/Cliente/ListarVM");
 
             if (resp.IsSuccessStatusCode)
             {
