@@ -40,6 +40,16 @@ namespace ADM.API.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("ListarArticulosVM")]
+        public IEnumerable<ArticuloViewModel> ListarArticulosVM()
+        {
+            DataTable tArticulo = DBData.List("sp_ListarArticulosVM");
+            string jsonArticle = JsonConvert.SerializeObject(tArticulo);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<ArticuloViewModel>>(jsonArticle);
+            return result;
+        }
+
         [HttpPost]
         [Route("Crear")]
         public bool CrearArticulo(Articulo articulo)

@@ -206,7 +206,34 @@ GO
 					/*ARTICULOS*/
 -------------------------------------------------
 
+/****** Object:  StoredProcedure [dbo].[sp_ListarArticulosVM]     ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
+CREATE PROCEDURE [dbo].[sp_ListarArticulosVM] 
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        a.PK_Articulo,
+        a.Descripcion,
+        a.Codigo_Barras,
+        p.Nombre AS FK_Proveedor,
+        a.Cantidad,
+        CAST(a.Costo AS FLOAT) AS Costo,
+        CAST(a.Precio AS FLOAT) AS Precio,
+        a.Estado
+    FROM 
+        dbo.TBL_ARTICULO a
+    LEFT JOIN 
+        dbo.TBL_PROVEEDORES p ON a.FK_Proveedor = CAST(p.PK_Proveedor AS VARCHAR)
+    ORDER BY 
+        a.Descripcion;
+END
+GO
 
 
 /****** Object:  StoredProcedure [dbo].[sp_ListarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
@@ -489,7 +516,47 @@ BEGIN
 END;
 
 GO
+/** Object:  StoredProcedure [dbo].[sp_ListarClientesVM]   Script Date: 6/11/2024 9:20:20 PM **/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
+CREATE PROCEDURE [dbo].[sp_ListarClientesVM] 
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT 
+        c.PK_Cliente,
+        c.TipoIdentificacion,
+        c.Identificacion,
+        c.Nombre,
+        c.Telefono,
+        c.Correo,
+        CONCAT(p.NOMBRE, ', ', ca.NOMBRE, ', ', d.NOMBRE, ', ', c.OtrasSenas) AS Direccion,
+        c.Estado,
+        cp.Descripcion AS CondicionPago,
+        t.Descripcion AS Transporte,
+        v.Nombre AS Vendedor
+    FROM 
+        dbo.TBL_CLIENTES c
+    LEFT JOIN 
+        dbo.TBL_PROVINCIA p ON c.Provincia = CAST(p.ID_PROVINCIA AS VARCHAR)
+    LEFT JOIN 
+        dbo.TBL_CANTON ca ON c.Provincia = CAST(ca.ID_PROVINCIA AS VARCHAR) AND c.Canton = CAST(ca.ID_CANTON AS VARCHAR)
+    LEFT JOIN 
+        dbo.TBL_DISTRITO d ON c.Provincia = CAST(d.ID_PROVINCIA AS VARCHAR) AND c.Canton = CAST(d.ID_CANTON AS VARCHAR) AND c.Distrito = CAST(d.ID_DISTRITO AS VARCHAR)
+    LEFT JOIN 
+        dbo.TBL_CONDICIONES_PAGO cp ON c.FK_CondicionPago = cp.PK_Condicion_Pago
+    LEFT JOIN 
+        dbo.TBL_TRANSPORTES t ON c.FK_Transporte = t.PK_Medio_Transporte
+    LEFT JOIN 
+        dbo.TBL_VENDEDORES v ON c.FK_Vendedor = v.PK_Vendedor
+    ORDER BY 
+        c.Nombre;
+END
+
+GO
 
 CREATE PROCEDURE dbo.sp_InsertarClientes
     @P_PK_Cliente VARCHAR(50),
@@ -623,7 +690,34 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+
 GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarClientes]    Script Date: 6/11/2024 7:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_EliminarClientes]
+      @P_PK_Cliente VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_EliminarClientes]
+    BEGIN TRY
+        -- Update the Estado to 0 for the specified provider
+        UPDATE dbo.TBL_CLIENTES
+        SET Estado = 0
+        WHERE PK_Cliente = @P_PK_Cliente;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
 
 
 
@@ -2535,5 +2629,32 @@ VALUES
     'Usuario1', 
     'Usuario1', 
     GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    [PK_Articulo], 
+    [Descripcion], 
+    [Codigo_Barras], 
+    [FK_Proveedor], 
+    [Cantidad], 
+    [Costo], 
+    [Precio], 
+    [Estado], 
+    [FK_Usuario_Creacion], 
+    [Fecha_Creacion]
+)
+VALUES 
+(
+    'ART011', 
+    'Artículo A', 
+    '123456789012', 
+    (SELECT TOP 1 PK_Proveedor FROM [dbo].[TBL_PROVEEDORES] WHERE [Nombre] = 'Proveedor 1'),
+    50, 
+    25.00, 
+    45.00, 
+    1, 
+    'usuario_creacion2', 
     GETDATE()
 );

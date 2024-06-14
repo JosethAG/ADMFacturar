@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ADM.Models\ADM.Models.csproj" />
     <ProjectReference Include="..\ADM.Service\ADM.Service.csproj" />
   </ItemGroup>
 
