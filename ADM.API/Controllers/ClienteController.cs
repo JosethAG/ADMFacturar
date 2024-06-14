@@ -43,10 +43,10 @@ namespace ADM.API.Controllers
 
 
         [HttpGet]
-        [Route("ListarVM")]
+        [Route("ListarClientesVM")]
         public IEnumerable<ClienteViewModel> ListaClientesVM()
         {
-            DataTable tCliente = DBData.List("sp_ListarVM");
+            DataTable tCliente = DBData.List("sp_ListarClientesVM");
             string jsonArticle = JsonConvert.SerializeObject(tCliente);
             var result = JsonProvider.DeserializeSimple<IEnumerable<ClienteViewModel>>(jsonArticle);
             return result;
