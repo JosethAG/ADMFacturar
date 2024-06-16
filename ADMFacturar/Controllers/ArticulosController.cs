@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ADM.Api.Cliente.Controllers
 {
-	public class ClientesController : Controller
+	public class ArticulosController : Controller
 	{
 		private readonly HttpClient _httpClient;
 
-		public ClientesController(IHttpClientFactory httpClientFactory)
+		public ArticulosController(IHttpClientFactory httpClientFactory)
 		{
 			_httpClient = httpClientFactory.CreateClient();
 			_httpClient.BaseAddress = new Uri("https://localhost:7270/api");
@@ -18,33 +18,33 @@ namespace ADM.Api.Cliente.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			var resp = await _httpClient.GetAsync("api/Cliente/ListarClientesVM");
+			var resp = await _httpClient.GetAsync("api/Articulo/ListarArticulosVM");
 
 			if (resp.IsSuccessStatusCode)
 			{
 				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-				var clientes = JsonConvert.DeserializeObject<IEnumerable<ClienteViewModel>>(content);
-				return View("Index", clientes); // Devuelve 'clientes' en lugar de 'resp'
+				var articulos = JsonConvert.DeserializeObject<IEnumerable<ArticuloViewModel>>(content);
+				return View("Index", articulos); // Devuelve 'articulos' en lugar de 'resp'
 			}
 
-			return View(new List<ClienteViewModel>());
+			return View(new List<ArticuloViewModel>());
 		}
 
-		public IActionResult CrearCliente() 
+		public IActionResult CrearArticulo()
 		{
 			return View();
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CrearCliente(Cliente cliente)
+		public async Task<IActionResult> CrearArticulo(Articulo articulo)
 		{
 			if (ModelState.IsValid)
 			{
-				var json = JsonConvert.SerializeObject(cliente);
+				var json = JsonConvert.SerializeObject(articulo);
 				var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-				var response = await _httpClient.PostAsync("/api/Cliente/Crear", content);
+				var response = await _httpClient.PostAsync("/api/Articulo/Crear", content);
 
 				if (response.IsSuccessStatusCode)
 				{
@@ -56,7 +56,7 @@ namespace ADM.Api.Cliente.Controllers
 				}
 
 			}
-			return View(cliente);
+			return View(articulo);
 		}
 
 	}
