@@ -1,10 +1,9 @@
 ﻿using ADM.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
-namespace ADM.Api.Cliente.Controllers
+namespace ADM.APICliente.Controllers
 {
 	public class ClientesController : Controller
 	{
@@ -36,7 +35,7 @@ namespace ADM.Api.Cliente.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CrearCliente(ADM.Models.Cliente cliente)
+		public async Task<IActionResult> CrearCliente(Cliente cliente)
 		{
 			if (ModelState.IsValid)
 			{
@@ -46,8 +45,13 @@ namespace ADM.Api.Cliente.Controllers
 
 				var response = await _httpClient.PostAsync("/api/Cliente/Crear", content);
 
+				// Log the response content for debugging
+				string responseContent = await response.Content.ReadAsStringAsync();
+				Console.WriteLine("Response from API: " + responseContent);
+
 				if (response.IsSuccessStatusCode)
 				{
+
 					return RedirectToAction("Index");
 				}
 				else
@@ -58,7 +62,6 @@ namespace ADM.Api.Cliente.Controllers
 			}
 			return View(cliente);
 		}
-
 
 	}
 }

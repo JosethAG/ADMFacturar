@@ -56,7 +56,10 @@ namespace ADM.API.Controllers
         [Route("Crear")]
         public bool CrearCliente(Cliente cliente)
         {
-            List<DBParameter> parameters = new List<DBParameter>
+			// Log received data for debugging
+			Console.WriteLine("Received Cliente: " + JsonConvert.SerializeObject(cliente));
+
+			List<DBParameter> parameters = new List<DBParameter>
             {
                 new DBParameter("@P_PK_Cliente", cliente.PK_Cliente),
                 new DBParameter("@P_TipoIdentificacion", cliente.TipoIdentificacion),
@@ -74,13 +77,16 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_FK_Vendedor", cliente.FK_Vendedor.ToString()),
                 new DBParameter("@P_FK_Usuario_Creacion", cliente.FK_Usuario_Creacion.ToString()),
                 new DBParameter("@P_FK_Usuario_Modificacion", cliente.FK_Usuario_Modificacion.ToString()),
-                new DBParameter("@P_Fecha_Creacion", cliente.Fecha_Creacion.ToString()),
+                new DBParameter("@P_Fecha_Creacion", DateTime.Now.ToString()),
                 new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString())
             };
 
             var result = DBData.Execute("sp_InsertarClientes", parameters);
 
-            return result;
+			// Log the result of the database operation
+			Console.WriteLine("Database operation result: " + result);
+
+			return result;
         }
 
         [HttpPut]
