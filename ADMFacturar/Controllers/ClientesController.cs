@@ -29,7 +29,7 @@ namespace ADM.APICliente.Controllers
 			return View(new List<ClienteViewModel>());
 		}
 
-		public IActionResult CrearCliente() 
+		public IActionResult CrearCliente()
 		{
 			return View();
 		}
@@ -44,6 +44,50 @@ namespace ADM.APICliente.Controllers
 
 
 				var response = await _httpClient.PostAsync("/api/Cliente/Crear", content);
+
+				// Log the response content for debugging
+				string responseContent = await response.Content.ReadAsStringAsync();
+				Console.WriteLine("Response from API: " + responseContent);
+
+				if (response.IsSuccessStatusCode)
+				{
+
+					return RedirectToAction("Index");
+				}
+				else
+				{
+					return View();
+				}
+
+			}
+			return View(cliente);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> ActualizarCliente(string nombre)
+		{
+			var resp = await _httpClient.GetAsync($"api/Cliente/Listar?nombre={nombre}");
+
+			if (resp.IsSuccessStatusCode)
+			{
+				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+				var cliente = JsonConvert.DeserializeObject<Cliente>(content);
+				return View("Index", cliente); // Devuelve 'clientes' en lugar de 'resp'
+			}
+
+			return NotFound();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ActualizarCliente(Cliente cliente)
+		{
+			if (ModelState.IsValid)
+			{
+				var json = JsonConvert.SerializeObject(cliente);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+				var response = await _httpClient.PostAsync("/api/Cliente/Actualizar", content);
 
 				// Log the response content for debugging
 				string responseContent = await response.Content.ReadAsStringAsync();
