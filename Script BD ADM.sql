@@ -206,7 +206,34 @@ GO
 					/*ARTICULOS*/
 -------------------------------------------------
 
+/****** Object:  StoredProcedure [dbo].[sp_ListarArticulosVM]     ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
+CREATE PROCEDURE [dbo].[sp_ListarArticulosVM] 
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        a.PK_Articulo,
+        a.Descripcion,
+        a.Codigo_Barras,
+        p.Nombre AS FK_Proveedor,
+        a.Cantidad,
+        CAST(a.Costo AS FLOAT) AS Costo,
+        CAST(a.Precio AS FLOAT) AS Precio,
+        a.Estado
+    FROM 
+        dbo.TBL_ARTICULO a
+    LEFT JOIN 
+        dbo.TBL_PROVEEDORES p ON a.FK_Proveedor = CAST(p.PK_Proveedor AS VARCHAR)
+    ORDER BY 
+        a.Descripcion;
+END
+GO
 
 
 /****** Object:  StoredProcedure [dbo].[sp_ListarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
@@ -489,13 +516,13 @@ BEGIN
 END;
 
 GO
-/** Object:  StoredProcedure [dbo].[sp_ListarVM]    Script Date: 6/11/2024 9:20:20 PM **/
+/** Object:  StoredProcedure [dbo].[sp_ListarClientesVM]   Script Date: 6/11/2024 9:20:20 PM **/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_ListarVM] 
+CREATE PROCEDURE [dbo].[sp_ListarClientesVM] 
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -2602,5 +2629,32 @@ VALUES
     'Usuario1', 
     'Usuario1', 
     GETDATE(), 
+    GETDATE()
+);
+
+INSERT INTO [dbo].[TBL_ARTICULO] 
+(
+    [PK_Articulo], 
+    [Descripcion], 
+    [Codigo_Barras], 
+    [FK_Proveedor], 
+    [Cantidad], 
+    [Costo], 
+    [Precio], 
+    [Estado], 
+    [FK_Usuario_Creacion], 
+    [Fecha_Creacion]
+)
+VALUES 
+(
+    'ART011', 
+    'Artículo A', 
+    '123456789012', 
+    (SELECT TOP 1 PK_Proveedor FROM [dbo].[TBL_PROVEEDORES] WHERE [Nombre] = 'Proveedor 1'),
+    50, 
+    25.00, 
+    45.00, 
+    1, 
+    'usuario_creacion2', 
     GETDATE()
 );
