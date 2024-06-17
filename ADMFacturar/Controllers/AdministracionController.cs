@@ -33,7 +33,7 @@ namespace ADMFacturar.Controllers
         //}
         public async Task<IActionResult> ListClientes()
         {
-            var resp = await _httpClient.GetAsync("api/Cliente/ListarVM");
+            var resp = await _httpClient.GetAsync("api/Cliente/ListarClientesVM");
 
             if (resp.IsSuccessStatusCode)
             {
@@ -61,14 +61,36 @@ namespace ADMFacturar.Controllers
 			}
 		}
 
-        public IActionResult ListArticulos()
+        //-----------------------------------------------------------------------------------------------------
+
+        public async Task<IActionResult> ListArticulos()
         {
-            return View();
+            var resp = await _httpClient.GetAsync("api/Articulo/ListarArticulosVM");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var articulos = JsonConvert.DeserializeObject<IEnumerable<ArticuloViewModel>>(content);
+                return View("listArticulos", articulos); // Devuelve 'articulos' en lugar de 'resp'
+            }
+
+            return View(new List<ArticuloViewModel>());
         }
 
-        public IActionResult ListVendedores()
+        public async Task<IActionResult> ListVendedores()
         {
-            return View();
+            {
+                var resp = await _httpClient.GetAsync("api/Vendedor/Listar");
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                    var vendedores = JsonConvert.DeserializeObject<IEnumerable<Vendedor>>(content);
+                    return View("ListVendedores", vendedores);
+                }
+
+                return View(new List<Vendedor>());
+            }
         }
         public async Task<IActionResult> ListTransportes()
 		{
