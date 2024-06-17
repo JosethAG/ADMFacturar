@@ -36,7 +36,7 @@ namespace ADM.Api.Cliente.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CrearCliente(Cliente cliente)
+		public async Task<IActionResult> CrearCliente(ADM.Models.Cliente cliente)
 		{
 			if (ModelState.IsValid)
 			{
@@ -58,6 +58,7 @@ namespace ADM.Api.Cliente.Controllers
 			}
 			return View(cliente);
 		}
+
 
 	}
 }
