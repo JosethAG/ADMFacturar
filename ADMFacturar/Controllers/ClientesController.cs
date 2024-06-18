@@ -104,6 +104,42 @@ namespace ADM.APICliente.Controllers
 
 		public async Task<IActionResult> ActualizarCliente(string? PK)
 		{
+			var respProv = await _httpClient.GetAsync("api/Direccion/Listar/Provincia");
+			if (respProv.IsSuccessStatusCode)
+			{
+				var dataProv = await respProv.Content.ReadAsStringAsync();
+				var provincias = JsonConvert.DeserializeObject<List<Provincia>>(dataProv);
+				ViewData["Provincias"] = provincias ?? new List<Provincia>();
+			}
+			else
+			{
+				ViewData["Provincias"] = new List<Provincia>();
+			}
+
+			var respCanton = await _httpClient.GetAsync("api/Direccion/Listar/Canton");
+			if (respCanton.IsSuccessStatusCode)
+			{
+				var dataCanton = await respCanton.Content.ReadAsStringAsync();
+				var cantones = JsonConvert.DeserializeObject<List<Canton>>(dataCanton);
+				ViewData["Cantones"] = cantones ?? new List<Canton>();
+			}
+			else
+			{
+				ViewData["Cantones"] = new List<Canton>();
+			}
+
+			var respDist = await _httpClient.GetAsync("api/Direccion/Listar/Distrito");
+			if (respDist.IsSuccessStatusCode)
+			{
+				var dataDist = await respDist.Content.ReadAsStringAsync();
+				var distritos = JsonConvert.DeserializeObject<List<Distrito>>(dataDist);
+				ViewData["Distritos"] = distritos ?? new List<Distrito>();
+			}
+			else
+			{
+				ViewData["Distritos"] = new List<Distrito>();
+			}
+
 			var resp = await _httpClient.GetAsync($"api/Cliente/Obtener/{PK}");
 
 			if (resp.IsSuccessStatusCode)
