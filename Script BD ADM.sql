@@ -230,7 +230,7 @@ BEGIN
     LEFT JOIN 
         dbo.TBL_PROVEEDORES p ON a.FK_Proveedor = CAST(p.PK_Proveedor AS VARCHAR)
     ORDER BY 
-        a.Descripcion;
+        a.PK_Articulo;
 END
 GO
 
@@ -1042,7 +1042,7 @@ BEGIN
     FROM 
         dbo.TBL_VENDEDORES
     ORDER BY 
-        Nombre;
+        PK_Vendedor;
 END;
 GO
 /****** Object:  StoredProcedure [dbo].[sp_ListarVendedoresxNombre]    Script Date: 6/9/2024 9:41:16 PM ******/
@@ -1266,7 +1266,7 @@ BEGIN
     FROM 
         dbo.TBL_TRANSPORTES
     ORDER BY 
-        Descripcion;
+        PK_Medio_Transporte;
 END;
 
 GO
