@@ -52,9 +52,9 @@ namespace ADM.API.Controllers
             new DBParameter("@P_Estado", transporte.Estado.ToString()),
             new DBParameter("@P_FK_Usuario_Creacion", transporte.FK_Usuario_Creacion),
             new DBParameter("@P_FK_Usuario_Modificacion", transporte.FK_Usuario_Modificacion),
-            new DBParameter("@P_Fecha_Creacion", transporte.Fecha_Creacion.ToString()),
-            new DBParameter("@P_Fecha_Modificacion", transporte.Fecha_Modificacion.ToString())
-        };
+			new DBParameter("@P_Fecha_Creacion", DateTime.Now.ToString("yyyy-MM-dd")),
+			new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
+		};
 
             var result = DBData.Execute("sp_InsertarTransportes", parameters);
 

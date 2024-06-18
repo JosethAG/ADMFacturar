@@ -47,6 +47,9 @@ namespace ADM.APICliente.Controllers
 
 
 				var response = await _httpClient.PostAsync("/api/Transporte/Crear", content);
+				// Log the response content for debugging
+				string responseContent = await response.Content.ReadAsStringAsync();
+				Console.WriteLine("Response from API: " + responseContent);
 
 				if (response.IsSuccessStatusCode)
 				{
