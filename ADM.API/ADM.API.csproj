@@ -15,4 +15,8 @@
     <ProjectReference Include="..\ADM.Service\ADM.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\" />
+  </ItemGroup>
+
 </Project>
