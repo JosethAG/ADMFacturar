@@ -230,7 +230,7 @@ BEGIN
     LEFT JOIN 
         dbo.TBL_PROVEEDORES p ON a.FK_Proveedor = CAST(p.PK_Proveedor AS VARCHAR)
     ORDER BY 
-        a.Descripcion;
+        a.PK_Articulo;
 END
 GO
 
@@ -366,8 +366,7 @@ BEGIN
 END;
 GO
 
-
-/****** Object:  StoredProcedure [dbo].[sp_ModificarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
+/****** Object:  StoredProcedure [dbo].[sp_ModificarArticulos]    Script Date: 6/18/2024 12:10:07 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -382,9 +381,7 @@ CREATE PROCEDURE [dbo].[sp_ModificarArticulos]
     @P_Costo DECIMAL(18, 2),
     @P_Precio DECIMAL(18, 2),
     @P_Estado BIT,
-    @P_FK_Usuario_Creacion VARCHAR(100),
     @P_FK_Usuario_Modificacion VARCHAR(100),
-    @P_Fecha_Creacion DATETIME,
     @P_Fecha_Modificacion DATETIME
 AS
 BEGIN
@@ -413,6 +410,7 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+
 GO
 
 /****** Object:  StoredProcedure [dbo].[sp_EliminarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
@@ -1044,7 +1042,7 @@ BEGIN
     FROM 
         dbo.TBL_VENDEDORES
     ORDER BY 
-        Nombre;
+        PK_Vendedor;
 END;
 GO
 /****** Object:  StoredProcedure [dbo].[sp_ListarVendedoresxNombre]    Script Date: 6/9/2024 9:41:16 PM ******/
@@ -1268,7 +1266,7 @@ BEGIN
     FROM 
         dbo.TBL_TRANSPORTES
     ORDER BY 
-        Descripcion;
+        PK_Medio_Transporte;
 END;
 
 GO
@@ -1400,7 +1398,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_EliminarTransporte]
+CREATE PROCEDURE [dbo].[sp_EliminarTransportes]
     @P_PK_Medio_Transporte BIGINT
 AS
 BEGIN

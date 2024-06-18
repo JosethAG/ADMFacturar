@@ -1,5 +1,12 @@
 ﻿@model Cliente
 
+@{
+	ViewBag.Title = "Crear Cliente";
+	var provincias = ViewData["Provincias"] as List<Provincia>;
+	var cantones = ViewData["Cantones"] as List<Canton>;
+	var distritos = ViewData["Distritos"] as List<Distrito>;
+}
+
 <!--                  Final Tabla                        -->
 
 <form asp-action="CrearCliente" method="post">
@@ -84,32 +91,55 @@
 					</select>
 				</div>
 			</div>
+
 			<div class="sm:col-span-2">
 				<label for="Provincia" class="block text-sm font-medium leading-6 text-white">Provincia</label>
 				<div class="mt-2">
-					<select asp-for="Provincia" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
-						<option value="1">San Jose</option>
-						<option value="2">Alajuela</option>
-						<option value="3">Cartago</option>
-						<option value="4">Heredia</option>
-						<option value="5">Puntarenas</option>
-						<option value="6">Limon</option>
-						<option value="7">Guanacaste</option>
+					<select asp-for="Provincia" id="Provincia" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" onchange="filterCantones()">
+						<option value="">Seleccione una provincia</option>
+						@if (provincias != null)
+						{
+							@foreach (var provincia in provincias)
+							{
+								<option value="@provincia.ID_PROVINCIA">@provincia.NOMBRE</option>
+							}
+						}
 					</select>
 				</div>
 			</div>
+
 			<div class="sm:col-span-2">
-				<label for="Canton" class="block text-sm font-medium leading-6 text-white">Canton</label>
+				<label for="Canton" class="block text-sm font-medium leading-6 text-white">Cantón</label>
 				<div class="mt-2">
-					<input asp-for="Canton" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+					<select asp-for="Canton" id="Canton"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" onchange="filterDistritos()">
+						<option value="">Seleccione un cantón</option>
+						@if (cantones != null)
+						{
+							@foreach (var canton in cantones)
+							{
+								<option value="@canton.ID_CANTON" data-provincia="@canton.ID_PROVINCIA">@canton.NOMBRE</option>
+							}
+						}
+					</select>
 				</div>
 			</div>
+
 			<div class="sm:col-span-2">
 				<label for="Distrito" class="block text-sm font-medium leading-6 text-white">Distrito</label>
 				<div class="mt-2">
-					<input asp-for="Distrito" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+					<select asp-for="Distrito" id="Distrito" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+						<option value="">Seleccione un distrito</option>
+						@if (distritos != null)
+						{
+							@foreach (var distrito in distritos)
+							{
+								<option value="@distrito.ID_DISTRITO" data-provincia="@distrito.ID_PROVINCIA" data-canton="@distrito.ID_CANTON">@distrito.NOMBRE</option>
+							}
+						}
+					</select>
 				</div>
 			</div>
+
 			<div class="sm:col-span-2">
 				<label for="OtrasSenas" class="block text-sm font-medium leading-6 text-white">Barrio y otras señas</label>
 				<div class="mt-2">
@@ -135,3 +165,37 @@
 		<button asp-action="Index" class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
 	</div>
 </form>
+
+
+<script>
+	function filterCantones() {
+		var provinciaId = document.getElementById("Provincia").value;
+		var cantonSelect = document.getElementById("Canton");
+		var cantonOptions = cantonSelect.getElementsByTagName("option");
+
+		for (var i = 1; i < cantonOptions.length; i++) {
+			var option = cantonOptions[i];
+			if (option.getAttribute("data-provincia") === provinciaId) {
+				option.style.display = "block";
+			} else {
+				option.style.display = "none";
+			}
+		}
+	}
+
+	function filterDistritos() {
+		var provinciaId = document.getElementById("Provincia").value;
+		var cantonId = document.getElementById("Canton").value;
+		var distritoSelect = document.getElementById("Distrito");
+		var distritoOptions = distritoSelect.getElementsByTagName("option");
+
+		for (var i = 1; i < distritoOptions.length; i++) {
+			var option = distritoOptions[i];
+			if (option.getAttribute("data-provincia") === provinciaId && option.getAttribute("data-canton") === cantonId) {
+				option.style.display = "block";
+			} else {
+				option.style.display = "none";
+			}
+		}
+	}
+</script>
