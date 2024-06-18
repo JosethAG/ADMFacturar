@@ -957,6 +957,39 @@ BEGIN
 END;
 GO
 
+USE [ADM]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerProveedor]    Script Date: 6/18/2024 12:18:47 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerProveedor] 
+    @PK_Proveedor varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Proveedor,
+        Nombre,
+        Telefono,
+        Correo,
+        Direccion,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_PROVEEDORES
+		where PK_Proveedor = @PK_Proveedor
+
+END;
+
+go
+
 	
 -------------------------------------------------
 					/*Vendedores*/
