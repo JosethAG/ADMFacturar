@@ -1,5 +1,4 @@
-CREATE DATABASE [ADM]
-USE [ADM]
+
 
 
 ----------------------------------------------------------------------------------------------------
@@ -442,6 +441,33 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerArticulo]
+    @PK_Articulo varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Articulo,
+        Descripcion,
+        Codigo_Barras,
+        FK_Proveedor,
+        Cantidad,
+        Costo,
+        Precio,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_ARTICULO 
+    WHERE 
+        PK_Articulo = @PK_Articulo
+END;
+
 GO
 
 
@@ -1391,6 +1417,33 @@ BEGIN
         ROLLBACK TRANSACTION
         RETURN 0
     END CATCH
+END;
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerTransporte]
+    @PK_Medio_Transporte bigint
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Medio_Transporte,
+        Descripcion,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_TRANSPORTES
+    WHERE 
+        PK_Medio_Transporte = @PK_Medio_Transporte;
 END;
 GO
 
