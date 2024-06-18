@@ -41,6 +41,29 @@ namespace ADM.API.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("Obtener/{PK}")]
+        public Cliente ObtenerCliente(string? PK) 
+        {
+            if (PK != null)
+            {
+				List<DBParameter> parameters = new List<DBParameter>
+					{
+						new DBParameter("@PK_Cliente", PK)
+					};
+				DataTable tCliente = DBData.List("sp_ObtenerCliente", parameters);
+                string jsonArticle = JsonConvert.SerializeObject(tCliente);
+                var result = JsonProvider.DeserializeSimple<IEnumerable<Cliente>>(jsonArticle);
+
+
+                return result.FirstOrDefault();
+            }
+            else
+            {
+                return new Cliente();
+            }
+		}
+
 
         [HttpGet]
         [Route("ListarClientesVM")]
@@ -77,8 +100,8 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_FK_Vendedor", cliente.FK_Vendedor.ToString()),
                 new DBParameter("@P_FK_Usuario_Creacion", cliente.FK_Usuario_Creacion.ToString()),
                 new DBParameter("@P_FK_Usuario_Modificacion", cliente.FK_Usuario_Modificacion.ToString()),
-                new DBParameter("@P_Fecha_Creacion", DateTime.Now.ToString()),
-                new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString())
+                new DBParameter("@P_Fecha_Creacion", DateTime.Now.ToString("yyyy-MM-dd")),
+                new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
             };
 
             var result = DBData.Execute("sp_InsertarClientes", parameters);
@@ -89,7 +112,7 @@ namespace ADM.API.Controllers
 			return result;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("Actualizar")]
         public bool ActualizarCliente(Cliente cliente)
         {
@@ -110,7 +133,7 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_FK_Transporte", cliente.FK_Transporte.ToString()),
                 new DBParameter("@P_FK_Vendedor", cliente.FK_Vendedor.ToString()),
                 new DBParameter("@P_FK_Usuario_Modificacion", cliente.FK_Usuario_Modificacion.ToString()),
-                new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString())
+                new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
             };
 
             var result = DBData.Execute("sp_ModificarClientes", parameters);
@@ -118,11 +141,11 @@ namespace ADM.API.Controllers
             return result;
         }
 
-        [HttpDelete]
-        [Route("Eliminar")]
-        public bool EliminarCliente(string Id)
+        [HttpPost]
+        [Route("Desactivar/{PK}")]
+        public bool DesactivarCliente(string PK)
         {
-            if (Id == null || Id.Length == 0)
+            if (PK == null || PK.Length == 0)
             {
                 return false;
             }
@@ -130,12 +153,12 @@ namespace ADM.API.Controllers
             {
                 List<DBParameter> parameters = new List<DBParameter>
                 {
-                    new DBParameter("@P_PK_Cliente", Id)
+                    new DBParameter("@P_PK_Cliente", PK)
                 };
                 
                 var result = DBData.Execute("sp_EliminarClientes", parameters);
 
-                return !result;
+                return result;
             }
         }
     }
