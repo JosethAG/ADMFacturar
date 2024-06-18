@@ -47,6 +47,9 @@ namespace ADM.APICliente.Controllers
 
 
 				var response = await _httpClient.PostAsync("/api/Transporte/Crear", content);
+				// Log the response content for debugging
+				string responseContent = await response.Content.ReadAsStringAsync();
+				Console.WriteLine("Response from API: " + responseContent);
 
 				if (response.IsSuccessStatusCode)
 				{
@@ -61,5 +64,71 @@ namespace ADM.APICliente.Controllers
 			return View(transporte);
 		}
 
-	}
+
+		[HttpPost]
+		public async Task<IActionResult> DesactivarTransporte(string PK)
+		{
+			if (ModelState.IsValid)
+			{
+				var content = new StringContent(PK, Encoding.UTF8, "application/json");
+				var resp = await _httpClient.PostAsync($"/api/Transporte/Desactivar/{PK}", content);
+				string responseContent = await resp.Content.ReadAsStringAsync();
+				Console.WriteLine("Response from API: " + responseContent);
+
+				if (resp.IsSuccessStatusCode)
+				{
+					return RedirectToAction("Index"); // Devuelve 'Transporte' en lugar de 'resp'
+				}
+
+				return NotFound();
+
+			}
+			return Ok();
+		}
+
+
+        public async Task<IActionResult> ActualizarTransporte(int? PK)
+        {
+            var resp = await _httpClient.GetAsync($"api/Transporte/Obtener/{PK}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var transporte = JsonConvert.DeserializeObject<Transporte>(content);
+                return View("ActualizarTransporte", transporte); // Devuelve 'transporte' en lugar de 'resp'
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ActualizarTransporte(Transporte transporte)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(transporte);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+                var response = await _httpClient.PostAsync("/api/Transporte/Actualizar", content);
+
+                // Log the response content for debugging
+                string responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View();
+                }
+
+            }
+            return View(transporte);
+        }
+
+    }
 }

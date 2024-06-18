@@ -1,7 +1,7 @@
 ﻿@model Vendedor
-<form asp-action="CrearVendedor" method="post">
+<form asp-action="ActualizarVendedor" method="post">
 	<div class="border-b border-gray-900/10 pb-12">
-		<h2 class="text-base font-semibold leading-7 text-white">Creacion de nuevo Vendedor</h2>
+		<h2 class="text-base font-semibold leading-7 text-white">Actualizar Vendedor</h2>
 		<div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
 			<div class="sm:col-span-2">
@@ -35,12 +35,11 @@
 		</div>
 		<br />
 		<br />
+		<input asp-for="PK_Vendedor" value="@Model.PK_Vendedor" hidden />
 		<input asp-for="FK_Usuario_Creacion" value="1" hidden />
 		<input asp-for="FK_Usuario_Modificacion" value="1" hidden />
-		<button type="submit" asp-action="CrearVendedor" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
-		<button asp-action="Index"  class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
+		<button type="submit" asp-action="ActualizarVendedor" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
+		<button asp-action="Index" class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
 	</div>
 </form>
-	</div>
-</div>
-<!--                  Final Modal de Crear Tempalte                        --
+	

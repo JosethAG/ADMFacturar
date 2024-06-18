@@ -1,5 +1,4 @@
-CREATE DATABASE [ADM]
-USE [ADM]
+
 
 
 ----------------------------------------------------------------------------------------------------
@@ -367,8 +366,7 @@ BEGIN
 END;
 GO
 
-
-/****** Object:  StoredProcedure [dbo].[sp_ModificarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
+/****** Object:  StoredProcedure [dbo].[sp_ModificarArticulos]    Script Date: 6/18/2024 12:10:07 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -383,9 +381,7 @@ CREATE PROCEDURE [dbo].[sp_ModificarArticulos]
     @P_Costo DECIMAL(18, 2),
     @P_Precio DECIMAL(18, 2),
     @P_Estado BIT,
-    @P_FK_Usuario_Creacion VARCHAR(100),
     @P_FK_Usuario_Modificacion VARCHAR(100),
-    @P_Fecha_Creacion DATETIME,
     @P_Fecha_Modificacion DATETIME
 AS
 BEGIN
@@ -414,6 +410,7 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+
 GO
 
 /****** Object:  StoredProcedure [dbo].[sp_EliminarArticulos]    Script Date: 6/11/2024 8:56:30 AM ******/
@@ -442,6 +439,33 @@ BEGIN
         RETURN 0
     END CATCH
 END;
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerArticulo]
+    @PK_Articulo varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Articulo,
+        Descripcion,
+        Codigo_Barras,
+        FK_Proveedor,
+        Cantidad,
+        Costo,
+        Precio,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_ARTICULO 
+    WHERE 
+        PK_Articulo = @PK_Articulo
+END;
+
 GO
 
 
@@ -719,7 +743,46 @@ BEGIN
     END CATCH
 END;
 
+GO
 
+/** Object:  StoredProcedure [dbo].[sp_ObtenerCliente]    Script Date: 6/17/2024 6:22:02 PM **/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerCliente]
+    @PK_Cliente varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Cliente,
+        TipoIdentificacion,
+        Identificacion,
+        Nombre,
+        Telefono,
+        Correo,
+        Provincia,
+        Canton,
+        Distrito,
+        OtrasSenas,
+        Estado,
+        FK_CondicionPago,
+        FK_Transporte,
+        FK_Vendedor,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_CLIENTES 
+    WHERE 
+        PK_Cliente = @PK_Cliente
+END;
+
+GO
 
 -------------------------------------------------
 					/*Proveedores*/
@@ -832,7 +895,7 @@ BEGIN
             @P_FK_Usuario_Creacion,
             @P_FK_Usuario_Modificacion,
             GETDATE(),
-			GETDATE()
+	    GETDATE()
         );
 
         COMMIT TRANSACTION
@@ -917,6 +980,39 @@ BEGIN
     END CATCH
 END;
 GO
+
+USE [ADM]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerProveedor]    Script Date: 6/18/2024 12:18:47 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerProveedor] 
+    @PK_Proveedor varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Proveedor,
+        Nombre,
+        Telefono,
+        Correo,
+        Direccion,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_PROVEEDORES
+		where PK_Proveedor = @PK_Proveedor
+
+END;
+
+go
 
 	
 -------------------------------------------------
@@ -1053,7 +1149,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[sp_ModificarVendedores]    Script Date: 6/10/2024 10:35:07 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_ModificarVendedores]    Script Date: 6/18/2024 12:25:41 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1080,7 +1176,7 @@ BEGIN
                 Correo = @P_Correo,
                 Estado = @P_Estado,
                 FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
-                Fecha_Modificacion = @P_Fecha_Modificacion
+                Fecha_Modificacion = GETDATE()
             WHERE PK_Vendedor = @P_PK_Vendedor;
 
         COMMIT TRANSACTION
@@ -1091,7 +1187,6 @@ BEGIN
         RETURN 0
     END CATCH
 END;
-
 GO
 /****** Object:  StoredProcedure [dbo].[sp_EliminarVendedores]    Script Date: 6/9/2024 9:41:44 PM ******/
 SET ANSI_NULLS ON
@@ -1117,6 +1212,35 @@ BEGIN
     END CATCH
 END;
 GO
+
+	GO
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerVendedor]    Script Date: 6/18/2024 12:24:24 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerVendedor]
+    @PK_Vendedor varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Vendedor,
+        Nombre,
+        Telefono,
+        Correo,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_VENDEDORES 
+    WHERE 
+        PK_Vendedor = @PK_Vendedor
+END;
 	
 
 	/***********************************************************************************************/
@@ -1291,6 +1415,33 @@ BEGIN
         ROLLBACK TRANSACTION
         RETURN 0
     END CATCH
+END;
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerTransporte]
+    @PK_Medio_Transporte bigint
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Medio_Transporte,
+        Descripcion,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_TRANSPORTES
+    WHERE 
+        PK_Medio_Transporte = @PK_Medio_Transporte;
 END;
 GO
 

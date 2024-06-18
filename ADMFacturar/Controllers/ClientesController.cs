@@ -63,16 +63,16 @@ namespace ADM.APICliente.Controllers
 			return View(cliente);
 		}
 
-		[HttpGet]
-		public async Task<IActionResult> ActualizarCliente(string nombre)
+
+		public async Task<IActionResult> ActualizarCliente(string? PK)
 		{
-			var resp = await _httpClient.GetAsync($"api/Cliente/Listar?nombre={nombre}");
+			var resp = await _httpClient.GetAsync($"api/Cliente/Obtener/{PK}");
 
 			if (resp.IsSuccessStatusCode)
 			{
 				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
 				var cliente = JsonConvert.DeserializeObject<Cliente>(content);
-				return View("Index", cliente); // Devuelve 'clientes' en lugar de 'resp'
+				return View("ActualizarCliente", cliente); // Devuelve 'clientes' en lugar de 'resp'
 			}
 
 			return NotFound();
@@ -105,6 +105,27 @@ namespace ADM.APICliente.Controllers
 
 			}
 			return View(cliente);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> DesactivarCliente(string PK)
+		{
+			if (ModelState.IsValid)
+			{
+				var content = new StringContent(PK, Encoding.UTF8, "application/json");
+				var resp = await _httpClient.PostAsync($"/api/Cliente/Desactivar/{PK}", content);
+				string responseContent = await resp.Content.ReadAsStringAsync();
+				Console.WriteLine("Response from API: " + responseContent);
+
+				if (resp.IsSuccessStatusCode)
+				{
+					return RedirectToAction("Index"); // Devuelve 'clientes' en lugar de 'resp'
+				}
+
+				return NotFound();
+
+			}
+			return Ok();
 		}
 
 	}

@@ -52,16 +52,39 @@ namespace ADM.API.Controllers
             new DBParameter("@P_Estado", transporte.Estado.ToString()),
             new DBParameter("@P_FK_Usuario_Creacion", transporte.FK_Usuario_Creacion),
             new DBParameter("@P_FK_Usuario_Modificacion", transporte.FK_Usuario_Modificacion),
-            new DBParameter("@P_Fecha_Creacion", transporte.Fecha_Creacion.ToString()),
-            new DBParameter("@P_Fecha_Modificacion", transporte.Fecha_Modificacion.ToString())
-        };
+			new DBParameter("@P_Fecha_Creacion", DateTime.Now.ToString("yyyy-MM-dd")),
+			new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
+		};
 
             var result = DBData.Execute("sp_InsertarTransportes", parameters);
 
             return result;
         }
 
-        [HttpPut]
+        [HttpGet]
+        [Route("Obtener/{PK}")]
+        public Transporte ObtenerTransporte(string? PK)
+        {
+            if (PK != null)
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@PK_Medio_Transporte", PK)
+                    };
+                DataTable tTransporte = DBData.List("sp_ObtenerTransporte", parameters);
+                string jsonArticle = JsonConvert.SerializeObject(tTransporte);
+                var result = JsonProvider.DeserializeSimple<IEnumerable<Transporte>>(jsonArticle);
+
+
+                return result.FirstOrDefault();
+            }
+            else
+            {
+                return new Transporte();
+            }
+        }
+
+        [HttpPost]
         [Route("Actualizar")]
         public bool ActualizarTransporte(Transporte transporte)
         {
@@ -72,8 +95,8 @@ namespace ADM.API.Controllers
             new DBParameter("@P_Estado", transporte.Estado.ToString()),
             new DBParameter("@P_FK_Usuario_Creacion", transporte.FK_Usuario_Creacion),
             new DBParameter("@P_FK_Usuario_Modificacion", transporte.FK_Usuario_Modificacion),
-            new DBParameter("@P_Fecha_Creacion", transporte.Fecha_Creacion.ToString()),
-            new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString())
+            new DBParameter("@P_Fecha_Creacion", DateTime.Now.ToString("yyyy-MM-dd")),
+            new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
         };
 
             var result = DBData.Execute("sp_ModificarTransportes", parameters);
@@ -81,23 +104,27 @@ namespace ADM.API.Controllers
             return result;
         }
 
-        [HttpDelete]
-        [Route("Eliminar")]
-        public bool EliminarTransporte(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                return false;
-            }
 
-            List<DBParameter> parameters = new List<DBParameter>
-        {
-            new DBParameter("@P_PK_Medio_Transporte", id)
-        };
 
-            var result = DBData.Execute("sp_EliminarTransporte", parameters);
+		[HttpPost]
+		[Route("Desactivar/{PK}")]
+		public bool DesactivarTransporte(string PK)
+		{
+			if (PK == null || PK.Length == 0)
+			{
+				return false;
+			}
+			else
+			{
+				List<DBParameter> parameters = new List<DBParameter>
+				{
+					new DBParameter("@P_PK_Medio_Transporte", PK)
+				};
 
-            return result;
-        }
-    }
+				var result = DBData.Execute("sp_EliminarTransporte", parameters);
+
+				return result;
+			}
+		}
+	}
 }
