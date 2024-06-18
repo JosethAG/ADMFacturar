@@ -20,9 +20,16 @@
             </div>
 
             <div class="sm:col-span-2">
-                <label for="FK_Proveedor" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
+                <label for="region" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
                 <div class="mt-2">
-                    <input asp-for="FK_Proveedor" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    <select asp-for="FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                        <option value="1">Proveedor 1</option>
+                        <option value="2">Proveedor 2</option>
+                        <option value="3">Proveedor 3</option>
+                        <option value="4">Proveedor 4</option>
+                        <option value="5">Proveedor 5</option>
+                        <option value="6">Proveedor 6</option>
+                    </select>
                 </div>
             </div>
 
