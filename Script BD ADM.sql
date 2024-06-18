@@ -719,7 +719,46 @@ BEGIN
     END CATCH
 END;
 
+GO
 
+/** Object:  StoredProcedure [dbo].[sp_ObtenerCliente]    Script Date: 6/17/2024 6:22:02 PM **/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerCliente]
+    @PK_Cliente varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Cliente,
+        TipoIdentificacion,
+        Identificacion,
+        Nombre,
+        Telefono,
+        Correo,
+        Provincia,
+        Canton,
+        Distrito,
+        OtrasSenas,
+        Estado,
+        FK_CondicionPago,
+        FK_Transporte,
+        FK_Vendedor,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_CLIENTES 
+    WHERE 
+        PK_Cliente = @PK_Cliente
+END;
+
+GO
 
 -------------------------------------------------
 					/*Proveedores*/
@@ -832,7 +871,7 @@ BEGIN
             @P_FK_Usuario_Creacion,
             @P_FK_Usuario_Modificacion,
             GETDATE(),
-			GETDATE()
+	    GETDATE()
         );
 
         COMMIT TRANSACTION

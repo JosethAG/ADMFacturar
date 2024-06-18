@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 
-namespace ADM.Api.Cliente.Controllers
+namespace ADM.APICliente.Controllers
 {
 	public class ArticulosController : Controller
 	{
