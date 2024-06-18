@@ -2,22 +2,14 @@
 
 <!--                  Final Tabla                        -->
 
-<form asp-action="CrearCliente" method="post">
+<form asp-action="ActualizarCliente" method="post">
 	<div class="border-b border-gray-900/10 pb-12">
 		<h2 class="text-base font-semibold leading-7 text-white">Creación de nuevo cliente</h2>
 		<div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
-			<div class="sm:col-span-2 ">
-				<label for="PK_Cliente" class="block text-sm font-medium leading-6 text-white">Código Cliente</label>
-				<div class="mt-2">
-					<input asp-for="PK_Cliente" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-				</div>
-			</div>
-		
 			<div class="sm:col-span-2">
 				<label for="TipoIdentificacion" class="block text-sm font-medium leading-6 text-white">Tipo de Identificación</label>
 				<div class="mt-2">
-					<select asp-for="TipoIdentificacion"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+					<select asp-for="TipoIdentificacion" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
 						<option value="1">Fisico</option>
 						<option value="2">Juridico</option>
 					</select>
@@ -37,7 +29,7 @@
 				</div>
 			</div>
 
-		
+
 			<div class="sm:col-span-2">
 				<label for="Telefono" class="block text-sm font-medium leading-6 text-white">Teléfono</label>
 				<div class="mt-2">
@@ -48,7 +40,7 @@
 			<div class="sm:col-span-2">
 				<label for="Correo" class="block text-sm font-medium leading-6 text-white">Correo</label>
 				<div class="mt-2">
-					<input asp-for="Correo"  type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+					<input asp-for="Correo" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
 				</div>
 			</div>
 			<div class="sm:col-span-2">
@@ -110,7 +102,7 @@
 				<div class="mt-2">
 					<input asp-for="OtrasSenas" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
 				</div>
-			</div>	
+			</div>
 			<div class="sm:col-span-2">
 				<label for="Estado" class="block text-sm font-medium leading-6 text-white">Estado</label>
 				<div class="mt-2">
@@ -123,10 +115,10 @@
 		</div>
 		<br />
 		<br />
-		<input asp-for="FK_Usuario_Creacion" value="user1" hidden/>
-		<input asp-for="FK_Usuario_Modificacion" value="user1" hidden/>
-		<input asp-for="Fecha_Modificacion" value="" hidden/>
-		<button type="submit" asp-action="CrearCliente" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
+		<input asp-for="PK_Cliente" value="@Model.PK_Cliente" hidden />
+		<input asp-for="FK_Usuario_Creacion" value="1" hidden />
+		<input asp-for="FK_Usuario_Modificacion" value="1" hidden />
+		<button type="submit" asp-action="ActualizarCliente" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
 		<button asp-action="Index" class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
 	</div>
 </form>
