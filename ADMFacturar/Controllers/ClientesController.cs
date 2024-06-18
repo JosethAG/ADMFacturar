@@ -17,6 +17,7 @@ namespace ADM.APICliente.Controllers
 
 		public async Task<IActionResult> Index()
 		{
+
 			var resp = await _httpClient.GetAsync("api/Cliente/ListarClientesVM");
 
 			if (resp.IsSuccessStatusCode)
@@ -29,14 +30,31 @@ namespace ADM.APICliente.Controllers
 			return View(new List<ClienteViewModel>());
 		}
 
-		public IActionResult CrearCliente()
+		public async Task<IActionResult> CrearCliente()
 		{
+			var respProv = await _httpClient.GetAsync("api/Direccion/Listar/Provincia");
+			var dataProv = await respProv.Content.ReadAsStringAsync();
+			var provincias = JsonConvert.DeserializeObject<List<Provincia>>(dataProv);
+
+			var respCanton = await _httpClient.GetAsync("api/Direccion/Listar/Canton");
+			var dataCanton = await respCanton.Content.ReadAsStringAsync();
+			var Canton = JsonConvert.DeserializeObject<List<Canton>>(dataCanton);
+
+			var respDist = await _httpClient.GetAsync("api/Direccion/Listar/Distrito");
+			var dataDist = await respDist.Content.ReadAsStringAsync();
+			var Distrito = JsonConvert.DeserializeObject<List<Distrito>>(dataDist);
+
+			ViewBag.Provincias = provincias;
+			ViewBag.Cantones = Canton;
+			ViewBag.Distritos = Distrito;
+
 			return View();
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> CrearCliente(Cliente cliente)
 		{
+
 			if (ModelState.IsValid)
 			{
 				var json = JsonConvert.SerializeObject(cliente);
