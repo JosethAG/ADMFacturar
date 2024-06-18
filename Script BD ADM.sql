@@ -1125,7 +1125,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[sp_ModificarVendedores]    Script Date: 6/10/2024 10:35:07 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_ModificarVendedores]    Script Date: 6/18/2024 12:25:41 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1152,7 +1152,7 @@ BEGIN
                 Correo = @P_Correo,
                 Estado = @P_Estado,
                 FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
-                Fecha_Modificacion = @P_Fecha_Modificacion
+                Fecha_Modificacion = GETDATE()
             WHERE PK_Vendedor = @P_PK_Vendedor;
 
         COMMIT TRANSACTION
@@ -1163,7 +1163,6 @@ BEGIN
         RETURN 0
     END CATCH
 END;
-
 GO
 /****** Object:  StoredProcedure [dbo].[sp_EliminarVendedores]    Script Date: 6/9/2024 9:41:44 PM ******/
 SET ANSI_NULLS ON
@@ -1189,6 +1188,35 @@ BEGIN
     END CATCH
 END;
 GO
+
+	GO
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerVendedor]    Script Date: 6/18/2024 12:24:24 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerVendedor]
+    @PK_Vendedor varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Vendedor,
+        Nombre,
+        Telefono,
+        Correo,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_VENDEDORES 
+    WHERE 
+        PK_Vendedor = @PK_Vendedor
+END;
 	
 
 	/***********************************************************************************************/
