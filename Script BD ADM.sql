@@ -1398,7 +1398,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_EliminarTransporte]
+CREATE PROCEDURE [dbo].[sp_EliminarTransportes]
     @P_PK_Medio_Transporte BIGINT
 AS
 BEGIN
