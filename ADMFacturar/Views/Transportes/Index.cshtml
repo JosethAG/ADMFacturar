@@ -7,13 +7,12 @@
 
 <!--                  Formulario                        -->
 <form>
-    <div class="border-b border-gray-900/10 pb-12">
-        <h2 class="text-base font-semibold leading-7 text-white">Filtro de Transportes</h2>
-        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
+    <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+        <h2 class="text-lg font-bold mb-4">Filtro de Transportes</h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
             <div class="sm:col-span-1">
-                <label for="provider" class="block text-sm font-medium leading-6 text-white">Nombre de Transporte</label>
-                <div class="mt-2">
+                <label for="city" class="block text-sm font-medium">Nombre de Transporte</label>
+                <div class="mt-1">
                     <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
             </div>
@@ -21,11 +20,9 @@
     </div>
 </form>
 
-<<div class="w-full">
-    <div class="flex justify-between items-center px-6 py-4 border-b">
-        <p class="text-xl pb-3 flex items-center text-white">
-            <i class="fas fa-list mr-3"></i> Listado de Transportes
-        </p>
+<div class="w-full mt-8">
+    <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+        <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Transportes</h3>
         <div>
             <a asp-action="CrearTransporte" class="btn max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Crear Nuevo Transporte </a>
         </div>
@@ -33,37 +30,33 @@
 
 
     <!--                  Tabla                        -->
-    <div class="bg-white overflow-auto">
-        <table class="min-w-full bg-white border border-gray-300">
-            <thead class="bg-gray-900 text-white">
-                <tr>
-                    <th class="text-center py-3">Código</th>
-                    <th class="text-center py-3">Transporte</th>
-                    <th class="text-center py-3">Estado</th>
-                    <th class="text-center py-3">Acciones</th>
+    <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+        <table class="min-w-full leading-normal">
+            <thead>
+                <tr class="bg-gray-800 text-white">
+                    <th class="py-3 text-center">Código Transporte</th>
+                    <th class="py-3 text-center">Descripcion Transporte</th>
+                    <th class="py-3 text-center">Estado Transporte</th>
+                    <th class="py-3 text-center">Acciones</th>
 
                 </tr>
             </thead>
-            <tbody class="text-center">
+            <tbody class="text-gray-700">
                 @if (Model != null && Model.Any())
                 {
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PK_Medio_Transporte)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Descripcion)
-                            </td>
-                            <td>
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_Medio_Transporte)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                            <td class="py-3 text-center">
                                 @if (item.Estado)
                                 {
-                                    <span>Activo</span>
+                                    <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
                                 }
                                 else
                                 {
-                                    <span>Inactivo</span>
+                                    <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
                                 }
                             </td>
                             @* <td class="p-3 border border-gray-300"> *@
