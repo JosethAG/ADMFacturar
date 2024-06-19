@@ -1446,6 +1446,48 @@ END;
 GO
 
 
+-------------------------------------------------
+					/*Provincia*/
+-------------------------------------------------
+
+CREATE PROCEDURE sp_ListarProvincias
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT ID_PROVINCIA, NOMBRE
+    FROM TBL_PROVINCIA
+END
+GO
+
+-------------------------------------------------
+					/*Canton*/
+-------------------------------------------------
+
+CREATE PROCEDURE sp_ListarCantones
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT ID_PROVINCIA, ID_CANTON, NOMBRE
+    FROM TBL_CANTON
+END
+GO
+
+-------------------------------------------------
+					/*Distrito*/
+-------------------------------------------------
+
+CREATE PROCEDURE sp_ListarDistritos
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT ID_PROVINCIA, ID_CANTON, ID_DISTRITO, NOMBRE
+    FROM TBL_DISTRITO
+END
+GO
+	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
 ----------------------------------------------------------------------------------------------------
