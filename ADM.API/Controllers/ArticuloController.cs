@@ -50,6 +50,29 @@ namespace ADM.API.Controllers
 			return result;
 		}
 
+		[HttpGet]
+		[Route("Obtener/{PK}")]
+		public Articulo ObtenerArticulo(string? PK)
+		{
+			if (PK != null)
+			{
+				List<DBParameter> parameters = new List<DBParameter>
+					{
+						new DBParameter("@PK_Articulo", PK)
+					};
+				DataTable tArticulo = DBData.List("sp_ObtenerArticulo", parameters);
+				string jsonArticle = JsonConvert.SerializeObject(tArticulo);
+				var result = JsonProvider.DeserializeSimple<IEnumerable<Articulo>>(jsonArticle);
+
+
+				return result.FirstOrDefault();
+			}
+			else
+			{
+				return new Articulo();
+			}
+		}
+
 		[HttpPost]
 		[Route("Crear")]
 		public bool CrearArticulo(Articulo articulo)
@@ -76,7 +99,7 @@ namespace ADM.API.Controllers
 		}
 
 
-		[HttpPut]
+		[HttpPost]
 		[Route("Actualizar")]
 		public bool ActualizarArticulo(Articulo articulo)
 		{
@@ -90,10 +113,8 @@ namespace ADM.API.Controllers
 				new DBParameter("@P_Costo", articulo.Costo.ToString()),
 				new DBParameter("@P_Precio", articulo.Precio.ToString()),
 				new DBParameter("@P_Estado", articulo.Estado.ToString()),
-				new DBParameter("@P_FK_Usuario_Creacion", articulo.FK_Usuario_Creacion),
-				new DBParameter("@P_FK_Usuario_Modificacion", articulo.FK_Usuario_Modificacion),
-				new DBParameter("@P_Fecha_Creacion", articulo.Fecha_Creacion.ToString()),
-				new DBParameter("@P_Fecha_Modificacion", articulo.Fecha_Modificacion.ToString())
+				new DBParameter("@P_FK_Usuario_Modificacion", articulo.FK_Usuario_Modificacion.ToString()),
+				new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
 			};
 
 			var result = DBData.Execute("sp_ModificarArticulos", parameters);
@@ -101,11 +122,12 @@ namespace ADM.API.Controllers
 			return result;
 		}
 
-		[HttpDelete]
-		[Route("Eliminar")]
-		public bool EliminarArticulo(string Id)
+
+		[HttpPost]
+		[Route("Desactivar/{PK}")]
+		public bool DesactivarArticulo(string PK)
 		{
-			if (Id == null || Id.Length == 0)
+			if (PK == null || PK.Length == 0)
 			{
 				return false;
 			}
@@ -113,13 +135,14 @@ namespace ADM.API.Controllers
 			{
 				List<DBParameter> parameters = new List<DBParameter>
 				{
-					new DBParameter("@P_PK_Articulo", Id)
+					new DBParameter("@P_PK_Articulo", PK)
 				};
 
 				var result = DBData.Execute("sp_EliminarArticulos", parameters);
 
-				return !result;
+				return result;
 			}
 		}
 	}
 }
+

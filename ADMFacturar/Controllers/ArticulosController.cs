@@ -62,5 +62,68 @@ namespace ADM.APICliente.Controllers
 			return View(articulo);
 		}
 
+		public async Task<IActionResult> ActualizarArticulo(string? PK)
+		{
+			var resp = await _httpClient.GetAsync($"api/Articulo/Obtener/{PK}");
+
+			if (resp.IsSuccessStatusCode)
+			{
+				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+				var articulo = JsonConvert.DeserializeObject<Articulo>(content);
+				return View("ActualizarArticulo", articulo); // Devuelve 'articulos' en lugar de 'resp'
+			}
+
+			return NotFound();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ActualizarArticulo(Articulo articulo)
+		{
+			if (ModelState.IsValid)
+			{
+				var json = JsonConvert.SerializeObject(articulo);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+				var response = await _httpClient.PostAsync("/api/Articulo/Actualizar", content);
+
+				// Log the response content for debugging
+				string responseContent = await response.Content.ReadAsStringAsync();
+				Console.WriteLine("Response from API: " + responseContent);
+
+				if (response.IsSuccessStatusCode)
+				{
+					return RedirectToAction("Index");
+				}
+				else
+				{
+					return View();
+				}
+			}
+			return View(articulo);
+		}
+
+
+		[HttpPost]
+		public async Task<IActionResult> DesactivarArticulo(string PK)
+		{
+			if (ModelState.IsValid)
+			{
+				var content = new StringContent(PK, Encoding.UTF8, "application/json");
+				var resp = await _httpClient.PostAsync($"/api/Articulo/Desactivar/{PK}", content);
+				string responseContent = await resp.Content.ReadAsStringAsync();
+				Console.WriteLine("Response from API: " + responseContent);
+
+				if (resp.IsSuccessStatusCode)
+				{
+					return RedirectToAction("Index"); // Devuelve 'articulos' en lugar de 'resp'
+				}
+
+				return NotFound();
+
+			}
+			return Ok();
+		}
+
+
 	}
 }

@@ -7,7 +7,7 @@
 		<div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
 			<div class="sm:col-span-2">
-				<label for="region" class="block text-sm font-medium leading-6 text-white">CodgioArticulo</label>
+				<label for="region" class="block text-sm font-medium leading-6 text-white">Código Articulo</label>
 				<div class="mt-2">
 					<input asp-for="PK_Articulo" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
 				</div>
@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="sm:col-span-2">
-				<label for="email" class="block text-sm font-medium leading-6 text-white">Codigo de Barras</label>
+				<label for="email" class="block text-sm font-medium leading-6 text-white">Código de Barras</label>
 				<div class="mt-2">
 					<input asp-for="Codigo_Barras" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
 				</div>
@@ -33,6 +33,7 @@
 						<option value="3">Proveedor 3</option>
 						<option value="4">Proveedor 4</option>
 						<option value="5">Proveedor 5</option>
+						<option value="6">Proveedor 6</option>
 					</select>
 				</div>
 			</div>
@@ -71,7 +72,7 @@
 	<input asp-for="FK_Usuario_Creacion" value="1" hidden />
 	<input asp-for="FK_Usuario_Modificacion" value="1" hidden />
 	<button type="submit" asp-action="CrearArticulo" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
-	<button class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
+	<button asp-action="Index"  class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
 
 </form>
 
