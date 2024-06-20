@@ -8,12 +8,12 @@
 <!--                  Formulario                        -->
 
 <form>
-	<div class="border-b border-gray-900/10 pb-12">
-		<h2 class="text-base font-semibold leading-7 text-white">Filtro de Proveedores</h2>
-		<div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-			<div class="sm:col-span-1 ">
-				<label for="city" class="block text-sm font-medium leading-6 text-white">Nombre de Proveedor</label>
-				<div class="mt-2">
+	<div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+		<h2 class="text-lg font-bold mb-4">Filtro de Provedores</h2>
+		<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+			<div class="sm:col-span-1">
+				<label for="city" class="block text-sm font-medium">Nombre de Proveedor</label>
+				<div class="mt-1">
 					<input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
 				</div>
 			</div>
@@ -23,82 +23,64 @@
 <!--Final de From-->
 
 
-<div class="w-full">
-	<div class="flex justify-between items-center px-6 py-4 border-b">
-		<p class="text-xl pb-3 flex items-center text-white">
-			<i class="fas fa-list mr-3"></i> Listado de Proveedores
-		</p>
+<div class="w-full mt-8">
+	<div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+		<h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Proveedores</h3>
 		<div>
-			<a asp-action="CrearProveedor" class="btn max-w-xs p-4 bg-none border border-gray-200 rounded-lg shadow dark:bg-white-800 dark:border-white-700 hover:bg-white hover:text-blue-500 text-white">Crear Nuevo Proveedor </a>
+			<a asp-action="CrearProveedor" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Proveedor</a>
 		</div>
 	</div>
 
 
 	<!--                  Tabla                        -->
-	<div class="bg-white overflow-auto">
-		<table class="min-w-full bg-white border border-gray-300">
-			<thead class="bg-gray-900 text-white">
-				<tr>
-					<th class="text-center py-3">Código</th>
-					<th class="text-center py-3">Nombre</th>
-					<th class="text-center py-3">Teléfono</th>
-					<th class="text-center py-3">Correo</th>
-					<th class="text-center py-3">Dirección</th>
-					<th class="text-center py-3">Estado</th>
-					<th class="text-center py-3">Acciones</th>
+	<div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+		<table class="min-w-full leading-normal">
+			<thead>
+				<tr class="bg-gray-800 text-white">
+					<th class="py-3 text-center">Código Proveedor</th>
+					<th class="py-3 text-center">Nombre Proveedor</th>
+					<th class="py-3 text-center">Teléfono Proveedor</th>
+					<th class="py-3 text-center">Correo Proveedor</th>
+					<th class="py-3 text-center">Dirección Proveedor</th>
+					<th class="py-3 text-center">Estado Proveedor</th>
+					<th class="py-3 text-center">Acciones</th>
 
 				</tr>
 			</thead>
-			<tbody class="text-center">
+			<tbody class="text-gray-700">
 				@if (Model != null && Model.Any())
 				{
 					@foreach (var item in Model)
 					{
-						<tr>
-							<td>
-								@Html.DisplayFor(modelItem => item.PK_Proveedor)
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.Nombre)
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.Telefono)
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.Correo)
-							</td>
-							<td>
-								@Html.DisplayFor(modelItem => item.Direccion)
-							</td>
-							<td>
+						<tr class="border-b border-gray-200 hover:bg-gray-100">
+							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_Proveedor)</td>
+							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Nombre)</td>
+							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Telefono)</td>
+							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Correo)</td>
+							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Direccion)</td>
+							<td class="py-3 text-center">
 								@if (item.Estado)
 								{
-									<span>Activo</span>
+									<span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
 								}
 								else
 								{
-									<span>Inactivo</span>
+									<span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
 								}
 							</td>
 							@* <td class="p-3 border border-gray-300"> *@
 							<td>
-								<div class="flex justify-center space-x-2">
-								<a asp-action="ActualizarProveedor" asp-route-PK="@item.PK_Proveedor" class="btn btnEditar mt-2" title="Editar Template">
-									<svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d=" M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
-								</a>
-
-								<form method="post" asp-action="DesactivarProveedor" asp-route-PK="@item.PK_Proveedor" onsubmit="return confirm('¿Está seguro que desea desactivar este Proveedor?');">
-									<button type="submit" class="btn btnEliminar mt-2" title="Desactivar">
-										<svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-											<path fill="currentColor" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-										</svg>
-									</button>
-								</form>
-								@* <button asp-action="DesactivarProveedor" asp-route-PK="@item.PK_Proveedor" class="btn btnEliminar" title="Desactivar">
-						<svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-						<path fill="currentColor" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-						</svg>
-						</button> *@
+								<div class="flex justify-center space-x-2">					
+									<div class="flex justify-center space-x-2">
+										<a asp-action="ActualizarProveedor" asp-route-PK="@item.PK_Proveedor" class="text-blue-600 hover:text-blue-900" title="Editar">
+											<i class="fas fa-edit"></i>
+										</a>
+										<form method="post" asp-action="DesactivarProveedor" asp-route-PK="@item.PK_Proveedor" onsubmit="return confirm('¿Está seguro que desea desactivar este cliente?');">
+											<button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+												<i class="fas fa-trash"></i>
+											</button>
+										</form>
+									</div>
 								</div>
 							</td>
 						</tr>
