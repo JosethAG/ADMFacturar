@@ -14,6 +14,20 @@
     }
 /*FIN CSS AARON*/
 
+.main-container {
+    display: flex;
+    justify-content: center; /* Centra los elementos horizontalmente */
+    align-items: center; /* Centra los elementos verticalmente (opcional) */
+    min-height: 70vh; /* Asegura que el contenedor tenga al menos la altura de la ventana */
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se ajusten y pasen a la siguiente línea */
+    justify-content: center; /* Centra las tarjetas dentro de este contenedor */
+    gap: 20px; /* Espacio entre tarjetas */
+    max-width: 1800px; /* Ajusta esto según el ancho máximo deseado para el grupo de tarjetas */
+}
 
 .preloader {
     width: 100%;
