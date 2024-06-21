@@ -1,0 +1,60 @@
+﻿@model Seguridad
+
+<form asp-action="ActualizarSeguridad" method="post" class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-md">
+    <div class="border-b border-gray-700 pb-6">
+        <h2 class="text-lg font-semibold leading-7 text-white">Actualizar Seguridad</h2>
+    </div>
+    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-2">
+            <label for="Usuario" class="block text-sm font-medium text-gray-300">Usuario</label>
+            <div class="mt-2">
+                <input asp-for="Usuario" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <span asp-validation-for="Usuario" class="text-sm text-red-600"></span>
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Correo" class="block text-sm font-medium text-gray-300">Correo</label>
+            <div class="mt-2">
+                <input asp-for="Correo" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <span asp-validation-for="Correo" class="text-sm text-red-600"></span>
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Contrasena" class="block text-sm font-medium text-gray-300">Contraseña</label>
+            <div class="mt-2">
+                <input asp-for="Contra" type="password" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <span asp-validation-for="Contra" class="text-sm text-red-600"></span>
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Rol" class="block text-sm font-medium text-gray-300">Rol</label>
+            <div class="mt-2">
+                <select asp-for="Rol" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="1">Administrador</option>
+                    <option value="2">Usuario</option>
+                    <option value="3">Otro</option>
+                </select>
+                <span asp-validation-for="Rol" class="text-sm text-red-600"></span>
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Estado" class="block text-sm font-medium text-gray-300">Estado</label>
+            <div class="mt-2">
+                <select asp-for="Estado" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="True">Activo</option>
+                    <option value="False">Inactivo</option>
+                </select>
+                <span asp-validation-for="Estado" class="text-sm text-red-600"></span>
+            </div>
+        </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-x-4">
+        <input asp-for="PK_IdUsuario" type="hidden" />
+        <input asp-for="FK_Usuario_Creacion" value="1" type="hidden" />
+        <input asp-for="FK_Usuario_Modificacion" value="1" type="hidden" />
+        <input asp-for="Fecha_Creacion" type="hidden" />
+        <input asp-for="Fecha_Modificacion" type="hidden" />
+        <button type="submit" asp-action="ActualizarSeguridad" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
+        <a asp-action="Index" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-red-500">Cancelar</a>
+    </div>
+</form>
