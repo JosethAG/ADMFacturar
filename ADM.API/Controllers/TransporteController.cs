@@ -1,5 +1,6 @@
 ﻿using ADM.Architectur;
 using ADM.Architecture;
+using ADM.Interface;
 using ADM.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,11 @@ namespace ADM.API.Controllers
 	[ApiController]
 	public class TransporteController : ControllerBase
 	{
-		[HttpGet]
+
+        private ITransporteService? _TransporteService;
+        [HttpGet]
 		[Route("Listar")]
-		public IEnumerable<Transporte> ListarTransportes(string? Nombre)
+		public IEnumerable<Transporte> ListarTransportes(string? Descripcion)
 		{
 			//DataTable tTransporte = DBData.List("sp_ListarTransportes");
 			//string jsonTransportes = JsonConvert.SerializeObject(tTransporte);
@@ -24,7 +27,7 @@ namespace ADM.API.Controllers
 
 			DataTable tTransporte = null;
 
-			if (Nombre == null)
+			if (Descripcion == null)
 			{
 				tTransporte = DBData.List("sp_ListarTransportes");
 			}
@@ -32,7 +35,7 @@ namespace ADM.API.Controllers
 			{
 				List<DBParameter> parameters = new List<DBParameter>
 					{
-						new DBParameter("@Descripcion", Nombre)
+						new DBParameter("@Descripcion", Descripcion)
 					};
 				tTransporte = DBData.List("sp_ListarTransportesxNombre", parameters);
 			}

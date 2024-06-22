@@ -1,4 +1,5 @@
-
+create database ADM;
+use ADM;
 
 
 ----------------------------------------------------------------------------------------------------
@@ -196,9 +197,289 @@ CREATE TABLE [dbo].[TBL_ARTICULO](
 ) ON [PRIMARY]
 GO
 
+
+/****** Table [dbo].[TBL_SEGURIDAD]  ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_SEGURIDAD](
+    [PK_IdUsuario] [bigint] IDENTITY(1,1) NOT NULL,
+    [Usuario] [varchar]  NULL,
+    [Correo] [varchar] NULL,
+    [Contra] [varchar]  NULL,
+    [Rol] [int] NULL,
+    [Estado] [bit] NULL,
+    [FK_Usuario_Creacion] [varchar](50) NOT NULL,
+    [FK_Usuario_Modificacion] [varchar](50) NULL,
+    [Fecha_Creacion] [datetime] NOT NULL,
+    [Fecha_Modificacion] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+    [PK_IdUsuario] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TBL_SEGURIDAD] ALTER COLUMN [Usuario] VARCHAR(100);
+ALTER TABLE [dbo].[TBL_SEGURIDAD] ALTER COLUMN [Correo] VARCHAR(100);
+ALTER TABLE [dbo].[TBL_SEGURIDAD] ALTER COLUMN [Contra] VARCHAR(100);
+
+
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
+
+-------------------------------------------------
+					/*SEGURIDAD*/
+-------------------------------------------------
+/****** Object:  StoredProcedure [dbo].[sp_ListarSeguridad]     ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarSeguridad]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_IdUsuario,
+        Usuario,
+        Correo,
+        Contra,
+        Rol,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_SEGURIDAD
+    ORDER BY 
+        PK_IdUsuario;
+END;
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarSeguridadxUsuario]     ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarSeguridadxUsuario]
+    @Usuario NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_IdUsuario,
+        Usuario,
+        Correo,
+        Contra,
+        Rol,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_SEGURIDAD 
+    WHERE 
+        Usuario LIKE '%' + @Usuario + '%'
+    ORDER BY 
+        Usuario;
+END;
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarSeguridad]     ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarSeguridad]
+    @P_PK_IdUsuario BIGINT,
+    @P_Usuario VARCHAR(100),
+    @P_Correo VARCHAR(200),
+    @P_Contra VARCHAR(200),
+    @P_Rol INT,
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(50),
+    @P_FK_Usuario_Modificacion VARCHAR(50),
+    @P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_InsertarSeguridad]
+    BEGIN TRY
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.TBL_SEGURIDAD WITH (NOLOCK)
+            WHERE PK_IdUsuario = @P_PK_IdUsuario
+        )
+        BEGIN
+            UPDATE dbo.TBL_SEGURIDAD
+            SET Usuario = @P_Usuario,
+                Correo = @P_Correo,
+                Contra = @P_Contra,
+                Rol = @P_Rol,
+                Estado = @P_Estado,
+                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+                Fecha_Modificacion = @P_Fecha_Modificacion
+            WHERE PK_IdUsuario = @P_PK_IdUsuario;
+        END
+        ELSE
+        BEGIN
+            INSERT INTO [dbo].[TBL_SEGURIDAD]
+            (             
+                Usuario,
+                Correo,
+                Contra,
+                Rol,
+                Estado,
+                FK_Usuario_Creacion,
+                FK_Usuario_Modificacion,
+                Fecha_Creacion,
+                Fecha_Modificacion
+            )
+            VALUES
+            (
+                @P_Usuario,
+                @P_Correo,
+                @P_Contra,
+                @P_Rol,
+                @P_Estado,
+                @P_FK_Usuario_Creacion,
+                @P_FK_Usuario_Modificacion,
+                @P_Fecha_Creacion,
+                @P_Fecha_Modificacion
+            );
+        END;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_ModificarSeguridad]     ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ModificarSeguridad]
+    @P_PK_IdUsuario BIGINT,
+    @P_Usuario VARCHAR(100),
+    @P_Correo VARCHAR(200),
+    @P_Contra VARCHAR(200),
+    @P_Rol INT,
+    @P_Estado BIT,
+    @P_FK_Usuario_Creacion VARCHAR(50),
+    @P_FK_Usuario_Modificacion VARCHAR(50),
+	@P_Fecha_Creacion DATETIME,
+    @P_Fecha_Modificacion DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_ModificarSeguridad]
+    BEGIN TRY
+        UPDATE dbo.TBL_SEGURIDAD
+            SET Usuario = @P_Usuario,
+                Correo = @P_Correo,
+                Contra = @P_Contra,
+                Rol = @P_Rol,
+                Estado = @P_Estado,
+                FK_Usuario_Modificacion = @P_FK_Usuario_Modificacion,
+                Fecha_Modificacion = @P_Fecha_Modificacion
+            WHERE PK_IdUsuario = @P_PK_IdUsuario;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_EliminarSeguridad]     ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_EliminarSeguridad]
+    @P_PK_IdUsuario BIGINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN [sp_EliminarSeguridad]
+    BEGIN TRY
+        UPDATE dbo.TBL_SEGURIDAD SET Estado = 0 WHERE PK_IdUsuario = @P_PK_IdUsuario;
+
+        COMMIT TRANSACTION
+        RETURN 1
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN 0
+    END CATCH
+END;
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerSeguridad]     ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerSeguridad]
+    @PK_IdUsuario BIGINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_IdUsuario,
+        Usuario,
+        Correo,
+        Contra,
+        Rol,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_SEGURIDAD 
+    WHERE 
+        PK_IdUsuario = @PK_IdUsuario
+END;
+GO
+
 
 
 -------------------------------------------------
@@ -2851,3 +3132,22 @@ VALUES
     'usuario_creacion2', 
     GETDATE()
 );
+
+-- Insert 1
+INSERT INTO [dbo].[TBL_SEGURIDAD]
+([Usuario], [Correo], [Contra], [Rol], [Estado], [FK_Usuario_Creacion], [Fecha_Creacion])
+VALUES
+('usuario1', 'usuario1@example.com', 'contraseña1', 1, 1, 'admin', GETDATE());
+
+-- Insert 2
+INSERT INTO [dbo].[TBL_SEGURIDAD]
+([Usuario], [Correo], [Contra], [Rol], [Estado], [FK_Usuario_Creacion], [Fecha_Creacion])
+VALUES
+('usuario2', 'usuario2@example.com', 'contraseña2', 2, 1, 'admin', GETDATE());
+
+-- Insert 3
+INSERT INTO [dbo].[TBL_SEGURIDAD]
+([Usuario], [Correo], [Contra], [Rol], [Estado], [FK_Usuario_Creacion], [Fecha_Creacion])
+VALUES
+('usuario3', 'usuario3@example.com', 'contraseña3', 3, 0, 'admin', GETDATE());
+
