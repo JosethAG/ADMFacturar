@@ -1,4 +1,5 @@
-﻿<link href="~/css/custom.css" rel="stylesheet" />
+﻿@model IEnumerable<IngresoMercaderiaViewModel>
+<link href="~/css/custom.css" rel="stylesheet" />
 
 <div class="w-full">
 </div>
@@ -57,40 +58,50 @@
         <table class="min-w-full leading-normal">
             <thead>
                 <tr class="bg-gray-800 text-white">
-                    <th class="text-center py-3">Número de Documento</th>
+                    <th class="text-center py-3">Documento</th>
                     <th class="text-center py-3">Proveedor</th>
                     <th class="text-center py-3">Fecha Emisión</th>
-                    <th class="text-center py-3">Fecha Vencimiento</th>
-                    <th class="text-center py-3">Forma de Pago</th>
-                    <th class="text-center py-3">Total a pagar</th>
+                    <th class="text-center py-3">Condición de Pago</th>
+                    <th class="text-center py-3">Total</th>
+                    <th class="text-center py-3">Estado</th>
                     <th class="text-center py-3">Acciones</th>
                 </tr>
             </thead>
             <tbody class="text-gray-700">
-                <tr class="border-b border-gray-200 hover:bg-gray-100">
-                    <td class="py-3 text-center">123456</td>
-                    <td class="py-3 text-center">Proveedor A</td>
-                    <td class="py-3 text-center">2024-04-01</td>
-                    <td class="py-3 text-center">2026-04-01</td>
-                    <td class="py-3 text-center">Efectivo</td>
-                    <td class="py-3 text-center">25000</td>
-                    <td>
-                        <div class="flex justify-center space-x-2">
-                            <a asp-action="AgregarInventario" class="text-blue-600 hover:text-blue-900" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </a>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_FK_Documento)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_FK_Proveedor)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Fecha_Compra)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.FK_CondicionPago)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Total)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Estado)</td>
 
-                            <a asp-action="AgregarInventario" class="text-blue-600 hover:text-blue-900" title="Ver">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <form method="post" asp-action="Index" onsubmit="return confirm('¿Está seguro que desea desactivar este cliente?');">
-                                <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-
-                        </div>
-                    </td>
+                            @* <td class="p-3 border border-gray-300"> *@
+                            <td>
+                                <div class="flex justify-center space-x-2">
+                                    <a asp-action="ActualizarCliente" asp-route-PK="@item.PK_FK_Documento" class="text-blue-600 hover:text-blue-900" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="post" asp-action="DesactivarCliente" asp-route-PK="@item.PK_FK_Documento" onsubmit="return confirm('¿Está seguro que desea desactivar este cliente?');">
+                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="14">No hay datos disponibles.</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
