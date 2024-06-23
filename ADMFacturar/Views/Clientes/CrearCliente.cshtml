@@ -195,10 +195,11 @@
 		event.preventDefault();
 		document.getElementById('alerta-exito').classList.remove('hidden');
 		setTimeout(function () {
-
 			window.location.href = '@Url.Action("Index", "Clientes")';
 		}, 3000);
-		document.getElementById('formcreate').submit();
+		setTimeout(function () {
+			document.getElementById('formcreate').submit();
+		}, 3000);
 	}
 </script>
 
