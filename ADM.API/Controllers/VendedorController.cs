@@ -34,7 +34,7 @@ namespace ADM.API.Controllers
                     {
                         new DBParameter("@Nombre", Nombre)
                     };
-                tVendedor = DBData.List("sp_ListarVendedoressxNombre", parameters);
+                tVendedor = DBData.List("sp_ListarVendedoresxNombre", parameters);
             }
             string jsonArticle = JsonConvert.SerializeObject(tVendedor);
             var result = JsonProvider.DeserializeSimple<IEnumerable<Vendedor>>(jsonArticle);
