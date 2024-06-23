@@ -18,7 +18,6 @@
 		</div>
 	</div>
 </form>
-
 <!--Final de From-->
 <div class="w-full mt-8">
 	<div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
@@ -27,7 +26,6 @@
 			<a asp-action="CrearArticulo" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Artículo</a>
 		</div>
 	</div>
-
 
 	<!--                  Tabla                        -->
 	<div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
@@ -59,7 +57,7 @@
 							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Costo)</td>
 							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Precio)</td>
 							<td class="py-3 text-center">
-								@if (item.Estado)
+								@if (item.Estado == true)
 								{
 									<span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
 								}
@@ -68,14 +66,15 @@
 									<span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
 								}
 							</td>
+							@* <td class="p-3 border border-gray-300"> *@
 							<td>
 								<div class="flex justify-center space-x-2">
 									<a asp-action="ActualizarArticulo" asp-route-PK="@item.PK_Articulo" class="text-blue-600 hover:text-blue-900" title="Editar">
 										<i class="fas fa-edit"></i>
 									</a>
-									<form method="post" asp-action="DesactivarArticulo" asp-route-PK="@item.PK_Articulo" onsubmit="return confirm('¿Está seguro que desea desactivar este cliente?');">
+									<form method="post" asp-action="DesactivarArticulo" asp-route-PK="@item.PK_Articulo" onsubmit="return mostrarConfirmacion(event)">
 										<button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-											<i class="fas fa-trash"></i>
+											<i class="fa-solid fa-ban"></i>
 										</button>
 									</form>
 								</div>
@@ -94,4 +93,36 @@
 	</div>
 </div>
 <!--                  Final Tabla                        -->
+<!-- Modal de confirmación -->
+<div id="confirmacionModal" class="fixed inset-0 z-10 overflow-y-auto hidden">
+	<div class="flex items-center justify-center min-h-screen">
+		<div class="bg-white rounded-lg p-6 shadow-xl">
+			<div class="mb-4 text-center">
+				<p class="text-lg font-semibold">¿Seguro que deseas desactivar este Artículo?</p>
+			</div>
+			<div class="text-center">
+				<button onclick="confirmarDesactivacion()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">Confirmar</button>
+				<button onclick="cancelarDesactivacion()" class="border border-gray-300 hover:bg-gray-200 font-semibold py-2 px-4 rounded">Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
 
+
+
+<script>
+
+	function mostrarConfirmacion(event) {
+		event.preventDefault();
+		document.getElementById('confirmacionModal').classList.remove('hidden');
+		window.confirmarDesactivacion = function () {
+			event.target.closest('form').submit();
+		};
+		window.cancelarDesactivacion = function () {
+			document.getElementById('confirmacionModal').classList.add('hidden');
+		};
+
+		return false;
+	}
+
+</script>

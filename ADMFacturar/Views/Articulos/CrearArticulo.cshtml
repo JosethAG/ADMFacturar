@@ -1,7 +1,6 @@
 ﻿@model Articulo
 
-
-<form asp-action="CrearArticulo" method="post" class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-md">
+<form asp-action="CrearArticulo" method="post" class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-md" id="formcreate">
     <div class="border-b border-gray-700 pb-6">
         <h2 class="text-lg font-semibold leading-7 text-white">Creación de nuevo Artículo</h2>
     </div>
@@ -9,25 +8,25 @@
         <div>
             <label for="PK_Articulo" class="block text-sm font-medium text-gray-300">Código Artículo</label>
             <div class="mt-2">
-                <input asp-for="PK_Articulo" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <input asp-for="PK_Articulo" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" required>
             </div>
         </div>
         <div>
             <label for="Descripcion" class="block text-sm font-medium text-gray-300">Descripción</label>
             <div class="mt-2">
-                <input asp-for="Descripcion" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <input asp-for="Descripcion" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" required>
             </div>
         </div>
         <div>
             <label for="Codigo_Barras" class="block text-sm font-medium text-gray-300">Código de Barras</label>
             <div class="mt-2">
-                <input asp-for="Codigo_Barras" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <input asp-for="Codigo_Barras" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" required>
             </div>
         </div>
         <div>
             <label for="FK_Proveedor" class="block text-sm font-medium text-gray-300">Proveedor</label>
             <div class="mt-2">
-                <select asp-for="FK_Proveedor" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <select asp-for="FK_Proveedor" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" required>
                     <option value="1">Proveedor 1</option>
                     <option value="2">Proveedor 2</option>
                     <option value="3">Proveedor 3</option>
@@ -40,25 +39,25 @@
         <div>
             <label for="Cantidad" class="block text-sm font-medium text-gray-300">Cantidad</label>
             <div class="mt-2">
-                <input asp-for="Cantidad" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <input asp-for="Cantidad" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" required>
             </div>
         </div>
         <div>
             <label for="Costo" class="block text-sm font-medium text-gray-300">Costo</label>
             <div class="mt-2">
-                <input asp-for="Costo" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <input asp-for="Costo" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500required">
             </div>
         </div>
         <div>
             <label for="Precio" class="block text-sm font-medium text-gray-300">Precio</label>
             <div class="mt-2">
-                <input asp-for="Precio" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <input asp-for="Precio" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" required>
             </div>
         </div>
         <div>
             <label for="Estado" class="block text-sm font-medium text-gray-300">Estado</label>
             <div class="mt-2">
-                <select asp-for="Estado" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <select asp-for="Estado" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" required>
                     <option value="true">Activo</option>
                     <option value="false">Inactivo</option>
                 </select>
@@ -68,8 +67,26 @@
     <div class="mt-6 flex justify-end gap-x-4">
         <input asp-for="FK_Usuario_Creacion" value="1" type="hidden" />
         <input asp-for="FK_Usuario_Modificacion" value="1" type="hidden" />
-        <button type="submit" asp-action="CrearArticulo" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
+        <button type="submit" onclick="mostrarAlertaYRedireccion(event)" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
         <button asp-action="Index" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-red-500">Cancelar</button>
     </div>
 </form>
 
+<div id="alerta-exito" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-4 py-2 rounded-md mb-4">
+    ¡ Artículo Ingresado a la BD exitosamente !
+</div>
+
+<script>
+    //Alerta de ingreso de registro a la BD...
+    function mostrarAlertaYRedireccion(event) {
+        event.preventDefault();
+        document.getElementById('alerta-exito').classList.remove('hidden');
+        setTimeout(function () {
+
+            window.location.href = '@Url.Action("Index", "Articulos")';
+        }, 3000);
+        setTimeout(function () {
+            document.getElementById('formcreate').submit();
+        }, 3000);
+    }
+</script>
