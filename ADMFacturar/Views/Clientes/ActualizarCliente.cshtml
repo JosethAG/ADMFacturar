@@ -183,9 +183,10 @@
 		event.preventDefault();
 		document.getElementById('alerta-exito').classList.remove('hidden');
 		setTimeout(function () {
-
 			window.location.href = '@Url.Action("Index", "Clientes")';
 		}, 3000);
-		document.getElementById('formupdate').submit();
+		setTimeout(function () {
+			document.getElementById('formupdate').submit();
+		}, 3000);
 	}
 </script>
