@@ -228,6 +228,80 @@ ALTER TABLE [dbo].[TBL_SEGURIDAD] ALTER COLUMN [Correo] VARCHAR(100);
 ALTER TABLE [dbo].[TBL_SEGURIDAD] ALTER COLUMN [Contra] VARCHAR(100);
 
 
+
+/****** Object:  Table [dbo].[TBL_DOCUMENTO_CP]    Script Date: 6/22/2024 9:56:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_DOCUMENTO_CP](
+	[PK_Documento] [varchar](50) NOT NULL,
+	[FK_Proveedor] [varchar](50) NOT NULL,
+	[Fecha_Documento] [datetime] NOT NULL,
+	[Fecha_Vence] [datetime] NOT NULL,
+	[Observaciones] [varchar](300)  NULL,
+	[Monto] [decimal](18, 2) NOT NULL,
+	[Saldo_Pendiente] [decimal](18, 2) NOT NULL,
+	[Anulado] [varchar](1) NOT NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NOT NULL,
+ CONSTRAINT [PK_TBL_DOCUMENTO_CP_1] PRIMARY KEY CLUSTERED 
+(
+	[PK_Documento] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TBL_INGRESO_MERCADERIA]    Script Date: 6/22/2024 9:56:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_INGRESO_MERCADERIA](
+	[PK_FK_Documento] [varchar](50) NOT NULL,
+	[PK_FK_Proveedor] INT NOT NULL,
+	[FK_CondicionPago] INT NOT NULL,
+	[Fecha_Compra] [datetime] NOT NULL,
+	[PK_FK_Articulo] [varchar](50) NOT NULL,
+	[Cantidad] INT NOT NULL,
+	[Costo] [decimal](18, 2) NOT NULL,
+	[Subtotal] [decimal](18, 2) NULL,
+	[Linea] [int] IDENTITY(1,1) NOT NULL,	
+	[Estado] [varchar](20) NOT NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NOT NULL,
+ CONSTRAINT [PK_TBL_INGRESO_MERCADERIA_1] PRIMARY KEY CLUSTERED 
+(
+	[PK_FK_Documento] ASC,
+	[PK_FK_Articulo] ASC,
+	[PK_FK_Proveedor] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[TBL_DOCUMENTO_CP] ADD  CONSTRAINT [DF_TBL_DOCUMENTO_CP_Fecha_Creacion]  DEFAULT (getdate()) FOR [Fecha_Creacion]
+GO
+ALTER TABLE [dbo].[TBL_DOCUMENTO_CP] ADD  CONSTRAINT [DF_TBL_DOCUMENTO_CP_Fecha_Modificacion]  DEFAULT (getdate()) FOR [Fecha_Modificacion]
+GO
+ALTER TABLE [dbo].[TBL_INGRESO_MERCADERIA] ADD  CONSTRAINT [DF_TBL_INGRESO_MERCADERIA_Fecha_Creacion]  DEFAULT (getdate()) FOR [Fecha_Creacion]
+GO
+ALTER TABLE [dbo].[TBL_INGRESO_MERCADERIA] ADD  CONSTRAINT [DF_TBL_INGRESO_MERCADERIA_Fecha_Modificacion]  DEFAULT (getdate()) FOR [Fecha_Modificacion]
+GO
+ALTER TABLE [dbo].[TBL_INGRESO_MERCADERIA]  WITH NOCHECK ADD  CONSTRAINT [FK_TBL_INGRESO_MERCADERIA_TBL_INV_ARTICULO] FOREIGN KEY([PK_FK_Articulo])
+REFERENCES [dbo].[TBL_ARTICULO] ([PK_Articulo])
+GO
+ALTER TABLE [dbo].[TBL_INGRESO_MERCADERIA] CHECK CONSTRAINT [FK_TBL_INGRESO_MERCADERIA_TBL_INV_ARTICULO]
+GO
+ALTER TABLE [dbo].[TBL_INGRESO_MERCADERIA]  WITH NOCHECK ADD  CONSTRAINT [FK_TBL_INGRESO_MERCADERIA_TBL_CONDICIONES_PAGO] FOREIGN KEY([FK_CondicionPago])
+REFERENCES [dbo].[TBL_CONDICIONES_PAGO] ([PK_Condicion_Pago])
+GO
+ALTER TABLE [dbo].[TBL_INGRESO_MERCADERIA] CHECK CONSTRAINT [FK_TBL_INGRESO_MERCADERIA_TBL_CONDICIONES_PAGO]
+GO
+
+
+
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
@@ -1768,6 +1842,116 @@ BEGIN
     FROM TBL_DISTRITO
 END
 GO
+
+-------------------------------------------------
+					/*Inventario*/
+-------------------------------------------------
+/****** Object:  StoredProcedure [dbo].[sp_ListarIngresoMercaderiaVM]    Script Date: 6/23/2024 10:46:46 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarIngresoMercaderiaVM]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+SELECT 
+    im.PK_FK_Documento,
+    p.Nombre as PK_FK_Proveedor,
+    cp.Descripcion as FK_CondicionPago,
+    CONVERT(varchar, im.Fecha_Compra, 23) as Fecha_Compra, -- Formato AAAA-MM-DD
+    SUM(im.Subtotal) as Total,
+    im.Estado
+FROM [dbo].[TBL_INGRESO_MERCADERIA] im
+INNER JOIN [dbo].[TBL_PROVEEDORES] p ON im.PK_FK_Proveedor = p.PK_Proveedor
+INNER JOIN [dbo].[TBL_CONDICIONES_PAGO] cp ON im.FK_CondicionPago = cp.PK_Condicion_Pago
+GROUP BY 
+    im.PK_FK_Documento, 
+    p.Nombre, 
+    cp.Descripcion, 
+    CONVERT(varchar, im.Fecha_Compra, 23), -- Formato AAAA-MM-DD
+    im.Estado
+ORDER BY 
+    Fecha_Compra DESC;
+END
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarIngresoMercaderia]    Script Date: 6/23/2024 10:48:15 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarActualizarIngresoMercaderia]
+    @PK_FK_Documento varchar(50),
+    @PK_FK_Proveedor int,
+    @FK_CondicionPago int,
+    @Fecha_Compra datetime,
+    @PK_FK_Articulo varchar(50),
+    @Cantidad decimal(18, 2),
+    @Costo decimal(18, 2),
+    @FK_Usuario_Creacion varchar(50),
+    @FK_Usuario_Modificacion varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Verificar si ya existe el ingreso
+    IF EXISTS (SELECT 1 FROM [dbo].[TBL_INGRESO_MERCADERIA]
+               WHERE [PK_FK_Documento] = @PK_FK_Documento
+               AND [PK_FK_Proveedor] = @PK_FK_Proveedor
+               AND [PK_FK_Articulo] = @PK_FK_Articulo)
+    BEGIN
+        -- Actualizar la cantidad y el costo si ya existe
+        UPDATE [dbo].[TBL_INGRESO_MERCADERIA]
+        SET [Cantidad] = @Cantidad,
+            [Costo] = @Costo,
+			[Subtotal] = @Cantidad * @Costo
+        WHERE [PK_FK_Documento] = @PK_FK_Documento
+        AND [PK_FK_Proveedor] = @PK_FK_Proveedor
+        AND [PK_FK_Articulo] = @PK_FK_Articulo;
+    END
+    ELSE
+    BEGIN
+        -- Insertar un nuevo ingreso si no existe
+        INSERT INTO [dbo].[TBL_INGRESO_MERCADERIA] (
+            [PK_FK_Documento],
+            [PK_FK_Proveedor],
+            [FK_CondicionPago],
+            [Fecha_Compra],
+            [PK_FK_Articulo],
+            [Cantidad],
+            [Costo],
+            [Subtotal],
+			[Estado],
+            [FK_Usuario_Creacion],
+            [FK_Usuario_Modificacion],
+            [Fecha_Creacion],
+            [Fecha_Modificacion]
+        )
+        VALUES (
+            @PK_FK_Documento,
+            @PK_FK_Proveedor,
+            @FK_CondicionPago,
+            @Fecha_Compra,
+            @PK_FK_Articulo,
+            @Cantidad,
+            @Costo,
+            @Cantidad * @Costo,
+			'Pendiente',
+            @FK_Usuario_Creacion,
+            @FK_Usuario_Modificacion,
+            GETDATE(),
+            GETDATE()
+        );
+    END
+END
+
+	
+
+
+	    
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/

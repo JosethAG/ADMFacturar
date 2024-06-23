@@ -411,3 +411,28 @@
     transform: translate(-50%, -50%);
     opacity: 50%;
 }
+
+
+/*Estilo de la alerta agregada a crear*/
+/*.alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;*/ /* Ancho del 100% del contenedor */
+    /*max-width: 600px;*/ /* Ancho máximo */
+    /*padding: 20px;
+    background-color: #3b82f6;*/ /* Color de fondo */
+    /*border: 1px solid #cccccc;*/ /* Borde */
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/ /* Sombra */
+    /*color: #333333;*/ /* Color del texto */
+    /*font-size: 1.6rem;*/ /* Tamaño del texto */
+    /*text-align: center;*/ /* Centrar el texto */
+    /*z-index: 1000;*/ /* Z-index para estar por encima de otros elementos */
+    /*opacity: 0;*/ /* Inicialmente oculta */
+    /*transition: opacity 0.3s ease-in-out;*/ /* Transición suave al mostrar/ocultar */
+/*}
+
+    .alert.show {
+        opacity: 1;*/ /* Mostrar la alerta cambiando la opacidad */
+    /*}*/
