@@ -57,7 +57,7 @@
 							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Costo)</td>
 							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Precio)</td>
 							<td class="py-3 text-center">
-								@if (item.Estado)
+								@if (item.Estado == true)
 								{
 									<span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
 								}

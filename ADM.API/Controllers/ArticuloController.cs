@@ -8,6 +8,7 @@ using ADM.Interface;
 using ADM.Architectur;
 using ADM.Architecture;
 using Newtonsoft.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ADM.API.Controllers
 {
@@ -45,6 +46,21 @@ namespace ADM.API.Controllers
 		public IEnumerable<ArticuloViewModel> ListarArticulosVM()
 		{
 			DataTable tArticulo = DBData.List("sp_ListarArticulosVM");
+			string jsonArticle = JsonConvert.SerializeObject(tArticulo);
+			var result = JsonProvider.DeserializeSimple<IEnumerable<ArticuloViewModel>>(jsonArticle);
+			return result;
+		}
+
+		[HttpGet]
+		[Route("ArticuloXDocumento/{id}")]
+		public IEnumerable<ArticuloViewModel> ArticuloXDocumento(string? id)
+		{
+			List<DBParameter> parameters = new List<DBParameter>
+					{
+						new DBParameter("@PK_FK_Documento", id)
+					};
+			DataTable tArticulo = DBData.List("sp_ListarIngresoPorDoc", parameters);
+
 			string jsonArticle = JsonConvert.SerializeObject(tArticulo);
 			var result = JsonProvider.DeserializeSimple<IEnumerable<ArticuloViewModel>>(jsonArticle);
 			return result;

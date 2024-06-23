@@ -47,10 +47,24 @@ namespace ADM.APIIngresoMercaderia.Controllers
 				string responseContent = await response.Content.ReadAsStringAsync();
 				Console.WriteLine("Response from API: " + responseContent);
 
-				if (response.IsSuccessStatusCode)
+
+                var respArts = await _httpClient.GetAsync($"api/Articulo/ArticuloXDocumento/{IngresoMercaderia.PK_FK_Documento}");
+
+                if (respArts.IsSuccessStatusCode)
+                {
+                    var dataArts = await respArts.Content.ReadAsStringAsync();
+                    var articulos = JsonConvert.DeserializeObject<List<ArticuloViewModel>>(dataArts);
+                    ViewData["Articulos"] = articulos ?? new List<ArticuloViewModel>();
+                }
+                else
+                {
+                    ViewData["Articulos"] = new List<ArticuloViewModel>();
+                }
+
+                if (response.IsSuccessStatusCode)
 				{
 
-					return RedirectToAction("AgregarInventario");
+					return View("AgregarInventario");
 
 				}
 				else
@@ -162,9 +176,10 @@ namespace ADM.APIIngresoMercaderia.Controllers
 			}
 			return Ok();
 		}
-        public IActionResult AgregarInventario()
+        public async Task<IActionResult> AgregarInventario()
         {
-            return View();
+			
+            return View();  // Pasa el modelo a la vista
         }
 
     }
