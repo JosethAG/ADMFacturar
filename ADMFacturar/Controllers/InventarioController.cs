@@ -75,107 +75,128 @@ namespace ADM.APIIngresoMercaderia.Controllers
 			}
 			return View(IngresoMercaderia);
 		}
+        [HttpPost]
+        public async Task<IActionResult> GuardarIngresoMercaderia(string PK)
+        {
+            if (ModelState.IsValid)
+            {
+                var content = new StringContent(PK, Encoding.UTF8, "application/json");
+                var resp = await _httpClient.PostAsync($"/api/IngresoMercaderia/Guardar/{PK}", content);
+                string responseContent = await resp.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index"); // Devuelve 'Ingreso' en lugar de 'resp'
+                }
+
+                return NotFound();
+
+            }
+            return Ok();
+        }
 
 
-		public async Task<IActionResult> ActualizarIngresoMercaderia(string? PK)
-		{
-			var respProv = await _httpClient.GetAsync("api/Direccion/Listar/Provincia");
-			if (respProv.IsSuccessStatusCode)
-			{
-				var dataProv = await respProv.Content.ReadAsStringAsync();
-				var provincias = JsonConvert.DeserializeObject<List<Provincia>>(dataProv);
-				ViewData["Provincias"] = provincias ?? new List<Provincia>();
-			}
-			else
-			{
-				ViewData["Provincias"] = new List<Provincia>();
-			}
 
-			var respCanton = await _httpClient.GetAsync("api/Direccion/Listar/Canton");
-			if (respCanton.IsSuccessStatusCode)
-			{
-				var dataCanton = await respCanton.Content.ReadAsStringAsync();
-				var cantones = JsonConvert.DeserializeObject<List<Canton>>(dataCanton);
-				ViewData["Cantones"] = cantones ?? new List<Canton>();
-			}
-			else
-			{
-				ViewData["Cantones"] = new List<Canton>();
-			}
+        //public async Task<IActionResult> ActualizarIngresoMercaderia(string? PK)
+        //{
+        //	var respProv = await _httpClient.GetAsync("api/Direccion/Listar/Provincia");
+        //	if (respProv.IsSuccessStatusCode)
+        //	{
+        //		var dataProv = await respProv.Content.ReadAsStringAsync();
+        //		var provincias = JsonConvert.DeserializeObject<List<Provincia>>(dataProv);
+        //		ViewData["Provincias"] = provincias ?? new List<Provincia>();
+        //	}
+        //	else
+        //	{
+        //		ViewData["Provincias"] = new List<Provincia>();
+        //	}
 
-			var respDist = await _httpClient.GetAsync("api/Direccion/Listar/Distrito");
-			if (respDist.IsSuccessStatusCode)
-			{
-				var dataDist = await respDist.Content.ReadAsStringAsync();
-				var distritos = JsonConvert.DeserializeObject<List<Distrito>>(dataDist);
-				ViewData["Distritos"] = distritos ?? new List<Distrito>();
-			}
-			else
-			{
-				ViewData["Distritos"] = new List<Distrito>();
-			}
+        //	var respCanton = await _httpClient.GetAsync("api/Direccion/Listar/Canton");
+        //	if (respCanton.IsSuccessStatusCode)
+        //	{
+        //		var dataCanton = await respCanton.Content.ReadAsStringAsync();
+        //		var cantones = JsonConvert.DeserializeObject<List<Canton>>(dataCanton);
+        //		ViewData["Cantones"] = cantones ?? new List<Canton>();
+        //	}
+        //	else
+        //	{
+        //		ViewData["Cantones"] = new List<Canton>();
+        //	}
 
-			var resp = await _httpClient.GetAsync($"api/IngresoMercaderia/Obtener/{PK}");
+        //	var respDist = await _httpClient.GetAsync("api/Direccion/Listar/Distrito");
+        //	if (respDist.IsSuccessStatusCode)
+        //	{
+        //		var dataDist = await respDist.Content.ReadAsStringAsync();
+        //		var distritos = JsonConvert.DeserializeObject<List<Distrito>>(dataDist);
+        //		ViewData["Distritos"] = distritos ?? new List<Distrito>();
+        //	}
+        //	else
+        //	{
+        //		ViewData["Distritos"] = new List<Distrito>();
+        //	}
 
-			if (resp.IsSuccessStatusCode)
-			{
-				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-				var IngresoMercaderia = JsonConvert.DeserializeObject<IngresoMercaderia>(content);
-				return View("ActualizarIngresoMercaderia", IngresoMercaderia); // Devuelve 'Ingreso' en lugar de 'resp'
-			}
+        //	var resp = await _httpClient.GetAsync($"api/IngresoMercaderia/Obtener/{PK}");
 
-			return NotFound();
-		}
+        //	if (resp.IsSuccessStatusCode)
+        //	{
+        //		var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+        //		var IngresoMercaderia = JsonConvert.DeserializeObject<IngresoMercaderia>(content);
+        //		return View("ActualizarIngresoMercaderia", IngresoMercaderia); // Devuelve 'Ingreso' en lugar de 'resp'
+        //	}
 
-		[HttpPost]
-		public async Task<IActionResult> ActualizarIngresoMercaderia(IngresoMercaderia IngresoMercaderia)
-		{
-			if (ModelState.IsValid)
-			{
-				var json = JsonConvert.SerializeObject(IngresoMercaderia);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //	return NotFound();
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> ActualizarIngresoMercaderia(IngresoMercaderia IngresoMercaderia)
+        //{
+        //	if (ModelState.IsValid)
+        //	{
+        //		var json = JsonConvert.SerializeObject(IngresoMercaderia);
+        //		var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-				var response = await _httpClient.PostAsync("/api/IngresoMercaderia/Actualizar", content);
+        //		var response = await _httpClient.PostAsync("/api/IngresoMercaderia/Actualizar", content);
 
-				// Log the response content for debugging
-				string responseContent = await response.Content.ReadAsStringAsync();
-				Console.WriteLine("Response from API: " + responseContent);
+        //		// Log the response content for debugging
+        //		string responseContent = await response.Content.ReadAsStringAsync();
+        //		Console.WriteLine("Response from API: " + responseContent);
 
-				if (response.IsSuccessStatusCode)
-				{
+        //		if (response.IsSuccessStatusCode)
+        //		{
 
-					return RedirectToAction("Index");
-				}
-				else
-				{
-					return View();
-				}
+        //			return RedirectToAction("Index");
+        //		}
+        //		else
+        //		{
+        //			return View();
+        //		}
 
-			}
-			return View(IngresoMercaderia);
-		}
+        //	}
+        //	return View(IngresoMercaderia);
+        //}
 
-		[HttpPost]
-		public async Task<IActionResult> DesactivarIngresoMercaderia(string PK)
-		{
-			if (ModelState.IsValid)
-			{
-				var content = new StringContent(PK, Encoding.UTF8, "application/json");
-				var resp = await _httpClient.PostAsync($"/api/IngresoMercaderia/Desactivar/{PK}", content);
-				string responseContent = await resp.Content.ReadAsStringAsync();
-				Console.WriteLine("Response from API: " + responseContent);
+        //[HttpPost]
+        //public async Task<IActionResult> DesactivarIngresoMercaderia(string PK)
+        //{
+        //	if (ModelState.IsValid)
+        //	{
+        //		var content = new StringContent(PK, Encoding.UTF8, "application/json");
+        //		var resp = await _httpClient.PostAsync($"/api/IngresoMercaderia/Desactivar/{PK}", content);
+        //		string responseContent = await resp.Content.ReadAsStringAsync();
+        //		Console.WriteLine("Response from API: " + responseContent);
 
-				if (resp.IsSuccessStatusCode)
-				{
-					return RedirectToAction("Index"); // Devuelve 'Ingreso' en lugar de 'resp'
-				}
+        //		if (resp.IsSuccessStatusCode)
+        //		{
+        //			return RedirectToAction("Index"); // Devuelve 'Ingreso' en lugar de 'resp'
+        //		}
 
-				return NotFound();
+        //		return NotFound();
 
-			}
-			return Ok();
-		}
+        //	}
+        //	return Ok();
+        //}
         public async Task<IActionResult> AgregarInventario()
         {
 			

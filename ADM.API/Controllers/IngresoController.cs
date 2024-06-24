@@ -104,6 +104,28 @@ namespace ADM.API.Controllers
 			return result;
         }
 
+
+        [HttpPost]
+        [Route("Guardar/{PK}")]
+        public bool GuardarIngresoMercaderia(string PK)
+        {
+            if (PK == null || PK.Length == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                {
+                    new DBParameter("@PK_FK_Documento", PK)
+                };
+
+                var result = DBData.Execute("sp_GuardarIngresoMercaderia", parameters);
+
+                return result;
+            }
+        }
+
         //[HttpPost]
         //[Route("Actualizar")]
         //public bool ActualizarIngresoMercaderia(IngresoMercaderia IngresoMercaderia)
@@ -133,25 +155,25 @@ namespace ADM.API.Controllers
         //    return result;
         //}
 
-        [HttpPost]
-        [Route("Desactivar/{PK}")]
-        public bool DesactivarIngresoMercaderia(string PK)
-        {
-            if (PK == null || PK.Length == 0)
-            {
-                return false;
-            }
-            else
-            {
-                List<DBParameter> parameters = new List<DBParameter>
-                {
-                    new DBParameter("@P_PK_IngresoMercaderia", PK)
-                };
-                
-                var result = DBData.Execute("sp_EliminarIngresoMercaderias", parameters);
+        //[HttpPost]
+        //[Route("Desactivar/{PK}")]
+        //public bool DesactivarIngresoMercaderia(string PK)
+        //{
+        //    if (PK == null || PK.Length == 0)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        List<DBParameter> parameters = new List<DBParameter>
+        //        {
+        //            new DBParameter("@P_PK_IngresoMercaderia", PK)
+        //        };
 
-                return result;
-            }
-        }
+        //        var result = DBData.Execute("sp_EliminarIngresoMercaderias", parameters);
+
+        //        return result;
+        //    }
+        //}
     }
 }
