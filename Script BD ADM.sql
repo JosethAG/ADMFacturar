@@ -1876,7 +1876,7 @@ GROUP BY
 ORDER BY 
     Fecha_Compra DESC;
 END
-
+GO
 /****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarIngresoMercaderia]    Script Date: 6/23/2024 10:48:15 AM ******/
 SET ANSI_NULLS ON
 GO
