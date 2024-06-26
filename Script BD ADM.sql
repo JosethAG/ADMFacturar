@@ -309,6 +309,22 @@ GO
 -------------------------------------------------
 					/*SEGURIDAD*/
 -------------------------------------------------
+
+CREATE PROCEDURE sp_ValidarCredenciales
+    @Usuario VARCHAR(100),
+    @Contra VARCHAR(100),
+    @Resultado BIT OUTPUT
+AS
+BEGIN
+    DECLARE @Count INT;
+    SET @Count = (SELECT COUNT(*) FROM TBL_SEGURIDAD WHERE Usuario = @Usuario AND Contra = @Contra);
+
+    IF @Count > 0
+        SET @Resultado = 1;
+    ELSE
+        SET @Resultado = 0;
+END
+	
 /****** Object:  StoredProcedure [dbo].[sp_ListarSeguridad]     ******/
 
 SET ANSI_NULLS ON
