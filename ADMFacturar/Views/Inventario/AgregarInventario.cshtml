@@ -1,87 +1,122 @@
-﻿<link href="~/css/custom.css" rel="stylesheet" />
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Inventario</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="~/css/custom.css" rel="stylesheet" />
+</head>
+<body>
+@model IngresoMercaderia
+
+@{
+    var articulos = ViewData["Articulos"] as List<ArticuloViewModel>;
+}
+
+
+<link href="~/css/custom.css" rel="stylesheet" />
 
 
 <!--                  Inicio Form                        -->
-<form class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
-
-    <h2 class="text-lg font-bold mb-4">Ingreso Factura de Mercadería</h2>
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
-        <div class="sm:col-span-2">
-            <label for="document_number" class="block text-sm font-medium">Número de Documento</label>
-            <div class="mt-2">
-                <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+<form asp-action="CrearIngresoMercaderia" method="post">
+    <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+        <h2 class="text-lg font-bold mb-4">Ingreso de Inventario</h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+            <div class="sm:col-span-2">
+                <label for="PK_FK_Documento" class="block text-sm font-medium">Número de Documento</label>
+                <div class="mt-2">
+                    <input asp-for="PK_FK_Documento" id="PK_FK_Documento" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                </div>
             </div>
-        </div>
 
-        <div class="sm:col-span-2">
-            <label for="entry_date" class="block text-sm font-medium">Fecha Compra</label>
-            <div class="mt-2">
-                <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+            <div class="sm:col-span-2">
+                <label for="Fecha_Compra" class="block text-sm font-medium">Fecha de Compra</label>
+                <div class="mt-2">
+                    <input asp-for="Fecha_Compra" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+                @*      type="date" id="entry_date" name="entry_date" *@
             </div>
-        </div>
-        <div class="sm:col-span-2">
+            @*     <div class="sm:col-span-2">
             <label for="expiry_date" class="block text-sm font-medium">Fecha Vencimiento</label>
             <div class="mt-2">
-                <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+            <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
             </div>
-        </div>
-        <div class="sm:col-span-2">
-            <label for="provider" class="block text-sm font-medium">Proveedor</label>
-            <div class="mt-2">
-                <select id="provider" name="provider" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                    <option value="">Seleccionar Proveedor</option>
-                    <!-- LECTURA DE LA BD O OPCIONES ESTÁTICAS -->
-                    <option value="Proveedor A">Proveedor A</option>
-                    <option value="Proveedor B">Proveedor B</option>
-                    <option value="Proveedor C">Proveedor C</option>
+            </div> *@
+            <div class="sm:col-span-2">
+                <label for="PK_FK_Proveedor" class="block text-sm font-medium">Proveedor</label>
+                <div class="mt-2">
+                    <select asp-for="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                        <option value="">Seleccionar Proveedor</option>
+                        <!-- LECTURA DE LA BD O OPCIONES ESTÁTICAS -->
+                        <option value="1">Proveedor A</option>
+                        <option value="2">Proveedor B</option>
 
-                </select>
+                    </select>
+                </div>
+            </div>
+            <div class="sm:col-span-2">
+                <label for="FK_CondicionPago" class="block text-sm font-medium">Condición de Pago</label>
+                <div class="mt-2">
+                    <select asp-for="FK_CondicionPago" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                        <option value="">Seleccionar Forma de Pago</option>
+                        <option value="1">Contado</option>
+                        <option value="2">Crédito 30 días</option>
+                        <option value="3">Crédito 60 días</option>
+                        <option value="4">Crédito 90 días</option>
+                        <option value="5">Anticipo 50%</option>
+                    </select>
+                </div>
+            </div>
+            <div class="sm:col-span-4">
+                <label for="document_number" class="block text-sm font-medium">Observaciones</label>
+                <div class="mt-2">
+                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                </div>
             </div>
         </div>
-        <div class="sm:col-span-2">
-            <label for="payment_method" class="block text-sm font-medium">Forma de Pago</label>
-            <div class="mt-2">
-                <select id="payment_method" name="payment_method" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                    <option value="">Seleccionar Forma de Pago</option>
-                    <option value="Credito">Credito</option>
-                    <option value="Contado">Contado</option>
-                </select>
+        <h2 class="text-lg font-bold mb-4 mt-8">Ingreso de Articulos</h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+            <div class="sm:col-span-2">
+                <label for="PK_FK_Articulo" class="block text-sm font-medium leading-6 text-white">Código Artículo</label>
+          @*       <div class="mt-2 flex items-center space-x-2">
+                    <input asp-for="PK_FK_Articulo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                    <a asp-action="Crea" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded inline-flex items-center justify-center">
+                        <i class="fas fa-search"></i>
+                    </a>
+                </div> *@
+                <div class="mt-2 flex items-center space-x-2">
+                    <input asp-for="PK_FK_Articulo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                    <button type="button" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded inline-flex items-center justify-center" onclick="openModal()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="sm:col-span-2">
-            <label for="document_number" class="block text-sm font-medium">Observaciones</label>
-            <div class="mt-2">
-                <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+            <div class="sm:col-span-2">
+                <label for="Cantidad" class="block text-sm font-medium leading-6 text-white">Cantidad</label>
+                <div class="mt-2">
+                    <input asp-for="Cantidad" value="" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                </div>
+            </div>
+            <div class="sm:col-span-2">
+                <label for="Costo" class="block text-sm font-medium leading-6 text-white">Costo</label>
+                <div class="mt-2 flex items-center space-x-2">
+                    <input asp-for="Costo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                    <button type="submit" asp-action="CrearIngresoMercaderia" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-4 rounded">Agregar Artículo</button>
+
+                </div>
             </div>
         </div>
     </div>
-    <h2 class="text-lg font-bold mb-4 mt-8">Ingreso de Articulos</h2>
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
-        <div class="sm:col-span-2">
-            <label for="document_number" class="block text-sm font-medium leading-6 text-white">Código Artículo</label>
-            <div class="mt-2 flex items-center space-x-2">
-                <input type="text" id="document_number" name="document_number" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
-                <a asp-action="AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-4 rounded">Buscar Artículo</a>
-            </div>
-        </div>
-        <div class="sm:col-span-2">
-            <label for="quantity" class="block text-sm font-medium leading-6 text-white">Cantidad</label>
-            <div class="mt-2">
-                <input type="number" id="quantity" name="quantity" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            </div>
-        </div>
-        <div class="sm:col-span-2">
-            <label for="cost" class="block text-sm font-medium leading-6 text-white">Costo</label>
-            <div class="mt-2">
-                <input type="text" id="cost" name="cost" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-            </div>
-        </div>
-    </div>
-
+    @*  <input asp-for="Fecha_Compra" value="2024-06-22 23:36:12.870" type="hidden" /> *@
+    <input asp-for="Estado" value="0" type="hidden" />
+    <input asp-for="Subtotal" value="0" type="hidden" />
+    <input asp-for="FK_Usuario_Creacion" value="user1" type="hidden" />
+    <input asp-for="FK_Usuario_Modificacion" value="user1" type="hidden" />
+    <input asp-for="Fecha_Creacion" value="" type="hidden" />
+    <input asp-for="Fecha_Modificacion" value="" type="hidden" />
+    <!--                  Final Tabla                        -->
 </form>
-<!--                  Final Form                        -->
-
-
 
 <!--                  Inicio Tabla                        -->
 
@@ -89,8 +124,10 @@
     <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
         <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Articulos</h3>
         <div>
-            <a asp-action="AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Agregar Artículo</a>
-            <a asp-action="Index" class="btn bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Guardar</a>
+            <form id="guardarForm" method="post" asp-action="GuardarIngresoMercaderia">
+                <input type="hidden" name="PK" id="hiddenPK" />
+                <button type="submit" class="rounded-md bg-green-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-green-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
+            </form>
 
         </div>
     </div>
@@ -99,7 +136,8 @@
     <table class="min-w-full leading-normal">
         <thead>
             <tr class="bg-gray-800 text-white">
-                <th class="text-center py-3">Artículo</th>
+                <th class="text-center py-3">Código</th>
+                <th class="text-center py-3">Nombre</th>
                 <th class="text-center py-3">Cantidad</th>
                 <th class="text-center py-3">Costo</th>
                 <th class="text-center py-3">Total</th>
@@ -107,25 +145,89 @@
             </tr>
         </thead>
         <tbody class="text-gray-700">
-            <tr class="border-b border-gray-200 hover:bg-gray-100">
-                <td class="py-3 text-center">Artículo A</td>
-                <td class="py-3 text-center">10</td>
-                <td class="py-3 text-center">$50</td>
-                <td class="py-3 text-center">$500</td>
-                <td class="py-3 text-center">
-                    <div class="flex justify-center space-x-2">
-                        <a asp-action="AgregarInventario" class="text-blue-600 hover:text-blue-900" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form method="post" asp-action="AgregarInventario" onsubmit="return confirm('¿Está seguro que desea desactivar este cliente?');">
-                            <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+            @if (articulos != null)
+            {
+                @foreach (var articulo in articulos)
+                {
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 text-center">@articulo.PK_Articulo</td>
+                        <td class="py-3 text-center">@articulo.Descripcion</td>
+                        <td class="py-3 text-center">@articulo.Cantidad</td>
+                        <td class="py-3 text-center">@articulo.Costo</td>
+                        <td class="py-3 text-center">@articulo.Precio</td>
+                        <td class="py-3 text-center">
+                            <div class="flex justify-center space-x-2">
+                                <a asp-action="AgregarInventario" class="text-blue-600 hover:text-blue-900" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" asp-action="AgregarInventario" onsubmit="return confirm('¿Está seguro que desea desactivar este cliente?');">
+                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
 
-                    </div>
-                </td>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
         </tbody>
     </table>
 </div>
-<!--                  Final Tabla                        -->
+
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <div class="mb-4">
+            <h3 class="text-lg font-bold">Buscar Artículo</h3>
+        </div>
+        <div class="mb-4">
+            <label for="search" class="block text-sm font-medium">Código o Descripción</label>
+            <input type="text" id="search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr class="bg-gray-800 text-white">
+                        <th class="text-center py-3">Código</th>
+                        <th class="text-center py-3">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    <!-- Aquí irán las filas de artículos -->
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 text-center">001</td>
+                        <td class="py-3 text-center">Artículo A</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 text-center">002</td>
+                        <td class="py-3 text-center">Artículo B</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-6 flex justify-end">
+            <button type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded" onclick="closeModal()">Cerrar</button>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal -->
+<script>
+    document.getElementById('guardarForm').addEventListener('submit', function (event) {
+        // Obtiene el valor de PK_FK_Documento
+        var proveedor = document.querySelector('[name="PK_FK_Documento"]').value;
+        // Asigna el valor al campo oculto
+        document.getElementById('hiddenPK').value = proveedor;
+    });
+
+        function openModal() {
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+</script>
+</body>
+</html>
