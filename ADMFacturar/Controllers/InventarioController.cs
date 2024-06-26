@@ -32,49 +32,67 @@ namespace ADM.APIIngresoMercaderia.Controllers
 		}
 
 
-		[HttpPost]
-		public async Task<IActionResult> CrearIngresoMercaderia(IngresoMercaderia IngresoMercaderia)
-		{
-			if (ModelState.IsValid)
-			{
-				var json = JsonConvert.SerializeObject(IngresoMercaderia);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //public async Task<IActionResult> CrearIngresoMercaderia()
+        //{
+        //    var respProv = await _httpClient.GetAsync("api/Proveedor/Listar");
+        //    if (respProv.IsSuccessStatusCode)
+        //    {
+        
+        //        var dataProv = await respProv.Content.ReadAsStringAsync();
+        //        var proveedores = JsonConvert.DeserializeObject<List<Proveedor>>(dataProv);
+        //        ViewData["Proveedores"] = proveedores ?? new List<Proveedor>();
+        //    }
+        //    else
+        //    {
+        //        ViewData["Proveedores"] = new List<Proveedor>();
+        //    }
 
 
-				var response = await _httpClient.PostAsync("/api/IngresoMercaderia/Crear", content);
+        //    return View();
+        //}
+  //      [HttpPost]
+		//public async Task<IActionResult> CrearIngresoMercaderia(IngresoMercaderia IngresoMercaderia)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		var json = JsonConvert.SerializeObject(IngresoMercaderia);
+		//		var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-				// Log the response content for debugging
-				string responseContent = await response.Content.ReadAsStringAsync();
-				Console.WriteLine("Response from API: " + responseContent);
+
+		//		var response = await _httpClient.PostAsync("/api/IngresoMercaderia/Crear", content);
+
+		//		// Log the response content for debugging
+		//		string responseContent = await response.Content.ReadAsStringAsync();
+		//		Console.WriteLine("Response from API: " + responseContent);
 
 
-                var respArts = await _httpClient.GetAsync($"api/Articulo/ArticuloXDocumento/{IngresoMercaderia.PK_FK_Documento}");
+  //              var respArts = await _httpClient.GetAsync($"api/Articulo/ArticuloXDocumento/{IngresoMercaderia.PK_FK_Documento}");
 
-                if (respArts.IsSuccessStatusCode)
-                {
-                    var dataArts = await respArts.Content.ReadAsStringAsync();
-                    var articulos = JsonConvert.DeserializeObject<List<ArticuloViewModel>>(dataArts);
-                    ViewData["Articulos"] = articulos ?? new List<ArticuloViewModel>();
-                }
-                else
-                {
-                    ViewData["Articulos"] = new List<ArticuloViewModel>();
-                }
+  //              if (respArts.IsSuccessStatusCode)
+  //              {
+  //                  var dataArts = await respArts.Content.ReadAsStringAsync();
+  //                  var articulos = JsonConvert.DeserializeObject<List<ArticuloViewModel>>(dataArts);
+  //                  ViewData["Articulos"] = articulos ?? new List<ArticuloViewModel>();
+  //              }
+  //              else
+  //              {
+  //                  ViewData["Articulos"] = new List<ArticuloViewModel>();
+  //              }
 
-                if (response.IsSuccessStatusCode)
-				{
+  //              if (response.IsSuccessStatusCode)
+		//		{
 
-					return View("AgregarInventario");
+		//			return View("AgregarInventario");
 
-				}
-				else
-				{
-					return View();
-				}
+		//		}
+		//		else
+		//		{
+		//			return View();
+		//		}
 
-			}
-			return View(IngresoMercaderia);
-		}
+		//	}
+		//	return View(IngresoMercaderia);
+		//}
         [HttpPost]
         public async Task<IActionResult> GuardarIngresoMercaderia(string PK)
         {
@@ -87,7 +105,7 @@ namespace ADM.APIIngresoMercaderia.Controllers
 
                 if (resp.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index"); // Devuelve 'Ingreso' en lugar de 'resp'
+                    return RedirectToAction("AgregarInventario"); // Devuelve 'Ingreso' en lugar de 'resp'
                 }
 
                 return NotFound();
@@ -197,10 +215,81 @@ namespace ADM.APIIngresoMercaderia.Controllers
         //	}
         //	return Ok();
         //}
-        public async Task<IActionResult> AgregarInventario()
+        //public async Task<IActionResult> AgregarInventario()
+        //{
+
+        //    var respProv = await _httpClient.GetAsync("api/Proveedor/Listar");
+        //    if (respProv.IsSuccessStatusCode)
+        //    {
+
+        //        var dataProv = await respProv.Content.ReadAsStringAsync();
+        //        var proveedores = JsonConvert.DeserializeObject<List<Proveedor>>(dataProv);
+        //        ViewData["Proveedores"] = proveedores ?? new List<Proveedor>();
+        //    }
+        //    else
+        //    {
+        //        ViewData["Proveedores"] = new List<Proveedor>();
+        //    }
+
+
+        //    return View();
+        //}
+
+        public async Task<IActionResult> AgregarInventario(IngresoMercaderia IngresoMercaderia)
         {
-			
-            return View();  // Pasa el modelo a la vista
+            var respProv = await _httpClient.GetAsync("api/Proveedor/Listar");
+            if (respProv.IsSuccessStatusCode)
+            {
+
+                var dataProv = await respProv.Content.ReadAsStringAsync();
+                var proveedores = JsonConvert.DeserializeObject<List<Proveedor>>(dataProv);
+                ViewData["Proveedores"] = proveedores ?? new List<Proveedor>();
+            }
+            else
+            {
+                ViewData["Proveedores"] = new List<Proveedor>();
+            }
+
+
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(IngresoMercaderia);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+                var response = await _httpClient.PostAsync("/api/IngresoMercaderia/Crear", content);
+
+                // Log the response content for debugging
+                string responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+
+                var respArts = await _httpClient.GetAsync($"api/Articulo/ArticuloXDocumento/{IngresoMercaderia.PK_FK_Documento}");
+
+                if (respArts.IsSuccessStatusCode)
+                {
+                    var dataArts = await respArts.Content.ReadAsStringAsync();
+                    var articulos = JsonConvert.DeserializeObject<List<ArticuloViewModel>>(dataArts);
+                    ViewData["Articulos"] = articulos ?? new List<ArticuloViewModel>();
+                }
+                else
+                {
+                    ViewData["Articulos"] = new List<ArticuloViewModel>();
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    return View("AgregarInventario");
+
+                }
+                else
+                {
+                    return View();
+                }
+
+            }
+            return View(IngresoMercaderia);
         }
 
     }
