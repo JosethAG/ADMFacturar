@@ -12,5 +12,6 @@ namespace ADM.Interface
         IEnumerable<Seguridad> ListaSeguridades(string? Usuario);
         bool CrearUpdSeguridad(Seguridad Seguridad);
         bool EliminarSeguridad(string Id);
+
     }
 }

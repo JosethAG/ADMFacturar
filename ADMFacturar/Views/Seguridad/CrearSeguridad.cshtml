@@ -23,6 +23,12 @@
             </div>
         </div>
         <div>
+            <label for="ConfirmarContra" class="block text-sm font-medium text-gray-300">Confirmar Contraseña</label>
+            <div class="mt-2">
+                <input id="ConfirmarContra" type="password" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+        <div>
             <label for="Rol" class="block text-sm font-medium text-gray-300">Rol</label>
             <div class="mt-2">
                 <select asp-for="Rol" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
@@ -44,7 +50,28 @@
     <div class="mt-6 flex justify-end gap-x-4">
         <input asp-for="FK_Usuario_Creacion" value="1" type="hidden" />
         <input asp-for="FK_Usuario_Modificacion" value="1" type="hidden" />
-        <button type="submit" asp-action="CrearSeguridad" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
+        <button type="submit" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
         <button asp-action="Index" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-red-500">Cancelar</button>
     </div>
+    <div id="error-message" class="text-red-500 mt-4"></div>
 </form>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("form").submit(function (event) {
+                var password = $("input[name='Contra']").val();
+                var confirmPassword = $("#ConfirmarContra").val();
+                if (password !== confirmPassword) {
+                    $("#error-message").text("Las contraseñas no coinciden.");
+                    event.preventDefault();
+                } else {
+                    $("#error-message").text("");
+                }
+            });
+        });
+    </script>
+}
