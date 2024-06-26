@@ -75,9 +75,9 @@
 										<a asp-action="ActualizarProveedor" asp-route-PK="@item.PK_Proveedor" class="text-blue-600 hover:text-blue-900" title="Editar">
 											<i class="fas fa-edit"></i>
 										</a>
-										<form method="post" asp-action="DesactivarProveedor" asp-route-PK="@item.PK_Proveedor" onsubmit="return confirm('¿Está seguro que desea desactivar este cliente?');">
+										<form method="post" asp-action="DesactivarProveedor" asp-route-PK="@item.PK_Proveedor" onsubmit="return mostrarConfirmacion(event)">
 											<button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-												<i class="fas fa-trash"></i>
+												<i class="fa-solid fa-ban"></i>
 											</button>
 										</form>
 									</div>
@@ -96,4 +96,35 @@
 		</table>
 	</div>
 </div>
-<!--                  Final Tabla                        -->
+
+<!-- Modal de confirmación -->
+<div id="confirmacionModal" class="fixed inset-0 z-10 overflow-y-auto hidden">
+	<div class="flex items-center justify-center min-h-screen">
+		<div class="bg-white rounded-lg p-6 shadow-xl">
+			<div class="mb-4 text-center">
+				<p class="text-lg font-semibold">¿Seguro que deseas desactivar este proveedor?</p>
+			</div>
+			<div class="text-center">
+				<button onclick="confirmarDesactivacion()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">Confirmar</button>
+				<button onclick="cancelarDesactivacion()" class="border border-gray-300 hover:bg-gray-200 font-semibold py-2 px-4 rounded">Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+
+	function mostrarConfirmacion(event) {
+		event.preventDefault();
+		document.getElementById('confirmacionModal').classList.remove('hidden');
+		window.confirmarDesactivacion = function () {
+			event.target.closest('form').submit();
+		};
+		window.cancelarDesactivacion = function () {
+			document.getElementById('confirmacionModal').classList.add('hidden');
+		};
+
+		return false;
+	}
+
+</script>
