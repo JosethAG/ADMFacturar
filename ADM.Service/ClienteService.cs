@@ -68,5 +68,8 @@ namespace ADM.Service
                 return DBData.Execute("", parameters);
             }
         }
+
+
+
     }
 }

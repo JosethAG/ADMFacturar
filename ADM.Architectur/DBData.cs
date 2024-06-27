@@ -5,7 +5,7 @@ namespace ADM.Architectur
 {
     public class DBData
     {
-        public static string connectionString = "Data Source=LOCALHOST\\SQLEXPRESS;Initial Catalog=ADM;Integrated Security=True;";
+        public static string connectionString = "Data Source=localhost;Initial Catalog=ADM;Integrated Security=True;";
 
         public static DataSet TableList(string SPName, List<DBParameter> parameters = null)
         {
@@ -98,6 +98,44 @@ namespace ADM.Architectur
             }
             catch (Exception ex)
             {
+                return false;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public static bool ExecuteLoginValidation(string SPName, string usuario, string contrasena)
+        {
+            SqlConnection conn = new SqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(SPName, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // Parámetros específicos para RealizarLogin
+                cmd.Parameters.AddWithValue("@Usuario", usuario);
+                cmd.Parameters.AddWithValue("@Contra", contrasena);
+
+                // Parámetro de salida
+                SqlParameter outputParameter = new SqlParameter();
+                outputParameter.ParameterName = "@Resultado";
+                outputParameter.SqlDbType = SqlDbType.Bit;
+                outputParameter.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(outputParameter);
+
+                cmd.ExecuteNonQuery();
+
+                bool isValid = Convert.ToBoolean(outputParameter.Value);
+
+                return isValid;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error executing stored procedure {SPName}: {ex.Message}");
                 return false;
             }
             finally

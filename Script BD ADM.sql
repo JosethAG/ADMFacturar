@@ -309,6 +309,22 @@ GO
 -------------------------------------------------
 					/*SEGURIDAD*/
 -------------------------------------------------
+
+CREATE PROCEDURE sp_ValidarCredenciales
+    @Usuario VARCHAR(100),
+    @Contra VARCHAR(100),
+    @Resultado BIT OUTPUT
+AS
+BEGIN
+    DECLARE @Count INT;
+    SET @Count = (SELECT COUNT(*) FROM TBL_SEGURIDAD WHERE Usuario = @Usuario AND Contra = @Contra);
+
+    IF @Count > 0
+        SET @Resultado = 1;
+    ELSE
+        SET @Resultado = 0;
+END
+	
 /****** Object:  StoredProcedure [dbo].[sp_ListarSeguridad]     ******/
 
 SET ANSI_NULLS ON
@@ -1876,7 +1892,7 @@ GROUP BY
 ORDER BY 
     Fecha_Compra DESC;
 END
-
+GO
 /****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarIngresoMercaderia]    Script Date: 6/23/2024 10:48:15 AM ******/
 SET ANSI_NULLS ON
 GO
@@ -1948,10 +1964,59 @@ BEGIN
     END
 END
 
-	
+GO 
+/****** Object:  StoredProcedure [dbo].[sp_GuardarIngresoMercaderia]    Script Date: 6/24/2024 4:15:06 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_GuardarIngresoMercaderia]
+    @PK_FK_Documento VARCHAR(50)
+AS
+BEGIN
+    -- Actualizar el estado a 'Completado' en TBL_INGRESO_MERCADERIA
+    UPDATE TBL_INGRESO_MERCADERIA
+    SET Estado = 'Completado'
+    WHERE PK_FK_Documento = @PK_FK_Documento;
 
+    -- Actualizar las cantidades en TBL_ARTICULO
+    UPDATE A
+    SET A.Cantidad = A.Cantidad + IM.Cantidad,
+	A.Costo = IM.Costo
+    FROM TBL_ARTICULO A
+    INNER JOIN TBL_INGRESO_MERCADERIA IM ON A.PK_Articulo = IM.PK_FK_Articulo
+    WHERE IM.PK_FK_Documento = @PK_FK_Documento;
 
-	    
+    -- Insertar un documento en TBL_DOCUMENTO_CP si la condición de pago es diferente a 1
+    IF EXISTS(SELECT 1 FROM TBL_INGRESO_MERCADERIA WHERE PK_FK_Documento = @PK_FK_Documento AND FK_CondicionPago <> 1)
+    BEGIN
+        DECLARE @MontoTotal DECIMAL(18,2);
+        DECLARE @Dias INT;
+        SELECT @MontoTotal = SUM(Subtotal), @Dias = MAX(Dias)
+        FROM TBL_INGRESO_MERCADERIA IM
+        INNER JOIN TBL_CONDICIONES_PAGO CP ON IM.FK_CondicionPago = CP.PK_Condicion_Pago
+        WHERE PK_FK_Documento = @PK_FK_Documento;
+
+        INSERT INTO TBL_DOCUMENTO_CP (PK_Documento, FK_Proveedor, Fecha_Documento, Fecha_Vence, Monto, Saldo_Pendiente, Anulado, FK_Usuario_Creacion, FK_Usuario_Modificacion, Fecha_Creacion, Fecha_Modificacion)
+        SELECT TOP 1
+            @PK_FK_Documento,
+            PK_FK_Proveedor,
+            Fecha_Compra,
+            DATEADD(DAY, @Dias, Fecha_Compra), -- Fecha de vencimiento basada en los días de la condición de pago
+            @MontoTotal, -- Monto total calculado
+            @MontoTotal, -- Saldo pendiente igual al monto total inicialmente
+            'N', -- No anulado
+            FK_Usuario_Creacion, 
+            FK_Usuario_Modificacion, 
+            Fecha_Creacion,
+            Fecha_Modificacion
+
+        FROM TBL_INGRESO_MERCADERIA
+        WHERE PK_FK_Documento = @PK_FK_Documento;
+    END
+END
+
+GO	    
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/

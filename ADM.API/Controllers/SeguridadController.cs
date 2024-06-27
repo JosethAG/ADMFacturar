@@ -8,6 +8,11 @@ using ADM.Interface;
 using ADM.Architectur;
 using ADM.Architecture;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity.Data;
+using System;
+using System.Text;
+using System.Collections.Generic;
+
 
 namespace ADM.API.Controllers
 {
@@ -18,6 +23,7 @@ namespace ADM.API.Controllers
     {
         private ISeguridadService? _SeguridadService;
 
+        private readonly string connectionString = "Data Source=LOCALHOST\\SQLEXPRESS;Initial Catalog=ADM;Integrated Security=True;";
 
         [HttpGet]
         [Route("Listar")]
@@ -131,5 +137,34 @@ namespace ADM.API.Controllers
                 return result;
             }
         }
+
+        
+
+        [HttpPost]
+        [Route("Login")]
+        public IActionResult Login(ADM.Models.LoginRequest request)
+        {
+            try
+            {
+                bool isValid = DBData.ExecuteLoginValidation("sp_ValidarCredenciales", request.Usuario, request.Contra);
+
+                if (isValid)
+                {
+                    return Ok(new { redirectTo = "/Home/Index" });
+                }
+                else
+                {
+                    return BadRequest("Usuario o contraseña incorrectos");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+
+
     }
 }
+ 
