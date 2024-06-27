@@ -285,22 +285,6 @@
         document.getElementById('buscarArticulo').addEventListener('input', function () {
             openModal(); // Volver a cargar la modal con los resultados filtrados al cambiar el texto de búsqueda
         });
-        function closeModal() {
-            // Oculta la modal
-            document.getElementById('modal').classList.add('hidden');
-        }
-
-        function seleccionarArticulo(codigo, descripcion) {
-            // Asigna el código del artículo al campo PK_FK_Articulo
-            document.getElementById('PK_FK_Articulo').value = codigo;
-            // Cierra la modal al seleccionar un artículo
-            closeModal();
-        }
-
-        // Función para filtrar los artículos al escribir en el campo de búsqueda
-        document.getElementById('buscarArticulo').addEventListener('input', function () {
-            openModal(); // Volver a cargar la modal con los resultados filtrados al cambiar el texto de búsqueda
-        });
 
         //  <!--Fin Modal-- >
 
