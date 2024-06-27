@@ -2016,7 +2016,60 @@ BEGIN
     END
 END
 
-GO	    
+GO
+
+
+/** Object:  StoredProcedure [dbo].[sp_ListarIngresoPorDoc]    Script Date: 6/23/2024 10:59:00 AM **/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarIngresoPorDoc]
+    @PK_FK_Documento varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+SELECT 
+    im.PK_FK_Articulo AS PK_Articulo,
+    A.Descripcion,
+    im.Cantidad,
+    im.Costo,
+    (im.Cantidad * im.Costo) AS Precio
+FROM [dbo].[TBL_INGRESO_MERCADERIA] im
+INNER JOIN [dbo].[TBL_ARTICULO] a ON im.PK_FK_Articulo = a.PK_Articulo
+WHERE PK_FK_Documento = @PK_FK_Documento
+ORDER BY 
+    Linea DESC;
+END;
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_EliminarArticuloIngreso]    Script Date: 6/26/2024 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Procedimiento almacenado para eliminar un artículo de ingreso de mercadería
+CREATE PROCEDURE [dbo].[sp_EliminarArticuloIngreso]
+    @PK_FK_Documento varchar(50),
+    @PK_FK_Articulo varchar(50)
+AS
+BEGIN
+    -- Evita que el procedimiento se detenga y muestre un error en caso de no encontrar el registro
+    SET NOCOUNT ON;
+
+    -- Elimina el registro específico de la tabla TBL_INGRESO_MERCADERIA
+    DELETE FROM [dbo].[TBL_INGRESO_MERCADERIA]
+    WHERE [PK_FK_Documento] = @PK_FK_Documento AND [PK_FK_Articulo] = @PK_FK_Articulo;
+
+    -- Opcional: Agregar manejo de errores o lógica adicional aquí
+
+END
+GO
+
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
