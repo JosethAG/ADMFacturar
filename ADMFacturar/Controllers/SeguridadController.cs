@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
+using System;
+
 
 namespace ADMFacturar.Controllers
 {
@@ -127,6 +129,56 @@ namespace ADMFacturar.Controllers
 
             }
             return Ok();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginRequest request)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                using (var response = await _httpClient.PostAsync("/api/Seguridad/Login", content))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<dynamic>(responseContent);
+
+                        if (result.redirectTo != null && result.redirectTo == "/Home/Index")
+                        {
+                            Console.WriteLine("Login exitoso. Redireccionando a la página principal.");
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error en las credenciales. No se pudo iniciar sesión.");
+                            ModelState.AddModelError(string.Empty, "Usuario o contraseña incorrectos.");
+                            return View("Login");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error al conectar con el servidor API.");
+                        ModelState.AddModelError(string.Empty, "Datos Incorrectos, ingréselos de nuevo.");
+                        return View("Login");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al realizar la solicitud de login: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Error interno del servidor.");
+                return View("Login");
+            }
         }
     }
 }
