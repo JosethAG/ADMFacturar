@@ -17,18 +17,36 @@ namespace ADM.APIIngresoMercaderia.Controllers
             _httpClient.BaseAddress = new Uri("https://localhost:7270/api");
         }
 
+        //public IActionResult Index()
+        //{
+        //    var resp = await _httpClient.GetAsync("api/IngresoMercaderia/ListarIngresoMercaderiasVM");
+
+        //    if (resp.IsSuccessStatusCode)
+        //    {
+        //        var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+        //        var Ingreso = JsonConvert.DeserializeObject<IEnumerable<IngresoMercaderiaViewModel>>(content);
+        //        return View("Index", Ingreso); // Devuelve 'Ingreso' en lugar de 'resp'
+        //    }
+
+        //    return View(new List<IngresoMercaderiaViewModel>());
+        //}
         public async Task<IActionResult> Index()
         {
-            var resp = await _httpClient.GetAsync("api/IngresoMercaderia/ListarIngresoMercaderiasVM");
-
-            if (resp.IsSuccessStatusCode)
+            var respProv = await _httpClient.GetAsync("api/Proveedor/Listar");
+            if (respProv.IsSuccessStatusCode)
             {
-                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-                var Ingreso = JsonConvert.DeserializeObject<IEnumerable<IngresoMercaderiaViewModel>>(content);
-                return View("Index", Ingreso); // Devuelve 'Ingreso' en lugar de 'resp'
-            }
 
-            return View(new List<IngresoMercaderiaViewModel>());
+                var dataProv = await respProv.Content.ReadAsStringAsync();
+                var proveedores = JsonConvert.DeserializeObject<List<Proveedor>>(dataProv);
+                ViewData["Proveedores"] = proveedores ?? new List<Proveedor>();
+            }
+            else
+            {
+                ViewData["Proveedores"] = new List<Proveedor>();
+            }         
+
+          
+            return View();
         }
 
         [HttpPost]
@@ -136,27 +154,7 @@ namespace ADM.APIIngresoMercaderia.Controllers
             return Ok();
         }
 
-        //public async Task<IActionResult> ListarArticulos()
-        //{
-
-
-        //    var respArts = await _httpClient.GetAsync($"api/Articulo/Listar/");
-
-        //    if (respArts.IsSuccessStatusCode)
-        //    {
-        //        var dataArts = await respArts.Content.ReadAsStringAsync();
-        //        var articulosModal = JsonConvert.DeserializeObject<List<Articulo>>(dataArts);
-        //        ViewData["ArticulosModal"] = articulosModal ?? new List<Articulo>();
-        //    }
-        //    else
-        //    {
-        //        ViewData["ArticulosModal"] = new List<ArticuloViewModel>();
-        //    }
-
-
-        //    return View();
-
-        //}
+   
         public async Task<IActionResult> ListarArticulos()
         {
 
@@ -175,6 +173,26 @@ namespace ADM.APIIngresoMercaderia.Controllers
             }
 
         }
+
+        public async Task<IActionResult> ListarIngresos()
+        
+        
+        {
+            var resp = await _httpClient.GetAsync($"api/IngresoMercaderia/ListarIngresoMercaderiasVM");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var ingresos = JsonConvert.DeserializeObject<IEnumerable<IngresoMercaderiaViewModel>>(content);
+                return Json(ingresos); // Devuelve 'Ingreso' en lugar de 'resp'
+            }
+
+            else
+            {
+                return BadRequest("Error al obtener los ingresos");
+            }
+        }
+
 
 
 
