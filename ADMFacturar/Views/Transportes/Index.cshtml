@@ -2,7 +2,7 @@
 @model Transporte
 
 @{
-    var tranportes = ViewData["Transportes"] as List<Transporte>;
+    var transportes = ViewData["Transportes"] as List<Transporte>;
 }
 
 
@@ -15,9 +15,9 @@
         <h2 class="text-lg font-bold mb-4">Filtro de Transportes</h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
             <div class="sm:col-span-1">
-                <label for="city" class="block text-sm font-medium">Nombre de Transporte</label>
+                <label for="nombre_transporte" class="block text-sm font-medium">Nombre de Transporte</label>
                 <div class="mt-1">
-                    <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    <input type="text" id="nombre_transporte" name="nombre_transporte" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
             </div>
         </div>
@@ -43,16 +43,16 @@
             <thead>
                 <tr class="bg-gray-800 text-white">
                     <th class="py-3 text-center">Código Transporte</th>
-                    <th class="py-3 text-center">Descripcion Transporte</th>
+                    <th class="py-3 text-center">Descripción Transporte</th>
                     <th class="py-3 text-center">Estado Transporte</th>
                     <th class="py-3 text-center">Acciones</th>
 
                 </tr>
             </thead>
-            <tbody class="text-gray-700">
-                @if (tranportes != null)
+            <tbody id="bodyTablaTransportes" class="text-gray-700">
+                @if (transportes != null)
                 {
-                    @foreach (var item in tranportes)
+                    @foreach (var item in transportes)
                     {
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_Medio_Transporte)</td>
@@ -93,7 +93,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="14">No hay datos disponibles.</td>
+                        <td colspan="4">No hay datos disponibles.</td>
                     </tr>
                 }
             </tbody>
@@ -192,7 +192,7 @@
 
 
 <script>
-
+    // Función para mostrar modal de confirmación de desactivación
     function mostrarConfirmacion(event) {
         event.preventDefault();
         document.getElementById('confirmacionModal').classList.remove('hidden');
@@ -205,5 +205,30 @@
 
         return false;
     }
+
+    // Función para filtrar la tabla de transportes por nombre
+    function filtrarTabla() {
+        // Obtener el valor de búsqueda del campo de nombre
+        const nombreTransporte = document.getElementById('nombre_transporte').value.toLowerCase();
+
+        // Obtener todas las filas de la tabla
+        const filas = document.querySelectorAll('#bodyTablaTransportes tr');
+
+        filas.forEach(fila => {
+            const cells = fila.getElementsByTagName('td');
+            const matchNombre = cells[1].textContent.toLowerCase().includes(nombreTransporte);
+
+            if (matchNombre) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
+            }
+        });
+    }
+
+    // Enlazar evento de input para el campo de nombre de transporte
+    document.getElementById('nombre_transporte').addEventListener('input', filtrarTabla);
+
+  
 
 </script>
