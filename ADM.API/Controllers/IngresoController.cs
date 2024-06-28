@@ -126,54 +126,55 @@ namespace ADM.API.Controllers
             }
         }
 
-        //[HttpPost]
-        //[Route("Actualizar")]
-        //public bool ActualizarIngresoMercaderia(IngresoMercaderia IngresoMercaderia)
-        //{
-        //    List<DBParameter> parameters = new List<DBParameter>
-        //    {
-        //        new DBParameter("@P_PK_IngresoMercaderia", IngresoMercaderia.PK_IngresoMercaderia),
-        //        new DBParameter("@P_TipoIdentificacion", IngresoMercaderia.TipoIdentificacion),
-        //        new DBParameter("@P_Identificacion", IngresoMercaderia.Identificacion.ToString()),
-        //        new DBParameter("@P_Nombre", IngresoMercaderia.Nombre),
-        //        new DBParameter("@P_Telefono", IngresoMercaderia.Telefono),
-        //        new DBParameter("@P_Correo", IngresoMercaderia.Correo),
-        //        new DBParameter("@P_Provincia", IngresoMercaderia.Provincia),
-        //        new DBParameter("@P_Canton", IngresoMercaderia.Canton),
-        //        new DBParameter("@P_Distrito", IngresoMercaderia.Distrito),
-        //        new DBParameter("@P_OtrasSenas", IngresoMercaderia.OtrasSenas),
-        //        new DBParameter("@P_Estado", IngresoMercaderia.Estado.ToString()),
-        //        new DBParameter("@P_FK_CondicionPago", IngresoMercaderia.FK_CondicionPago.ToString()),
-        //        new DBParameter("@P_FK_Transporte", IngresoMercaderia.FK_Transporte.ToString()),
-        //        new DBParameter("@P_FK_Vendedor", IngresoMercaderia.FK_Vendedor.ToString()),
-        //        new DBParameter("@P_FK_Usuario_Modificacion", IngresoMercaderia.FK_Usuario_Modificacion.ToString()),
-        //        new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
-        //    };
+        [HttpPost]
+        [Route("Eliminar/{PK_FK_Documento}/{PK_Articulo}")]
+        public bool EliminarArticulo(string PK_FK_Documento, string PK_Articulo)
+        {
+            if (string.IsNullOrEmpty(PK_FK_Documento) || string.IsNullOrEmpty(PK_Articulo))
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
 
-        //    var result = DBData.Execute("sp_ModificarIngresoMercaderias", parameters);
+        {
+            new DBParameter("@PK_FK_Documento", PK_FK_Documento),
+            new DBParameter("@PK_FK_Articulo", PK_Articulo)
+        };
 
-        //    return result;
-        //}
+                var result = DBData.Execute("sp_EliminarArticuloIngreso", parameters);
 
-        //[HttpPost]
-        //[Route("Desactivar/{PK}")]
-        //public bool DesactivarIngresoMercaderia(string PK)
-        //{
-        //    if (PK == null || PK.Length == 0)
-        //    {
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        List<DBParameter> parameters = new List<DBParameter>
-        //        {
-        //            new DBParameter("@P_PK_IngresoMercaderia", PK)
-        //        };
+                return result;
+            }
+        }
 
-        //        var result = DBData.Execute("sp_EliminarIngresoMercaderias", parameters);
+        [HttpGet]
+        [Route("ListarArticulosVM")]
+        public IEnumerable<ArticuloViewModel> ListarArticulosVM()
+        {
+            DataTable tArticulo = DBData.List("sp_ListarArticulosVM");
+            string jsonArticle = JsonConvert.SerializeObject(tArticulo);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<ArticuloViewModel>>(jsonArticle);
+            return result;
+        }
 
-        //        return result;
-        //    }
-        //}
+
+
+
+        //Metodos Api para salida de Mercaderia
+
+
+        [HttpGet]
+        [Route("ListarSalidaMercaderia")]
+        public IEnumerable<SalidaMercaderia> ListaSalidaMercaderia()
+        {
+            DataTable tSalidaMercaderia = DBData.List("sp_ListarSalidaMercaderia");
+            string jsonArticle = JsonConvert.SerializeObject(tSalidaMercaderia);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<SalidaMercaderia>>(jsonArticle);
+            return result;
+        }
+
+
     }
 }

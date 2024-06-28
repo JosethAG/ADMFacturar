@@ -1,4 +1,9 @@
-﻿@model IEnumerable<IngresoMercaderiaViewModel>
+﻿@model IngresoMercaderia
+
+@{
+    var proveedores = ViewData["Proveedores"] as List<Proveedor>;
+
+}
 <link href="~/css/custom.css" rel="stylesheet" />
 
 <div class="w-full">
@@ -22,17 +27,20 @@
                 </div>
             </div>
             <div class="sm:col-span-1">
-                <label for="provider" class="block text-sm font-medium">Proveedor</label>
+                <label for="PK_FK_Proveedor" class="block text-sm font-medium">Proveedor</label>
                 <div class="mt-2">
-                    <select id="provider" name="provider" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                        <option value="">Seleccionar Proveedor</option>
-                        <!-- LECTURA DE LA BD O OPCIONES ESTÁTICAS -->
-                        <option value="Proveedor A">Proveedor A</option>
-                        <option value="Proveedor B">Proveedor B</option>
-                        <option value="Proveedor C">Proveedor C</option>
-
-                    </select>
+                 <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                            <option value="">Seleccione un proveedor</option>
+                            @if (proveedores != null)
+                            {
+                                @foreach (var proveedor in proveedores)
+                                {
+                                    <option value="@proveedor.PK_Proveedor">@proveedor.Nombre</option>
+                                }
+                            }
+                        </select>
                 </div>
+
             </div>
             <div class="sm:col-span-1">
                 <label for="document_number" class="block text-sm font-medium">Número de Documento</label>
@@ -45,11 +53,18 @@
     </div>
 </form>
 
-<div class="w-full mt-8">
+@* <div class="w-full mt-8">
     <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
         <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Ingresos</h3>
         <div>
             <a asp-action="AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Ingreso de Mercadería</a>
+        </div>
+    </div> *@
+<div class="w-full mt-8">
+    <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+        <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado Ingresos de Inventario</h3>
+        <div>
+            <a href="/Inventario/AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Ingreso de Mercadería</a>
         </div>
     </div>
 
@@ -67,42 +82,98 @@
                     <th class="text-center py-3">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="text-gray-700">
-                @if (Model != null && Model.Any())
-                {
-                    @foreach (var item in Model)
-                    {
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
-                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_FK_Documento)</td>
-                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_FK_Proveedor)</td>
-                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Fecha_Compra)</td>
-                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.FK_CondicionPago)</td>
-                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Total)</td>
-                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Estado)</td>
-
-                            @* <td class="p-3 border border-gray-300"> *@
-                            <td>
-                                <div class="flex justify-center space-x-2">
-                                    <a asp-action="ActualizarCliente" asp-route-PK="@item.PK_FK_Documento" class="text-blue-600 hover:text-blue-900" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form method="post" asp-action="DesactivarCliente" asp-route-PK="@item.PK_FK_Documento" onsubmit="return confirm('¿Está seguro que desea desactivar este cliente?');">
-                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="14">No hay datos disponibles.</td>
-                    </tr>
-                }
+             <tbody id="bodyTablaIngresos" class="text-gray-700">
+          
             </tbody>
         </table>
     </div>
 </div>
+
+
+<script>
+// Función para obtener y listar los ingresos desde el backend
+function obtenerYListarIngresos() {
+    fetch('/Inventario/ListarIngresos')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Datos recibidos del API:', data);
+
+            // Llenar la tabla con los datos recibidos
+            const tableBody = document.getElementById('bodyTablaIngresos');
+            tableBody.innerHTML = '';
+
+            data.forEach(item => {
+                const row = `
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 text-center">${item.pK_FK_Documento}</td>
+                        <td class="py-3 text-center">${item.pK_FK_Proveedor}</td>
+                        <td class="py-3 text-center">${item.fecha_Compra}</td>
+                        <td class="py-3 text-center">${item.fK_CondicionPago}</td>
+                        <td class="py-3 text-center">${item.total}</td>
+                        <td class="py-3 text-center">${item.estado}</td>
+                        <td class="py-3 text-center">
+                            <div class="flex justify-center space-x-2">
+                                <a href="/Inventario/ActualizarIngreso/${item.pK_FK_Documento}" class="text-blue-600 hover:text-blue-900" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="/Inventario/DesactivarIngreso/${item.pK_FK_Documento}">
+                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+
+            // Agregar la funcionalidad de filtrado
+            document.getElementById('entry_date').addEventListener('input', filtrarTabla);
+            document.getElementById('expiry_date').addEventListener('input', filtrarTabla);
+            document.getElementById('PK_FK_Proveedor').addEventListener('change', filtrarTabla);
+            document.getElementById('document_number').addEventListener('input', filtrarTabla);
+        })
+        .catch(error => {
+            console.error('Error al obtener los ingresos:', error);
+            // Mostrar un mensaje de error en caso de fallo
+            const errorDiv = document.getElementById('error-message');
+            if (errorDiv) {
+                errorDiv.textContent = 'Error al obtener los ingresos. Por favor, inténtelo de nuevo más tarde.';
+            } else {
+                console.error('Elemento error-message no encontrado en el DOM.');
+            }
+        });
+}
+
+// Función para filtrar la tabla de ingresos por búsqueda
+function filtrarTabla() {
+    // Obtener el valor de búsqueda de cada campo
+    const entryDate = document.getElementById('entry_date').value.toLowerCase();
+    const expiryDate = document.getElementById('expiry_date').value.toLowerCase();
+    const PK_FK_Proveedor = document.getElementById('PK_FK_Proveedor').value.toLowerCase();
+    const documentNumber = document.getElementById('document_number').value.toLowerCase();
+
+    // Obtener todas las filas de la tabla
+    const filas = document.querySelectorAll('#bodyTablaIngresos tr');
+
+    filas.forEach(fila => {
+        const cells = fila.getElementsByTagName('td');
+        const fechaCompra = new Date(cells[2].textContent.trim()); // Suponiendo que cells[2] contiene la fecha_compra
+        const matchEntryDate = entryDate === '' || fechaCompra >= new Date(entryDate);
+        const matchExpiryDate = expiryDate === '' || fechaCompra <= new Date(expiryDate);
+        const matchPK_FK_Proveedor = PK_FK_Proveedor === '' || cells[1].textContent.toLowerCase().includes(PK_FK_Proveedor);
+        const matchDocumentNumber = documentNumber === '' || cells[0].textContent.toLowerCase().includes(documentNumber);
+
+        if (matchEntryDate && matchExpiryDate && matchPK_FK_Proveedor && matchDocumentNumber) {
+            fila.style.display = '';
+        } else {
+            fila.style.display = 'none';
+        }
+    });
+}
+
+// Llamar a obtenerYListarIngresos al cargar la página
+document.addEventListener('DOMContentLoaded', obtenerYListarIngresos);
+</script> 
+
