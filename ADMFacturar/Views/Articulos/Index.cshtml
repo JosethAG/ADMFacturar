@@ -10,9 +10,9 @@
 		<h2 class="text-lg font-bold mb-4">Filtro de Articulos</h2>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
 			<div class="sm:col-span-1">
-				<label for="city" class="block text-sm font-medium">Nombre de Articulo</label>
+				<label for="nombre_articulo" class="block text-sm font-medium">Nombre de Articulo</label>
 				<div class="mt-1">
-					<input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+					<input type="text" id="nombre_articulo" name="nombre_articulo" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
 				</div>
 			</div>
 		</div>
@@ -43,7 +43,7 @@
 					<th class="py-3 text-center">Acciones</th>
 				</tr>
 			</thead>
-			<tbody class="text-gray-700">
+			<tbody id="bodyTablaArticulos" class="text-gray-700">
 				@if (Model != null && Model.Any())
 				{
 					@foreach (var item in Model)
@@ -85,7 +85,7 @@
 				else
 				{
 					<tr>
-						<td colspan="14">No hay datos disponibles.</td>
+						<td colspan="9">No hay datos disponibles.</td>
 					</tr>
 				}
 			</tbody>
@@ -111,7 +111,7 @@
 
 
 <script>
-
+	// Función para mostrar modal de confirmación de desactivación
 	function mostrarConfirmacion(event) {
 		event.preventDefault();
 		document.getElementById('confirmacionModal').classList.remove('hidden');
@@ -125,4 +125,28 @@
 		return false;
 	}
 
+	// Función para filtrar la tabla de artículos por nombre
+	function filtrarTabla() {
+		// Obtener el valor de búsqueda del campo de nombre
+		const nombreArticulo = document.getElementById('nombre_articulo').value.toLowerCase();
+
+		// Obtener todas las filas de la tabla
+		const filas = document.querySelectorAll('#bodyTablaArticulos tr');
+
+		filas.forEach(fila => {
+			const cells = fila.getElementsByTagName('td');
+			const matchNombre = cells[1].textContent.toLowerCase().includes(nombreArticulo);
+
+			if (matchNombre) {
+				fila.style.display = '';
+			} else {
+				fila.style.display = 'none';
+			}
+		});
+	}
+
+	// Enlazar evento de input para el campo de nombre de artículo
+	document.getElementById('nombre_articulo').addEventListener('input', filtrarTabla);
+
+	
 </script>

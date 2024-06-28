@@ -10,9 +10,9 @@
 		<h2 class="text-lg font-bold mb-4">Filtro de clientes</h2>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
 			<div class="sm:col-span-1">
-				<label for="city" class="block text-sm font-medium">Nombre de Cliente</label>
+				<label for="nombre_cliente" class="block text-sm font-medium">Nombre de Cliente</label>
 				<div class="mt-1">
-					<input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+					<input type="text" id="nombre_cliente" name="nombre_cliente" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
 				</div>
 			</div>
 		</div>
@@ -45,7 +45,7 @@
 					<th class="py-3 text-center">Acciones</th>
 				</tr>
 			</thead>
-			<tbody class="text-gray-700">
+			<tbody id="bodyTablaClientes" class="text-gray-700">
 				@if (Model != null && Model.Any())
 				{
 					@foreach (var item in Model)
@@ -90,7 +90,7 @@
 				else
 				{
 					<tr>
-						<td colspan="14">No hay datos disponibles.</td>
+						<td colspan="12">No hay datos disponibles.</td>
 					</tr>
 				}
 			</tbody>
@@ -130,6 +130,33 @@
 		return false; 
 	}
 
+
+
+	// Función para filtrar la tabla de clientes por nombre
+	function filtrarTabla() {
+		// Obtener el valor del nombre de cliente
+		const clientName = document.getElementById('nombre_cliente').value.toLowerCase();
+
+		// Obtener todas las filas de la tabla
+		const filas = document.querySelectorAll('#bodyTablaClientes tr');
+
+		filas.forEach(fila => {
+			const cells = fila.getElementsByTagName('td');
+			const matchClientName = clientName === '' || cells[3].textContent.toLowerCase().includes(clientName);
+
+			if (matchClientName) {
+				fila.style.display = '';
+			} else {
+				fila.style.display = 'none';
+			}
+		});
+	}
+
+	// Llamar a la función de filtrado al cargar la página y al cambiar el nombre del cliente
+	document.addEventListener('DOMContentLoaded', function () {
+		filtrarTabla(); // Filtrar inicialmente al cargar la página
+		document.getElementById('nombre_cliente').addEventListener('input', filtrarTabla); // Filtrar al cambiar el nombre
+	});
 </script>
 
 
