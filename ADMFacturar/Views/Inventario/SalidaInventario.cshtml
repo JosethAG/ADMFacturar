@@ -1,0 +1,420 @@
+﻿@model SalidaMercaderia
+
+@{
+    var articulos = ViewData["Articulos"] as List<ArticuloViewModel>;
+    var articulosModal = ViewData["ArticulosModal"] as List<ArticuloViewModel>;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salida de Inventario</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="~/css/custom.css" rel="stylesheet" />
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!--                  Inicio Form                        -->
+    <form asp-action="SalidaInventario" method="post" id="formularioIngreso">
+        <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+            <h2 class="text-lg font-bold mb-4">Salida de Inventario</h2>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+                <div class="sm:col-span-2">
+                    <label for="PK_FK_Documento" class="block text-sm font-medium">Número de Documento</label>
+                    <div class="mt-2">
+                        <input asp-for="PK_FK_Documento" id="PK_FK_Documento" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
+                    </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="Fecha_Salida" class="block text-sm font-medium">Fecha de Salida</label>
+                    <div class="mt-2">
+                        <input asp-for="Fecha_Salida" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
+                    </div>
+                </div>
+
+                @*             <div class="sm:col-span-2">
+                <label for="Tipo_Salida" class="block text-sm font-medium">Proveedor</label>
+                <div class="mt-2">
+                <select asp-for="Tipo_Salida" id="Tipo_Salida" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                <option value="">Seleccione un proveedor</option>
+                @if (proveedores != null)
+                {
+                @foreach (var proveedor in proveedores)
+                {
+                <option value="@proveedor.PK_Proveedor">@proveedor.Nombre</option>
+                }
+                }
+                </select>
+
+                </div>
+                </div> *@
+                <div class="sm:col-span-2">
+                    <label for="Tipo_Salida" class="block text-sm font-medium">Tipo Salida</label>
+                    <div class="mt-2">
+                        <select asp-for="Tipo_Salida" id="Tipo_Salida" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                            <option value="">Seleccione una opción</option>
+                            <option value="Daño">Daño</option>
+                            <option value="Regalía">Regalía</option>
+                            <option value="Ajuste Inventario">Ajuste Inventario</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sm:col-span-4">
+                    <label for="Observaciones" class="block text-sm font-medium">Observaciones</label>
+                    <div class="mt-2">
+                        <input asp-for="Observaciones" id="Observaciones" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                    </div>
+                </div>
+            </div>
+            <h2 class="text-lg font-bold mb-4 mt-8">Articulos</h2>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+                <div class="sm:col-span-2">
+                    <label for="PK_FK_Articulo" class="block text-sm font-medium leading-6 text-white">Código Artículo</label>
+                    <div class="mt-2 flex items-center space-x-2">
+                        <input asp-for="PK_FK_Articulo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
+                        <button type="button" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded inline-flex items-center justify-center" onclick="openModal()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="Cantidad" class="block text-sm font-medium leading-6 text-white">Cantidad</label>
+                    <div class="mt-2">
+                        <input asp-for="Cantidad" value="" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
+                    </div>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="Costo" class="block text-sm font-medium leading-6 text-white invisible">Agregar</label>
+                    <div class="mt-2 flex items-center space-x-2">
+                        <!-- <input asp-for="Costo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required> -->
+                        <button type="submit" asp-action="SalidaInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-4 rounded">
+                            Agregar Artículo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input asp-for="Estado" value="" type="hidden" />
+        <input asp-for="FK_Usuario_Creacion" value="user1" type="hidden" />
+        <input asp-for="FK_Usuario_Modificacion" value="user1" type="hidden" />
+        <input asp-for="Fecha_Creacion" value="" type="hidden" />
+        <input asp-for="Fecha_Modificacion" value="" type="hidden" />
+        <!--                  Final Tabla                        -->
+    </form>
+
+    <!--                  Inicio Tabla                        -->
+
+    <div class="w-full mt-8">
+        <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+            <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Articulos</h3>
+            <div class="flex items-center space-x-2">
+                <form id="guardarForm" method="post" asp-action="GuardarSalidaMercaderia">
+                    <input type="hidden" name="PK" id="hiddenPK" />
+                    <button type="submit" id="btnGuardar" class="rounded-md bg-green-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-green-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
+                </form>
+                <a href="@Url.Action("IndexSalida", "Inventario")" class="rounded-md bg-red-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-indigo-500">Salir</a>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+        <table class="min-w-full leading-normal" id="tablaArticulos">
+            <thead>
+                <tr class="bg-gray-800 text-white">
+                    <th class="text-center py-3">Código</th>
+                    <th class="text-center py-3">Nombre</th>
+                    <th class="text-center py-3">Cantidad</th>
+                    <th class="text-center py-3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+                @if (articulos != null)
+                {
+                    @foreach (var articulo in articulos)
+                    {
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 text-center">@articulo.PK_Articulo</td>
+                            <td class="py-3 text-center">@articulo.Descripcion</td>
+                            <td class="py-3 text-center">@articulo.Cantidad</td>
+                            <td class="py-3 text-center">
+                                <div class="flex justify-center space-x-2">
+                                    <form method="post" asp-action="EliminarArticuloSalida" class="eliminar-form">
+                                        <input type="hidden" name="PK_FK_Documento" id="pkDocumentoEliminar" value="">
+                                        <input type="hidden" name="PK_Articulo" value="@articulo.PK_Articulo">
+                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--                  Inicio Modal                       -->
+
+    <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden">
+        <div class="bg-gray-900 text-white rounded-lg p-6 w-full max-w-md shadow-xl">
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-4">Buscar Artículo</h3>
+                <div class="relative">
+                    <input type="text" id="buscarArticulo" class="block w-full rounded-md py-2 px-3 bg-white text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Buscar por código o descripción">
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+                    <table class="min-w-full leading-normal" id="tablaArticulosModal">
+                        <thead>
+                            <tr class="bg-gray-800 text-white">
+                                <th class="text-center py-3 px-4">Código</th>
+                                <th class="text-center py-3 px-4">Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <!-- Filas de artículos generadas dinámicamente por JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded" onclick="closeModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!--                  Fin Modal                       -->
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+    <script>
+
+
+        function openModal() {
+            fetch('/Inventario/ListarArticulos')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Datos recibidos del API:', data);
+
+                    // Filtrar por búsqueda
+                    const buscar = document.getElementById('buscarArticulo').value.toLowerCase();
+                    const filteredData = data.filter(articulo =>
+                        articulo.pK_Articulo.toLowerCase().includes(buscar) || articulo.descripcion.toLowerCase().includes(buscar)
+                    );
+
+                    // Limpiar la tabla actual
+                    var tableBody = document.querySelector('#tablaArticulosModal tbody');
+                    tableBody.innerHTML = '';
+
+                    // Iterar sobre los artículos filtrados y agregar filas a la tabla
+                    filteredData.forEach(articulo => {
+                        console.log('Artículo:', articulo);
+
+                        var row = `
+                                                        <tr class="border-b border-gray-200 hover:bg-gray-100" cursor-pointer" onclick="seleccionarArticulo('${articulo.pK_Articulo}', '${articulo.descripcion}')">
+                                                        <td class="py-3 text-center">${articulo.pK_Articulo}</td>
+                                                        <td class="py-3 text-center">${articulo.descripcion}</td>
+                                                    </tr>
+                                                `;
+                        tableBody.innerHTML += row;
+                    });
+
+                    // Mostrar la modal
+                    document.getElementById('modal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error al obtener los artículos:', error);
+                });
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function seleccionarArticulo(codigo, descripcion) {
+            // Asignar el código del artículo al campo PK_FK_Articulo
+            document.getElementById('PK_FK_Articulo').value = codigo;
+            // Cerrar la modal después de seleccionar el artículo
+            closeModal();
+        }
+
+        // Función para filtrar los artículos al escribir en el campo de búsqueda
+        document.getElementById('buscarArticulo').addEventListener('input', function () {
+            openModal(); // Volver a cargar la modal con los resultados filtrados al cambiar el texto de búsqueda
+        });
+
+        //  <!--Fin Modal-- >
+
+
+
+        //   <!--Inicio Validacion al guardar-- >
+
+        document.getElementById('btnGuardar').addEventListener('click', function (event) {
+            event.preventDefault(); // Detener el envío normal del formulario
+            var pkDocumento = document.getElementById('PK_FK_Documento').value;
+
+            // Validar campos requeridos
+            var documento = document.querySelector('[name="PK_FK_Documento"]').value;
+            var proveedor = document.querySelector('[name="Tipo_Salida"]').value;
+            var fechaSalida = document.querySelector('[name="Fecha_Salida"]').value;
+
+            if (!documento || !proveedor || !fechaSalida) {
+                // Mostrar mensaje de error con SweetAlert2 si no están completos los campos
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor complete todos los campos requeridos.',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                // Verificar si hay artículos en la tabla
+                var tablaArticulos = document.getElementById('tablaArticulos');
+                var filas = tablaArticulos.getElementsByTagName('tr');
+
+                if (filas.length <= 1) { // Si la tabla tiene solo la fila de encabezado
+                    // Mostrar mensaje de error con SweetAlert2 si no hay artículos
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Debe agregar al menos un artículo.',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    // Crear objeto FormData con los datos del formulario
+                    var formData = new FormData();
+                    formData.append('PK', documento); // Agregar la PK del documento
+
+                    // Enviar los datos al controlador utilizando fetch
+                    fetch('/Inventario/GuardarSalidaMercaderia', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Mostrar mensaje de éxito con SweetAlert2
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Guardado Correctamente',
+                                    showConfirmButton: true, // Mostrar botón de confirmación
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK' // Texto del botón de confirmación
+                                }).then((result) => {
+                                    // Redirigir a la página de índice de inventario después de guardar
+                                    window.location.href = '/Inventario/IndexSalida';
+                                });
+                            } else {
+                                throw new Error('Error al guardar los datos');
+                            }
+                        })
+                        .catch(error => {
+                            // Mostrar mensaje de error con SweetAlert2
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: error.message,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                }
+            }
+        });
+
+        //   <!--Fin Validacion al guardar-- >
+
+
+        //   <!--Inicio Validacion boton eliminar-- >
+
+
+        document.querySelectorAll('.eliminar-form').forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Detener el envío normal del formulario
+
+                // Obtener la PK del documento y del artículo desde el formulario
+                var pkDocumento = document.getElementById('PK_FK_Documento').value;
+                var pkArticulo = this.querySelector('input[name="PK_Articulo"]').value;
+
+                document.getElementById('pkDocumentoEliminar').value = pkDocumento;
+
+                // Mostrar mensaje de confirmación con SweetAlert2
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "No podrá revertir esto",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Crear objeto FormData con los datos del formulario
+                        var formData = new FormData();
+                        formData.append('PK_FK_Documento', pkDocumento);
+                        formData.append('PK_Articulo', pkArticulo);
+
+                        // Enviar los datos al controlador utilizando fetch
+                        fetch(`/Inventario/EliminarArticuloSalida?PK_FK_Documento=${pkDocumento}&PK_Articulo=${pkArticulo}`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    // Mostrar mensaje de éxito con SweetAlert2
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Artículo eliminado correctamente',
+                                        showConfirmButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        // Recargar la página después de eliminar
+                                        location.reload();
+                                    });
+                                } else {
+                                    throw new Error('Error al eliminar el artículo');
+                                }
+                            })
+                            .catch(error => {
+                                // Mostrar mensaje de error con SweetAlert2
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: error.message,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            });
+                    }
+                });
+            });
+        });
+
+
+        //   <!--Fin Validacion boton eliminar-- >
+    </script>
+</body>
+</html>
