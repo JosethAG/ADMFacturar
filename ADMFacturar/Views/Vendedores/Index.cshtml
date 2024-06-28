@@ -5,121 +5,136 @@
 <div class="w-full">
 </div>
 
-<!--                  Formulario                        -->
+<!-- Formulario -->
 <form>
-	<div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
-		<h2 class="text-lg font-bold mb-4">Filtro de Vendedores</h2>
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
-			<div class="sm:col-span-1">
-				<label for="city" class="block text-sm font-medium">Nombre de Vendedor</label>
-				<div class="mt-1">
-					<input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+        <h2 class="text-lg font-bold mb-4">Filtro de Vendedores</h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+            <div class="sm:col-span-1">
+                <label for="nombre_vendedor" class="block text-sm font-medium">Nombre de Vendedor</label>
+                <div class="mt-1">
+                    <input type="text" id="nombre_vendedor" name="nombre_vendedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
-<!--Final de From-->
+<!-- Final de Formulario -->
+
 <div class="w-full mt-8">
-	<div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
-		<h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Vendedores</h3>
-		<div>
-			<a asp-action="CrearVendedor" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Vendedor</a>
-		</div>
-	</div>
+    <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+        <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Vendedores</h3>
+        <div>
+            <a asp-action="CrearVendedor" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Vendedor</a>
+        </div>
+    </div>
 
-
-	<!--                  Tabla                        -->
-	<div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
-		<table class="min-w-full leading-normal">
-			<thead>
-				<tr class="bg-gray-800 text-white">
-					<th class="py-3 text-center">Codigo Vendedor</th>
-					<th class="py-3 text-center">Nombre Vendedor</th>
-					<th class="py-3 text-center">Telefono Vendedor</th>
-					<th class="py-3 text-center">Correo Vendedor</th>
-					<th class="py-3 text-center">Estado Vendedor</th>
-					<th class="py-3 text-center">Acciones</th>
-				</tr>
-			</thead>
-			<tbody class="text-gray-700">
-				@if (Model != null && Model.Any())
-				{
-					@foreach (var item in Model)
-					{
-						<tr class="border-b border-gray-200 hover:bg-gray-100">
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_Vendedor)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Nombre)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Telefono)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Correo)</td>
-							<td class="py-3 text-center">
-								@if (item.Estado)
-								{
-									<span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
-								}
-								else
-								{
-									<span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
-								}
-							</td>
-							@* <td class="p-3 border border-gray-300"> *@
-							<td>						
-								<div class="flex justify-center space-x-2">
-									<a asp-action="ActualizarVendedor" asp-route-PK="@item.PK_Vendedor" class="text-blue-600 hover:text-blue-900" title="Editar">
-										<i class="fas fa-edit"></i>
-									</a>
-									<form method="post" asp-action="DesactivarVendedor" asp-route-PK="@item.PK_Vendedor" onsubmit="return mostrarConfirmacion(event)">
-										<button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-											<i class="fa-solid fa-ban"></i>
-										</button>
-									</form>
-								</div>
-							
-							</td>
-						</tr>
-					}
-				}
-				else
-				{
-					<tr>
-						<td colspan="14">No hay datos disponibles.</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
+    <!-- Tabla -->
+    <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+        <table class="min-w-full leading-normal">
+            <thead>
+                <tr class="bg-gray-800 text-white">
+                    <th class="py-3 text-center">Codigo Vendedor</th>
+                    <th class="py-3 text-center">Nombre Vendedor</th>
+                    <th class="py-3 text-center">Telefono Vendedor</th>
+                    <th class="py-3 text-center">Correo Vendedor</th>
+                    <th class="py-3 text-center">Estado Vendedor</th>
+                    <th class="py-3 text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="bodyTablaVendedores" class="text-gray-700">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_Vendedor)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Telefono)</td>
+                            <td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Correo)</td>
+                            <td class="py-3 text-center">
+                                @if (item.Estado)
+                                {
+                                    <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="flex justify-center space-x-2">
+                                    <a asp-action="ActualizarVendedor" asp-route-PK="@item.PK_Vendedor" class="text-blue-600 hover:text-blue-900" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="post" asp-action="DesactivarVendedor" asp-route-PK="@item.PK_Vendedor" onsubmit="return mostrarConfirmacion(event)">
+                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+                                            <i class="fa-solid fa-ban"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="14">No hay datos disponibles.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- Modal de confirmación -->
 <div id="confirmacionModal" class="fixed inset-0 z-10 overflow-y-auto hidden">
-	<div class="flex items-center justify-center min-h-screen">
-		<div class="bg-white rounded-lg p-6 shadow-xl">
-			<div class="mb-4 text-center">
-				<p class="text-lg font-semibold">¿Seguro que deseas desactivar este Vendedor?</p>
-			</div>
-			<div class="text-center">
-				<button onclick="confirmarDesactivacion()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">Confirmar</button>
-				<button onclick="cancelarDesactivacion()" class="border border-gray-300 hover:bg-gray-200 font-semibold py-2 px-4 rounded">Cancelar</button>
-			</div>
-		</div>
-	</div>
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg p-6 shadow-xl">
+            <div class="mb-4 text-center">
+                <p class="text-lg font-semibold">¿Seguro que deseas desactivar este Vendedor?</p>
+            </div>
+            <div class="text-center">
+                <button onclick="confirmarDesactivacion()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">Confirmar</button>
+                <button onclick="cancelarDesactivacion()" class="border border-gray-300 hover:bg-gray-200 font-semibold py-2 px-4 rounded">Cancelar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-
 <script>
+    // Función para mostrar el modal de confirmación
+    function mostrarConfirmacion(event) {
+        event.preventDefault();
+        document.getElementById('confirmacionModal').classList.remove('hidden');
+        window.confirmarDesactivacion = function () {
+            event.target.closest('form').submit();
+        };
+        window.cancelarDesactivacion = function () {
+            document.getElementById('confirmacionModal').classList.add('hidden');
+        };
 
-	function mostrarConfirmacion(event) {
-		event.preventDefault();
-		document.getElementById('confirmacionModal').classList.remove('hidden');
-		window.confirmarDesactivacion = function () {
-			event.target.closest('form').submit();
-		};
-		window.cancelarDesactivacion = function () {
-			document.getElementById('confirmacionModal').classList.add('hidden');
-		};
+        return false;
+    }
 
-		return false;
-	}
+    // Función para filtrar la tabla de vendedores por nombre
+    function filtrarTabla() {
+        const nombreVendedor = document.getElementById('nombre_vendedor').value.toLowerCase();
+        const filas = document.querySelectorAll('#bodyTablaVendedores tr');
 
+        filas.forEach(fila => {
+            const cells = fila.getElementsByTagName('td');
+            const matchNombreVendedor = nombreVendedor === '' || cells[1].textContent.toLowerCase().includes(nombreVendedor);
+
+            if (matchNombreVendedor) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
+            }
+        });
+    }
+
+    // Agregar evento al campo de texto para filtrar en tiempo real
+    document.getElementById('nombre_vendedor').addEventListener('input', filtrarTabla);
 </script>
