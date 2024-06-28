@@ -65,8 +65,22 @@ namespace ADM.API.Controllers
 			var result = JsonProvider.DeserializeSimple<IEnumerable<ArticuloViewModel>>(jsonArticle);
 			return result;
 		}
+        [HttpGet]
+        [Route("ArticuloXDocumentoSalida/{id}")]
+        public IEnumerable<ArticuloViewModel> ArticuloXDocumentoSalida(string? id)
+        {
+            List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@PK_FK_Documento", id)
+                    };
+            DataTable tArticulo = DBData.List("sp_ListarSalidaPorDoc", parameters);
 
-		[HttpGet]
+            string jsonArticle = JsonConvert.SerializeObject(tArticulo);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<ArticuloViewModel>>(jsonArticle);
+            return result;
+        }
+
+        [HttpGet]
 		[Route("Obtener/{PK}")]
 		public Articulo ObtenerArticulo(string? PK)
 		{

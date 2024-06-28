@@ -7,11 +7,11 @@ using ADM.Models;
 
 namespace ADM.Interface
 {
-    public interface IIngresoMercaderiaService
+    public interface ISalidaMercaderiaService
     {
-        IEnumerable<IngresoMercaderia> ListaIngresoMercaderias(string? Nombre);
-        bool CrearUpdIngresoMercaderia(IngresoMercaderia IngresoMercaderia);
-        bool EliminarIngresoMercaderia(string Id);
+        IEnumerable<SalidaMercaderia> ListaSalidaMercaderias(string? Nombre);
+        bool CrearUpdSalidaMercaderia(SalidaMercaderia SalidaMercaderia);
+        bool EliminarSalidaMercaderia(string Id);
 
     }
 }
