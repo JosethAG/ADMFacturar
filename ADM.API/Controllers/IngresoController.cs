@@ -161,5 +161,20 @@ namespace ADM.API.Controllers
 
 
 
+
+        //Metodos Api para salida de Mercaderia
+
+
+        [HttpGet]
+        [Route("ListarSalidaMercaderia")]
+        public IEnumerable<SalidaMercaderia> ListaSalidaMercaderia()
+        {
+            DataTable tSalidaMercaderia = DBData.List("sp_ListarSalidaMercaderia");
+            string jsonArticle = JsonConvert.SerializeObject(tSalidaMercaderia);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<SalidaMercaderia>>(jsonArticle);
+            return result;
+        }
+
+
     }
 }

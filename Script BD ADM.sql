@@ -301,6 +301,47 @@ ALTER TABLE [dbo].[TBL_INGRESO_MERCADERIA] CHECK CONSTRAINT [FK_TBL_INGRESO_MERC
 GO
 
 
+/****** Object:  Table [dbo].[TBL_SALIDA_MERCADERIA]    Script Date: 6/27/2024 7:36:35 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_SALIDA_MERCADERIA](
+	[PK_FK_Documento] [varchar](50) NOT NULL,
+	[Fecha_Salida] [datetime] NOT NULL,
+	[Tipo_Salida] [varchar](50) NOT NULL,
+	[Observaciones] [varchar](50)  NULL,
+	[PK_FK_Articulo] [varchar](50) NOT NULL,
+	[Cantidad] [int] NOT NULL,
+	[Linea] [int] IDENTITY(1,1) NOT NULL,
+	[Estado] [varchar](20) NOT NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NOT NULL,
+ CONSTRAINT [PK_TBL_SALIDA_MERCADERIA_1] PRIMARY KEY CLUSTERED 
+(
+	[PK_FK_Documento] ASC,
+	[PK_FK_Articulo] ASC
+
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TBL_SALIDA_MERCADERIA] ADD  CONSTRAINT [DF_TBL_SALIDA_MERCADERIA_Fecha_Creacion]  DEFAULT (getdate()) FOR [Fecha_Creacion]
+GO
+
+ALTER TABLE [dbo].[TBL_SALIDA_MERCADERIA] ADD  CONSTRAINT [DF_TBL_SALIDA_MERCADERIA_Fecha_Modificacion]  DEFAULT (getdate()) FOR [Fecha_Modificacion]
+GO
+
+ALTER TABLE [dbo].[TBL_SALIDA_MERCADERIA]  WITH NOCHECK ADD  CONSTRAINT [FK_TBL_SALIDA_MERCADERIA_TBL_INV_ARTICULO] FOREIGN KEY([PK_FK_Articulo])
+REFERENCES [dbo].[TBL_ARTICULO] ([PK_Articulo])
+GO
+
+ALTER TABLE [dbo].[TBL_SALIDA_MERCADERIA] CHECK CONSTRAINT [FK_TBL_SALIDA_MERCADERIA_TBL_INV_ARTICULO]
+GO
 
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
@@ -1860,7 +1901,7 @@ END
 GO
 
 -------------------------------------------------
-					/*Inventario*/
+					/*Ingreso Inventario*/
 -------------------------------------------------
 /****** Object:  StoredProcedure [dbo].[sp_ListarIngresoMercaderiaVM]    Script Date: 6/23/2024 10:46:46 AM ******/
 SET ANSI_NULLS ON
@@ -2016,7 +2057,234 @@ BEGIN
     END
 END
 
-GO	    
+GO
+
+
+/** Object:  StoredProcedure [dbo].[sp_ListarIngresoPorDoc]    Script Date: 6/23/2024 10:59:00 AM **/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarIngresoPorDoc]
+    @PK_FK_Documento varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+SELECT 
+    im.PK_FK_Articulo AS PK_Articulo,
+    A.Descripcion,
+    im.Cantidad,
+    im.Costo,
+    (im.Cantidad * im.Costo) AS Precio
+FROM [dbo].[TBL_INGRESO_MERCADERIA] im
+INNER JOIN [dbo].[TBL_ARTICULO] a ON im.PK_FK_Articulo = a.PK_Articulo
+WHERE PK_FK_Documento = @PK_FK_Documento
+ORDER BY 
+    Linea DESC;
+END;
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_EliminarArticuloIngreso]    Script Date: 6/26/2024 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Procedimiento almacenado para eliminar un artículo de ingreso de mercadería
+CREATE PROCEDURE [dbo].[sp_EliminarArticuloIngreso]
+    @PK_FK_Documento varchar(50),
+    @PK_FK_Articulo varchar(50)
+AS
+BEGIN
+    -- Evita que el procedimiento se detenga y muestre un error en caso de no encontrar el registro
+    SET NOCOUNT ON;
+
+    -- Elimina el registro específico de la tabla TBL_INGRESO_MERCADERIA
+    DELETE FROM [dbo].[TBL_INGRESO_MERCADERIA]
+    WHERE [PK_FK_Documento] = @PK_FK_Documento AND [PK_FK_Articulo] = @PK_FK_Articulo;
+
+    -- Opcional: Agregar manejo de errores o lógica adicional aquí
+
+END
+GO
+
+
+-------------------------------------------------
+					/*Salida Inventario*/
+-------------------------------------------------
+GO	
+/****** Object:  StoredProcedure [dbo].[sp_ListarSalidaMercaderia]    Script Date: 6/27/2024 7:41:59 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarSalidaMercaderia]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+SELECT 
+    PK_FK_Documento,
+    CONVERT(varchar, Fecha_Salida, 23) AS Fecha_Salida,
+    Tipo_Salida,
+	Observaciones,
+	Estado
+FROM [dbo].[TBL_SALIDA_MERCADERIA] 
+GROUP BY 
+    PK_FK_Documento,
+    CONVERT(varchar, Fecha_Salida, 23),
+    Tipo_Salida,
+	Observaciones,
+	Estado
+ORDER BY 
+    Fecha_Salida DESC;
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarSalidaMercaderia]    Script Date: 6/27/2024 9:41:30 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarActualizarSalidaMercaderia]
+    @PK_FK_Documento varchar(50),
+    @Fecha_Salida datetime,
+    @Tipo_Salida varchar(50),
+    @Observaciones varchar(100),
+    @PK_FK_Articulo varchar(50),
+    @Cantidad int,
+    @FK_Usuario_Creacion varchar(50),
+    @FK_Usuario_Modificacion varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Verificar si ya existe el ingreso
+    IF EXISTS (SELECT 1 FROM [dbo].[TBL_SALIDA_MERCADERIA]
+               WHERE [PK_FK_Documento] = @PK_FK_Documento   
+               AND [PK_FK_Articulo] = @PK_FK_Articulo)
+    BEGIN
+        -- Actualizar la cantidad y el costo si ya existe
+        UPDATE [dbo].[TBL_SALIDA_MERCADERIA]
+        SET [Cantidad] = @Cantidad
+        WHERE [PK_FK_Documento] = @PK_FK_Documento
+        AND [PK_FK_Articulo] = @PK_FK_Articulo;
+    END
+    ELSE
+    BEGIN
+        -- Insertar un nuevo ingreso si no existe
+        INSERT INTO [dbo].[TBL_SALIDA_MERCADERIA] (
+            [PK_FK_Documento],
+			[Fecha_Salida],
+			[Tipo_Salida],
+			[Observaciones],
+            [PK_FK_Articulo],
+            [Cantidad],
+			[Estado],
+            [FK_Usuario_Creacion],
+            [FK_Usuario_Modificacion],
+            [Fecha_Creacion],
+            [Fecha_Modificacion]
+        )
+        VALUES (
+            @PK_FK_Documento,
+            @Fecha_Salida,
+			@Tipo_Salida,
+            @Observaciones,
+            @PK_FK_Articulo,
+            @Cantidad,
+			'Pendiente',
+            @FK_Usuario_Creacion,
+            @FK_Usuario_Modificacion,
+            GETDATE(),
+            GETDATE()
+        );
+    END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[[sp_ListarSalidaPorDoc]]    Script Date: 6/27/2024 10:14:08 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarSalidaPorDoc]
+    @PK_FK_Documento varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+SELECT 
+    im.PK_FK_Articulo AS PK_Articulo,
+    A.Descripcion,
+    im.Cantidad
+FROM [dbo].[TBL_SALIDA_MERCADERIA] im
+INNER JOIN [dbo].[TBL_ARTICULO] a ON im.PK_FK_Articulo = a.PK_Articulo
+WHERE PK_FK_Documento = @PK_FK_Documento
+ORDER BY 
+    Linea DESC;
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarArticuloSalida]    Script Date: 6/27/2024 10:22:46 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Procedimiento almacenado para eliminar un artículo de ingreso de mercadería
+CREATE PROCEDURE [dbo].[sp_EliminarArticuloSalida]
+    @PK_FK_Documento varchar(50),
+    @PK_FK_Articulo varchar(50)
+AS
+BEGIN
+    -- Evita que el procedimiento se detenga y muestre un error en caso de no encontrar el registro
+    SET NOCOUNT ON;
+
+    -- Elimina el registro específico de la tabla TBL_INGRESO_MERCADERIA
+    DELETE FROM [dbo].[TBL_SALIDA_MERCADERIA]
+    WHERE [PK_FK_Documento] = @PK_FK_Documento AND [PK_FK_Articulo] = @PK_FK_Articulo;
+
+    -- Opcional: Agregar manejo de errores o lógica adicional aquí
+
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_GuardarSalidaMercaderia]    Script Date: 6/27/2024 10:38:40 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_GuardarSalidaMercaderia] 
+    @PK_FK_Documento VARCHAR(50)
+AS
+BEGIN
+    -- Actualizar el estado a 'Completado' en TBL_SALIDA_MERCADERIA
+    UPDATE TBL_SALIDA_MERCADERIA
+    SET Estado = 'Completado'
+    WHERE PK_FK_Documento = @PK_FK_Documento;
+
+    -- Actualizar las cantidades en TBL_ARTICULO
+    UPDATE A
+    SET A.Cantidad = A.Cantidad - IM.Cantidad
+    FROM TBL_ARTICULO A
+    INNER JOIN TBL_SALIDA_MERCADERIA IM ON A.PK_Articulo = IM.PK_FK_Articulo
+    WHERE IM.PK_FK_Documento = @PK_FK_Documento;
+
+END
+
+GO
+	
+
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/

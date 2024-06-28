@@ -1,8 +1,7 @@
-﻿@model IngresoMercaderia
+﻿@model SalidaMercaderia
 
 @{
     var articulos = ViewData["Articulos"] as List<ArticuloViewModel>;
-    var proveedores = ViewData["Proveedores"] as List<Proveedor>;
     var articulosModal = ViewData["ArticulosModal"] as List<ArticuloViewModel>;
 }
 
@@ -11,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingreso de Inventario</title>
+    <title>Salida de Inventario</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="~/css/custom.css" rel="stylesheet" />
     <!-- SweetAlert2 CSS -->
@@ -20,9 +19,9 @@
 <body>
 
     <!--                  Inicio Form                        -->
-    <form asp-action="AgregarInventario" method="post" id="formularioIngreso">
+    <form asp-action="SalidaInventario" method="post" id="formularioIngreso">
         <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
-            <h2 class="text-lg font-bold mb-4">Ingreso de Inventario</h2>
+            <h2 class="text-lg font-bold mb-4">Salida de Inventario</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
                 <div class="sm:col-span-2">
                     <label for="PK_FK_Documento" class="block text-sm font-medium">Número de Documento</label>
@@ -32,49 +31,49 @@
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="Fecha_Compra" class="block text-sm font-medium">Fecha de Compra</label>
+                    <label for="Fecha_Salida" class="block text-sm font-medium">Fecha de Salida</label>
                     <div class="mt-2">
-                        <input asp-for="Fecha_Compra" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
+                        <input asp-for="Fecha_Salida" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
                     </div>
                 </div>
 
-                <div class="sm:col-span-2">
-                    <label for="PK_FK_Proveedor" class="block text-sm font-medium">Proveedor</label>
-                    <div class="mt-2">
-                        <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
-                            <option value="">Seleccione un proveedor</option>
-                            @if (proveedores != null)
-                            {
-                                @foreach (var proveedor in proveedores)
-                                {
-                                    <option value="@proveedor.PK_Proveedor">@proveedor.Nombre</option>
-                                }
-                            }
-                        </select>
+                @*             <div class="sm:col-span-2">
+                <label for="Tipo_Salida" class="block text-sm font-medium">Proveedor</label>
+                <div class="mt-2">
+                <select asp-for="Tipo_Salida" id="Tipo_Salida" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                <option value="">Seleccione un proveedor</option>
+                @if (proveedores != null)
+                {
+                @foreach (var proveedor in proveedores)
+                {
+                <option value="@proveedor.PK_Proveedor">@proveedor.Nombre</option>
+                }
+                }
+                </select>
 
-                    </div>
                 </div>
+                </div> *@
                 <div class="sm:col-span-2">
-                    <label for="FK_CondicionPago" class="block text-sm font-medium">Condición de Pago</label>
+                    <label for="Tipo_Salida" class="block text-sm font-medium">Tipo Salida</label>
                     <div class="mt-2">
-                        <select asp-for="FK_CondicionPago" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
-                            <option value="">Seleccionar Forma de Pago</option>
-                            <option value="1">Contado</option>
-                            <option value="2">Crédito 30 días</option>
-                            <option value="3">Crédito 60 días</option>
-                            <option value="4">Crédito 90 días</option>
-                            <option value="5">Anticipo 50%</option>
+                        <select asp-for="Tipo_Salida" id="Tipo_Salida" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                            <option value="">Seleccione una opción</option>
+                            <option value="Daño">Daño</option>
+                            <option value="Regalía">Regalía</option>
+                            <option value="Ajuste Inventario">Ajuste Inventario</option>
+                            <option value="Otro">Otro</option>
                         </select>
                     </div>
                 </div>
+
                 <div class="sm:col-span-4">
-                    <label for="document_number" class="block text-sm font-medium">Observaciones</label>
+                    <label for="Observaciones" class="block text-sm font-medium">Observaciones</label>
                     <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                        <input asp-for="Observaciones" id="Observaciones" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
                     </div>
                 </div>
             </div>
-            <h2 class="text-lg font-bold mb-4 mt-8">Ingreso de Articulos</h2>
+            <h2 class="text-lg font-bold mb-4 mt-8">Articulos</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
                 <div class="sm:col-span-2">
                     <label for="PK_FK_Articulo" class="block text-sm font-medium leading-6 text-white">Código Artículo</label>
@@ -92,18 +91,17 @@
                     </div>
                 </div>
                 <div class="sm:col-span-2">
-                    <label for="Costo" class="block text-sm font-medium leading-6 text-white">Costo</label>
+                    <label for="Costo" class="block text-sm font-medium leading-6 text-white invisible">Agregar</label>
                     <div class="mt-2 flex items-center space-x-2">
-                        <input asp-for="Costo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
-                        <button type="submit" asp-action="AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-4 rounded">
+                        <!-- <input asp-for="Costo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required> -->
+                        <button type="submit" asp-action="SalidaInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-4 rounded">
                             Agregar Artículo
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        <input asp-for="Estado" value="0" type="hidden" />
-        <input asp-for="Subtotal" value="0" type="hidden" />
+        <input asp-for="Estado" value="" type="hidden" />
         <input asp-for="FK_Usuario_Creacion" value="user1" type="hidden" />
         <input asp-for="FK_Usuario_Modificacion" value="user1" type="hidden" />
         <input asp-for="Fecha_Creacion" value="" type="hidden" />
@@ -116,20 +114,12 @@
     <div class="w-full mt-8">
         <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
             <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Articulos</h3>
-            @*       <div>
-            <form id="guardarForm" method="post" asp-action="GuardarIngresoMercaderia">
-            <input type="hidden" name="PK" id="hiddenPK" />
-            <button type="submit" id="btnGuardar" class="rounded-md bg-green-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-green-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
-            </form>
-            <a href="@Url.Action("Index", "Inventario")" class="rounded-md bg-red-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-indigo-500 inline-block mt-4">Salir</a>
-
-            </div> *@
             <div class="flex items-center space-x-2">
-                <form id="guardarForm" method="post" asp-action="GuardarIngresoMercaderia">
+                <form id="guardarForm" method="post" asp-action="GuardarSalidaMercaderia">
                     <input type="hidden" name="PK" id="hiddenPK" />
                     <button type="submit" id="btnGuardar" class="rounded-md bg-green-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-green-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
                 </form>
-                <a href="@Url.Action("Index", "Inventario")" class="rounded-md bg-red-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-indigo-500">Salir</a>
+                <a href="@Url.Action("IndexSalida", "Inventario")" class="rounded-md bg-red-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-indigo-500">Salir</a>
             </div>
         </div>
     </div>
@@ -140,8 +130,6 @@
                     <th class="text-center py-3">Código</th>
                     <th class="text-center py-3">Nombre</th>
                     <th class="text-center py-3">Cantidad</th>
-                    <th class="text-center py-3">Costo</th>
-                    <th class="text-center py-3">Total</th>
                     <th class="text-center py-3">Acciones</th>
                 </tr>
             </thead>
@@ -154,23 +142,9 @@
                             <td class="py-3 text-center">@articulo.PK_Articulo</td>
                             <td class="py-3 text-center">@articulo.Descripcion</td>
                             <td class="py-3 text-center">@articulo.Cantidad</td>
-                            <td class="py-3 text-center">@articulo.Costo</td>
-                            <td class="py-3 text-center">@articulo.Precio</td>
                             <td class="py-3 text-center">
                                 <div class="flex justify-center space-x-2">
-
-                                    @*           <form method="post" asp-action="AgregarInventario">
-                            <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Eliminar">
-                            <i class="fas fa-trash"></i>
-                            </button>
-                            </form>
-                            *@
-                                    @*    <form method="post" asp-action="EliminarArticulo" asp-route-PK_FK_Documento="@Model.PK_FK_Documento" asp-route-PK_Articulo="@articulo.PK_Articulo" class="eliminar-form">
-                            <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Eliminar">
-                            <i class="fas fa-trash"></i>
-                            </button>
-                            </form> *@
-                                    <form method="post" asp-action="EliminarArticulo" class="eliminar-form">
+                                    <form method="post" asp-action="EliminarArticuloSalida" class="eliminar-form">
                                         <input type="hidden" name="PK_FK_Documento" id="pkDocumentoEliminar" value="">
                                         <input type="hidden" name="PK_Articulo" value="@articulo.PK_Articulo">
                                         <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Eliminar">
@@ -186,7 +160,7 @@
             </tbody>
         </table>
     </div>
-    
+
 
     <!--                  Inicio Modal                       -->
 
@@ -254,11 +228,11 @@
                         console.log('Artículo:', articulo);
 
                         var row = `
-                                        <tr class="border-b border-gray-200 hover:bg-gray-100" cursor-pointer" onclick="seleccionarArticulo('${articulo.pK_Articulo}', '${articulo.descripcion}')">
-                                        <td class="py-3 text-center">${articulo.pK_Articulo}</td>
-                                        <td class="py-3 text-center">${articulo.descripcion}</td>
-                                    </tr>
-                                `;
+                                                        <tr class="border-b border-gray-200 hover:bg-gray-100" cursor-pointer" onclick="seleccionarArticulo('${articulo.pK_Articulo}', '${articulo.descripcion}')">
+                                                        <td class="py-3 text-center">${articulo.pK_Articulo}</td>
+                                                        <td class="py-3 text-center">${articulo.descripcion}</td>
+                                                    </tr>
+                                                `;
                         tableBody.innerHTML += row;
                     });
 
@@ -290,6 +264,7 @@
 
 
 
+        //   <!--Inicio Validacion al guardar-- >
 
         document.getElementById('btnGuardar').addEventListener('click', function (event) {
             event.preventDefault(); // Detener el envío normal del formulario
@@ -297,14 +272,10 @@
 
             // Validar campos requeridos
             var documento = document.querySelector('[name="PK_FK_Documento"]').value;
-            var proveedor = document.querySelector('[name="PK_FK_Proveedor"]').value;
-            var fechaCompra = document.querySelector('[name="Fecha_Compra"]').value;
-            var condicionPago = document.querySelector('[name="FK_CondicionPago"]').value;
+            var proveedor = document.querySelector('[name="Tipo_Salida"]').value;
+            var fechaSalida = document.querySelector('[name="Fecha_Salida"]').value;
 
-            // Obtener la PK del documento para enviar al controlador
-            var pkDocumento = document.querySelector('[name="PK_FK_Documento"]').dataset.pk; // Asumiendo que se almacena en un atributo de datos
-
-            if (!documento || !proveedor || !fechaCompra || !condicionPago) {
+            if (!documento || !proveedor || !fechaSalida) {
                 // Mostrar mensaje de error con SweetAlert2 si no están completos los campos
                 Swal.fire({
                     icon: 'error',
@@ -334,10 +305,8 @@
                     var formData = new FormData();
                     formData.append('PK', documento); // Agregar la PK del documento
 
-
-
                     // Enviar los datos al controlador utilizando fetch
-                    fetch('/Inventario/GuardarIngresoMercaderia', {
+                    fetch('/Inventario/GuardarSalidaMercaderia', {
                         method: 'POST',
                         body: formData
                     })
@@ -352,7 +321,7 @@
                                     confirmButtonText: 'OK' // Texto del botón de confirmación
                                 }).then((result) => {
                                     // Redirigir a la página de índice de inventario después de guardar
-                                    window.location.href = '/Inventario/Index';
+                                    window.location.href = '/Inventario/IndexSalida';
                                 });
                             } else {
                                 throw new Error('Error al guardar los datos');
@@ -407,7 +376,7 @@
                         formData.append('PK_Articulo', pkArticulo);
 
                         // Enviar los datos al controlador utilizando fetch
-                        fetch(`/Inventario/EliminarArticulo?PK_FK_Documento=${pkDocumento}&PK_Articulo=${pkArticulo}`, {
+                        fetch(`/Inventario/EliminarArticuloSalida?PK_FK_Documento=${pkDocumento}&PK_Articulo=${pkArticulo}`, {
                             method: 'POST',
                             body: formData
                         })
