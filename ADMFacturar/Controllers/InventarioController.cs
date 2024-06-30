@@ -22,6 +22,12 @@ namespace ADM.APIIngresoMercaderia.Controllers
             return View();
         }
 
+        public IActionResult IndexExistencias()
+        {
+            return View();
+        }
+
+        //----------------Inicio Codigo para Ingreso de Mercaderia-------------------
         public async Task<IActionResult> Index()
         {
             var respProv = await _httpClient.GetAsync("api/Proveedor/Listar");
@@ -194,6 +200,10 @@ namespace ADM.APIIngresoMercaderia.Controllers
 
 
 
+        //----------------Fin Codigo para Ingreso de Mercaderia-------------------
+
+
+
 
         //----------------Inicio Codigo para Salida de Mercaderia-------------------
         public async Task<IActionResult> ListarSalidas()
@@ -306,9 +316,8 @@ namespace ADM.APIIngresoMercaderia.Controllers
         }
 
 
-
-
         //----------------Fin Codigo para Salida de Mercaderia-------------------
+
 
     }
 }
