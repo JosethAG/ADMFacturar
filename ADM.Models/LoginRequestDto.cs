@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ADM.Models
 {
-    public class LoginRequest
+    public class LoginRequestDto
     {
-        public string Usuario { get; set; }
+        public string Correo { get; set; }
         public string Contra { get; set; }
     }
 }

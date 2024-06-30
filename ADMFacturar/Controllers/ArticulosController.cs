@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ADM.APICliente.Controllers
 {
-	public class ArticulosController : Controller
+    [Authorize(Roles = "Administrador")]
+    public class ArticulosController : Controller
 	{
 		private readonly HttpClient _httpClient;
 
