@@ -198,6 +198,30 @@ namespace ADM.APIIngresoMercaderia.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EliminarIngreso(string pkDocumento)
+        {
+            if (ModelState.IsValid)
+            {
+                // Crear el contenido JSON con ambos parámetros
+                var jsonContent = JsonConvert.SerializeObject(new { pkDocumento });
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                // Enviar la solicitud POST a la API
+                var resp = await _httpClient.PostAsync($"/api/IngresoMercaderia/EliminarIngreso/{pkDocumento}", content);
+                string responseContent = await resp.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                return NotFound();
+            }
+
+            return Ok();
+        }
 
 
         //----------------Fin Codigo para Ingreso de Mercaderia-------------------

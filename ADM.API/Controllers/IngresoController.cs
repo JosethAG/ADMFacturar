@@ -160,20 +160,43 @@ namespace ADM.API.Controllers
         }
 
 
+        [HttpPost]
+        [Route("EliminarIngreso/{PK_FK_Documento}")]
+        public bool EliminarIngreso(string PK_FK_Documento)
+        {
+            if (string.IsNullOrEmpty(PK_FK_Documento))
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+
+        {
+            new DBParameter("@PK_FK_Documento", PK_FK_Documento),
+        };
+
+                var result = DBData.Execute("sp_EliminarIngreso", parameters);
+
+                return result;
+            }
+        }
+
+
 
 
         //Metodos Api para salida de Mercaderia
 
 
-        [HttpGet]
-        [Route("ListarSalidaMercaderia")]
-        public IEnumerable<SalidaMercaderia> ListaSalidaMercaderia()
-        {
-            DataTable tSalidaMercaderia = DBData.List("sp_ListarSalidaMercaderia");
-            string jsonArticle = JsonConvert.SerializeObject(tSalidaMercaderia);
-            var result = JsonProvider.DeserializeSimple<IEnumerable<SalidaMercaderia>>(jsonArticle);
-            return result;
-        }
+        //[HttpGet]
+        //[Route("ListarSalidaMercaderia")]
+        //public IEnumerable<SalidaMercaderia> ListaSalidaMercaderia()
+        //{
+        //    DataTable tSalidaMercaderia = DBData.List("sp_ListarSalidaMercaderia");
+        //    string jsonArticle = JsonConvert.SerializeObject(tSalidaMercaderia);
+        //    var result = JsonProvider.DeserializeSimple<IEnumerable<SalidaMercaderia>>(jsonArticle);
+        //    return result;
+        //}
 
 
     }

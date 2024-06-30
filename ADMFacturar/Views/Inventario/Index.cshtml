@@ -4,32 +4,41 @@
     var proveedores = ViewData["Proveedores"] as List<Proveedor>;
 
 }
-<link href="~/css/custom.css" rel="stylesheet" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso Mercaderia</title>
+    <link href="~/css/custom.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+</head>
+<body>
 
-<div class="w-full">
-</div>
+    <div class="w-full"></div>
 
-<form>
-    <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
-        <h2 class="text-lg font-bold mb-4">Filtros de Búsqueda</h2>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
-
-            <div class="sm:col-span-1">
-                <label for="entry_date" class="block text-sm font-medium">Fecha Inicio</label>
-                <div class="mt-2">
-                    <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+    <form>
+        <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+            <h2 class="text-lg font-bold mb-4">Filtros de Búsqueda</h2>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+                <!-- Filtros de Búsqueda -->
+                <div class="sm:col-span-1">
+                    <label for="entry_date" class="block text-sm font-medium">Fecha Inicio</label>
+                    <div class="mt-2">
+                        <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
                 </div>
-            </div>
-            <div class="sm:col-span-1">
-                <label for="expiry_date" class="block text-sm font-medium">Fecha Final</label>
-                <div class="mt-2">
-                    <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                <div class="sm:col-span-1">
+                    <label for="expiry_date" class="block text-sm font-medium">Fecha Final</label>
+                    <div class="mt-2">
+                        <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
                 </div>
-            </div>
-            <div class="sm:col-span-1">
-                <label for="PK_FK_Proveedor" class="block text-sm font-medium">Proveedor</label>
-                <div class="mt-2">
-                 <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                <div class="sm:col-span-1">
+                    <label for="PK_FK_Proveedor" class="block text-sm font-medium">Proveedor</label>
+                    <div class="mt-2">
+                        <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
                             <option value="">Seleccione un proveedor</option>
                             @if (proveedores != null)
                             {
@@ -39,141 +48,201 @@
                                 }
                             }
                         </select>
+                    </div>
                 </div>
-
-            </div>
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium">Número de Documento</label>
-                <div class="mt-2">
-                    <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                <div class="sm:col-span-1">
+                    <label for="document_number" class="block text-sm font-medium">Número de Documento</label>
+                    <div class="mt-2">
+                        <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                    </div>
                 </div>
             </div>
-
         </div>
-    </div>
-</form>
+    </form>
 
-@* <div class="w-full mt-8">
-    <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
-        <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Ingresos</h3>
-        <div>
-            <a asp-action="AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Ingreso de Mercadería</a>
+    <div class="w-full mt-8">
+        <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+            <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado Ingresos de Inventario</h3>
+            <div>
+                <a href="/Inventario/AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Ingreso de Mercadería</a>
+            </div>
         </div>
-    </div> *@
-<div class="w-full mt-8">
-    <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
-        <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado Ingresos de Inventario</h3>
-        <div>
-            <a href="/Inventario/AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Ingreso de Mercadería</a>
-        </div>
-    </div>
 
-    <!--                  Tabla                        -->
-    <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
-        <table class="min-w-full leading-normal">
-            <thead>
-                <tr class="bg-gray-800 text-white">
-                    <th class="text-center py-3">Documento</th>
-                    <th class="text-center py-3">Proveedor</th>
-                    <th class="text-center py-3">Fecha Emisión</th>
-                    <th class="text-center py-3">Condición de Pago</th>
-                    <th class="text-center py-3">Total</th>
-                    <th class="text-center py-3">Estado</th>
-                    <th class="text-center py-3">Acciones</th>
-                </tr>
-            </thead>
-             <tbody id="bodyTablaIngresos" class="text-gray-700">
-          
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-<script>
-// Función para obtener y listar los ingresos desde el backend
-function obtenerYListarIngresos() {
-    fetch('/Inventario/ListarIngresos')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Datos recibidos del API:', data);
-
-            // Llenar la tabla con los datos recibidos
-            const tableBody = document.getElementById('bodyTablaIngresos');
-            tableBody.innerHTML = '';
-
-            data.forEach(item => {
-                const row = `
-                    <tr class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="py-3 text-center">${item.pK_FK_Documento}</td>
-                        <td class="py-3 text-center">${item.pK_FK_Proveedor}</td>
-                        <td class="py-3 text-center">${item.fecha_Compra}</td>
-                        <td class="py-3 text-center">${item.fK_CondicionPago}</td>
-                        <td class="py-3 text-center">${item.total}</td>
-                        <td class="py-3 text-center">${item.estado}</td>
-                        <td class="py-3 text-center">
-                            <div class="flex justify-center space-x-2">
-                                <a href="/Inventario/ActualizarIngreso/${item.pK_FK_Documento}" class="text-blue-600 hover:text-blue-900" title="Editar">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form method="post" action="/Inventario/DesactivarIngreso/${item.pK_FK_Documento}">
-                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+        <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr class="bg-gray-800 text-white">
+                        <th class="text-center py-3">Documento</th>
+                        <th class="text-center py-3">Proveedor</th>
+                        <th class="text-center py-3">Fecha Emisión</th>
+                        <th class="text-center py-3">Condición de Pago</th>
+                        <th class="text-center py-3">Total</th>
+                        <th class="text-center py-3">Estado</th>
+                        <th class="text-center py-3">Acciones</th>
                     </tr>
-                `;
-                tableBody.innerHTML += row;
-            });
+                </thead>
+                <tbody id="bodyTablaIngresos" class="text-gray-700"></tbody>
+            </table>
+        </div>
+    </div>
 
-            // Agregar la funcionalidad de filtrado
-            document.getElementById('entry_date').addEventListener('input', filtrarTabla);
-            document.getElementById('expiry_date').addEventListener('input', filtrarTabla);
-            document.getElementById('PK_FK_Proveedor').addEventListener('change', filtrarTabla);
-            document.getElementById('document_number').addEventListener('input', filtrarTabla);
-        })
-        .catch(error => {
-            console.error('Error al obtener los ingresos:', error);
-            // Mostrar un mensaje de error en caso de fallo
-            const errorDiv = document.getElementById('error-message');
-            if (errorDiv) {
-                errorDiv.textContent = 'Error al obtener los ingresos. Por favor, inténtelo de nuevo más tarde.';
-            } else {
-                console.error('Elemento error-message no encontrado en el DOM.');
-            }
-        });
-}
+    <script>
+        // Función para obtener y listar los ingresos desde el backend
+        function obtenerYListarIngresos() {
+            fetch('/Inventario/ListarIngresos')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Datos recibidos del API:', data);
 
-// Función para filtrar la tabla de ingresos por búsqueda
-function filtrarTabla() {
-    // Obtener el valor de búsqueda de cada campo
-    const entryDate = document.getElementById('entry_date').value.toLowerCase();
-    const expiryDate = document.getElementById('expiry_date').value.toLowerCase();
-    const PK_FK_Proveedor = document.getElementById('PK_FK_Proveedor').value.toLowerCase();
-    const documentNumber = document.getElementById('document_number').value.toLowerCase();
+                    // Llenar la tabla con los datos recibidos
+                    const tableBody = document.getElementById('bodyTablaIngresos');
+                    tableBody.innerHTML = '';
 
-    // Obtener todas las filas de la tabla
-    const filas = document.querySelectorAll('#bodyTablaIngresos tr');
+                    data.forEach(item => {
+                        const row = `
+                                            <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                                <td class="py-3 text-center">${item.pK_FK_Documento}</td>
+                                                <td class="py-3 text-center">${item.pK_FK_Proveedor}</td>
+                                                <td class="py-3 text-center">${item.fecha_Compra}</td>
+                                                <td class="py-3 text-center">${item.fK_CondicionPago}</td>
+                                                <td class="py-3 text-center">₡${item.total}</td>
+                                                <td class="py-3 text-center">${item.estado}</td>
+                                                <td class="py-3 text-center">
+                                                    <div class="flex justify-center space-x-2">
+                                                        <a href="/Inventario/ActualizarIngreso/${item.pK_FK_Documento}" class="text-blue-600 hover:text-blue-900" title="Editar">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                                <form method="post" action="/Inventario/DesactivarIngreso/${item.pK_FK_Documento}" class="eliminar-form" data-documento="${item.pK_FK_Documento}">
+                                                            <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                            <input type="hidden" name="estado" value="${item.estado}">
+                                                             <input type="hidden" name="documento" value="${item.pK_FK_Documento}">
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        `;
+                        tableBody.innerHTML += row;
+                    });
 
-    filas.forEach(fila => {
-        const cells = fila.getElementsByTagName('td');
-        const fechaCompra = new Date(cells[2].textContent.trim()); // Suponiendo que cells[2] contiene la fecha_compra
-        const matchEntryDate = entryDate === '' || fechaCompra >= new Date(entryDate);
-        const matchExpiryDate = expiryDate === '' || fechaCompra <= new Date(expiryDate);
-        const matchPK_FK_Proveedor = PK_FK_Proveedor === '' || cells[1].textContent.toLowerCase().includes(PK_FK_Proveedor);
-        const matchDocumentNumber = documentNumber === '' || cells[0].textContent.toLowerCase().includes(documentNumber);
+                    // Agregar la funcionalidad de filtrado
+                    document.getElementById('entry_date').addEventListener('input', filtrarTabla);
+                    document.getElementById('expiry_date').addEventListener('input', filtrarTabla);
+                    document.getElementById('PK_FK_Proveedor').addEventListener('change', filtrarTabla);
+                    document.getElementById('document_number').addEventListener('input', filtrarTabla);
 
-        if (matchEntryDate && matchExpiryDate && matchPK_FK_Proveedor && matchDocumentNumber) {
-            fila.style.display = '';
-        } else {
-            fila.style.display = 'none';
+                    // Agregar la funcionalidad de eliminación con verificación de estado
+                    document.querySelectorAll('.eliminar-form').forEach(function (form) {
+                        form.addEventListener('submit', function (event) {
+                            event.preventDefault(); // Detener el envío normal del formulario
+
+
+                            // Obtener el estado y el PK del documento desde el formulario
+                            var estado = this.querySelector('input[name="estado"]').value;
+                            var pkDocumento = this.querySelector('input[name="documento"]').value; // Obtener el valor desde el atributo data-documento
+
+
+                            if (estado.toLowerCase() === 'completado') {
+                                // Mostrar mensaje de error si el estado es "aplicado"
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'No se puede eliminar',
+                                    text: 'No se puede eliminar un ingreso con estado "completado".',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                // Mostrar mensaje de confirmación con SweetAlert2
+                                Swal.fire({
+                                    title: '¿Está seguro?',
+                                    text: "No podrá revertir esto",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, eliminar',
+                                    cancelButtonText: 'Cancelar'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Enviar el formulario al controlador
+                                        fetch(`/Inventario/EliminarIngreso/?pkDocumento=${pkDocumento}`, {
+                                            method: 'POST'
+                                        })
+                                            .then(response => {
+                                                if (response.ok) {
+                                                    // Mostrar mensaje de éxito con SweetAlert2
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'Ingreso eliminado correctamente',
+                                                        showConfirmButton: true,
+                                                        confirmButtonColor: '#3085d6',
+                                                        confirmButtonText: 'OK'
+                                                    }).then((result) => {
+                                                        // Recargar la página después de eliminar
+                                                        location.reload();
+                                                    });
+                                                } else {
+                                                    throw new Error('Error al eliminar el ingreso');
+                                                }
+                                            })
+                                            .catch(error => {
+                                                // Mostrar mensaje de error con SweetAlert2
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Error',
+                                                    text: error.message,
+                                                    confirmButtonColor: '#3085d6',
+                                                    confirmButtonText: 'OK'
+                                                });
+                                            });
+                                    }
+                                });
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al obtener los ingresos:', error);
+                    // Mostrar un mensaje de error en caso de fallo
+                    const errorDiv = document.getElementById('error-message');
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Error al obtener los ingresos. Por favor, inténtelo de nuevo más tarde.';
+                    } else {
+                        console.error('Elemento error-message no encontrado en el DOM.');
+                    }
+                });
         }
-    });
-}
 
-// Llamar a obtenerYListarIngresos al cargar la página
-document.addEventListener('DOMContentLoaded', obtenerYListarIngresos);
-</script> 
+        // Función para filtrar la tabla de ingresos por búsqueda
+        function filtrarTabla() {
+            // Obtener el valor de búsqueda de cada campo
+            const entryDate = document.getElementById('entry_date').value.toLowerCase();
+            const expiryDate = document.getElementById('expiry_date').value.toLowerCase();
+            const PK_FK_Proveedor = document.getElementById('PK_FK_Proveedor').value.toLowerCase();
+            const documentNumber = document.getElementById('document_number').value.toLowerCase();
 
+            // Obtener todas las filas de la tabla
+            const filas = document.querySelectorAll('#bodyTablaIngresos tr');
+
+            filas.forEach(fila => {
+                const cells = fila.getElementsByTagName('td');
+                const fechaCompra = new Date(cells[2].textContent.trim()); // Suponiendo que cells[2] contiene la fecha_compra
+                const matchEntryDate = entryDate === '' || fechaCompra >= new Date(entryDate);
+                const matchExpiryDate = expiryDate === '' || fechaCompra <= new Date(expiryDate);
+                const matchPK_FK_Proveedor = PK_FK_Proveedor === '' || cells[1].textContent.toLowerCase().includes(PK_FK_Proveedor);
+                const matchDocumentNumber = documentNumber === '' || cells[0].textContent.toLowerCase().includes(documentNumber);
+
+                if (matchEntryDate && matchExpiryDate && matchPK_FK_Proveedor && matchDocumentNumber) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        }
+
+        // Llamar a obtenerYListarIngresos al cargar la página
+        document.addEventListener('DOMContentLoaded', obtenerYListarIngresos);
+    </script>
+</body>
+</html>
