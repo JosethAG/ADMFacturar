@@ -1,17 +1,11 @@
-﻿using System.Data.SqlClient;
-using System.Data;
-using ADM.API;
+﻿using ADM.API;
 using ADM.Models;
-using ADM.Service;
 using Microsoft.AspNetCore.Mvc;
-using ADM.Interface;
 using ADM.Architectur;
 using ADM.Architecture;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Identity.Data;
 using System;
-using System.Text;
-using System.Collections.Generic;
+using System.Data;
 
 
 namespace ADM.API.Controllers
@@ -21,9 +15,6 @@ namespace ADM.API.Controllers
     [ApiController]
     public class SeguridadController : Controller
     {
-        private ISeguridadService? _SeguridadService;
-
-        private readonly string connectionString = "Data Source=LOCALHOST\\SQLEXPRESS;Initial Catalog=ADM;Integrated Security=True;";
 
         [HttpGet]
         [Route("Listar")]
@@ -33,15 +24,15 @@ namespace ADM.API.Controllers
 
             if (Usuario == null)
             {
-                tSeguridad = DBData.List("sp_ListarSeguridad");
+                tSeguridad = DBData.List("sp_ListarUsuario");
             }
             else
             {
                 List<DBParameter> parameters = new List<DBParameter>
                     {
-                        new DBParameter("@Usuario", Usuario)
+                        new DBParameter("@Nombre", Usuario)
                     };
-                tSeguridad = DBData.List("sp_ListarSeguridadxUsuario", parameters);
+                tSeguridad = DBData.List("sp_ListarUsuarioxUsuario", parameters);
             }
             string jsonArticle = JsonConvert.SerializeObject(tSeguridad);
             var result = JsonProvider.DeserializeSimple<IEnumerable<Seguridad>>(jsonArticle);
@@ -58,7 +49,7 @@ namespace ADM.API.Controllers
                     {
                         new DBParameter("@PK_IdUsuario", PK)
                     };
-                DataTable tSeguridad = DBData.List("sp_ObtenerSeguridad", parameters);
+                DataTable tSeguridad = DBData.List("sp_ObtenerUsuario", parameters);
                 string jsonArticle = JsonConvert.SerializeObject(tSeguridad);
                 var result = JsonProvider.DeserializeSimple<IEnumerable<Seguridad>>(jsonArticle);
 
@@ -78,7 +69,7 @@ namespace ADM.API.Controllers
             List<DBParameter> parameters = new List<DBParameter>
             {
                 new DBParameter("@P_PK_IdUsuario", Seguridad.PK_IdUsuario.ToString()),
-                new DBParameter("@P_Usuario", Seguridad.Usuario),
+                new DBParameter("@P_Nombre", Seguridad.Usuario),
                 new DBParameter("@P_Correo", Seguridad.Correo),
                 new DBParameter("@P_Contra", Seguridad.Contra),
                 new DBParameter("@P_Rol", Seguridad.Rol.ToString()), //El rol en la bd es int
@@ -89,7 +80,7 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
             };
 
-            var result = DBData.Execute("sp_InsertarSeguridad", parameters);
+            var result = DBData.Execute("sp_InsertarUsuario", parameters);
 
             return result;
         }
@@ -101,7 +92,7 @@ namespace ADM.API.Controllers
             List<DBParameter> parameters = new List<DBParameter>
             {
                 new DBParameter("@P_PK_IdUsuario", Seguridad.PK_IdUsuario.ToString()),
-                new DBParameter("@P_Usuario", Seguridad.Usuario),
+                new DBParameter("@P_Nombre", Seguridad.Usuario),
                 new DBParameter("@P_Correo", Seguridad.Correo),
                 new DBParameter("@P_Contra", Seguridad.Contra),
                 new DBParameter("@P_Rol", Seguridad.Rol.ToString()), //El rol en la bd es int
@@ -112,7 +103,7 @@ namespace ADM.API.Controllers
                 new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
             };
 
-            var result = DBData.Execute("sp_ModificarSeguridad", parameters);
+            var result = DBData.Execute("sp_ModificarUsuario", parameters);
 
             return result;
         }
@@ -132,7 +123,7 @@ namespace ADM.API.Controllers
                     new DBParameter("@P_PK_IdUsuario", PK)
                 };
 
-                var result = DBData.Execute("sp_EliminarSeguridad", parameters);
+                var result = DBData.Execute("sp_EliminarUsuario", parameters);
 
                 return result;
             }
@@ -142,28 +133,28 @@ namespace ADM.API.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public IActionResult Login(ADM.Models.LoginRequest request)
+        public IEnumerable<Usuario> Login([FromBody] LoginRequestDto request)
         {
-            try
-            {
-                bool isValid = DBData.ExecuteLoginValidation("sp_ValidarCredenciales", request.Usuario, request.Contra);
 
-                if (isValid)
-                {
-                    return Ok(new { redirectTo = "/Home/Index" });
-                }
-                else
-                {
-                    return BadRequest("Usuario o contraseña incorrectos");
-                }
-            }
-            catch (Exception ex)
+            if (request.Correo != null && request.Contra != null)
             {
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+                List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@Correo", request.Correo),
+                        new DBParameter("@Contra", request.Contra)
+                    };
+                DataTable tUsuario = DBData.List("sp_ValidarCredenciales", parameters);
+                string jsonUsuario = JsonConvert.SerializeObject(tUsuario);
+                var result = JsonProvider.DeserializeSimple<IEnumerable<Usuario>>(jsonUsuario);
+
+                return result;
             }
+            else
+            {
+                return null;
+            }
+            
         }
-
-
 
     }
 }
