@@ -14,7 +14,7 @@ namespace ADM.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ArticuloController : Controller
+    public class ArticuloController : Controller
 	{
 		private IArticuloService? _ArticuloService;
 

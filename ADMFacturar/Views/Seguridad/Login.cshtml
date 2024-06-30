@@ -1,4 +1,4 @@
-﻿@model ADM.Models.LoginRequest
+﻿@model ADM.Models.Usuario
 
 <link href="~/css/custom.css" rel="stylesheet" />
 
@@ -17,9 +17,9 @@
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form asp-controller="Seguridad" asp-action="Login" method="post" class="space-y-6">
             <div>
-                <label asp-for="Usuario" class="block text-lg font-medium leading-7 text-white"></label>
+                <label asp-for="Correo" class="block text-lg font-medium leading-7 text-white"></label>
                 <div class="mt-2">
-                    <input asp-for="Usuario" class="block w-full rounded-lg border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-7" style="padding-left: 15px;">
+                    <input asp-for="Correo" type="email" class="block w-full rounded-lg border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-7" style="padding-left: 15px;" required>
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
                     <label asp-for="Contra" class="block text-lg font-medium leading-7 text-white"></label>
                 </div>
                 <div class="mt-2">
-                    <input asp-for="Contra" type="password" class="block w-full rounded-lg border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-7" style="padding-left: 15px;">
+                    <input asp-for="Contra" type="password" class="block w-full rounded-lg border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-7" style="padding-left: 15px;" required>
                 </div>
             </div>
 
