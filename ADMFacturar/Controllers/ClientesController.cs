@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 
+using Microsoft.AspNetCore.Authentication;
+
 namespace ADM.APICliente.Controllers
 {
 	public class ClientesController : Controller
