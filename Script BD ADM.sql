@@ -2105,7 +2105,30 @@ BEGIN
     DELETE FROM [dbo].[TBL_INGRESO_MERCADERIA]
     WHERE [PK_FK_Documento] = @PK_FK_Documento AND [PK_FK_Articulo] = @PK_FK_Articulo;
 
-    -- Opcional: Agregar manejo de errores o lógica adicional aquí
+
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_EliminarIngreso]    Script Date: 6/29/2024 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Procedimiento almacenado para eliminar ingresos de mercadería por documento
+CREATE PROCEDURE [dbo].[sp_EliminarIngreso]
+    @PK_FK_Documento varchar(50)
+AS
+BEGIN
+    -- Evita que el procedimiento se detenga y muestre un error en caso de no encontrar el registro
+    SET NOCOUNT ON;
+
+    -- Elimina los registros que coincidan con el PK_FK_Documento proporcionado
+    DELETE FROM [dbo].[TBL_INGRESO_MERCADERIA]
+    WHERE [PK_FK_Documento] = @PK_FK_Documento;
+
+  
 
 END
 GO
