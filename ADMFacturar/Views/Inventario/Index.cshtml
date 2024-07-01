@@ -2,7 +2,6 @@
 
 @{
     var proveedores = ViewData["Proveedores"] as List<Proveedor>;
-
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +37,7 @@
                 <div class="sm:col-span-1">
                     <label for="PK_FK_Proveedor" class="block text-sm font-medium">Proveedor</label>
                     <div class="mt-2">
-                        <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                        <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
                             <option value="">Seleccione un proveedor</option>
                             @if (proveedores != null)
                             {
@@ -51,11 +50,22 @@
                     </div>
                 </div>
                 <div class="sm:col-span-1">
+                    <label for="estado" class="block text-sm font-medium">Estado</label>
+                    <div class="mt-2">
+                        <select id="estado" name="estado" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                            <option value="">Seleccione un estado</option>
+                            <option value="completado">Completado</option>
+                            <option value="pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="sm:col-span-1">
                     <label for="document_number" class="block text-sm font-medium">Número de Documento</label>
                     <div class="mt-2">
                         <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
                     </div>
                 </div>
+
             </div>
         </div>
     </form>
@@ -100,29 +110,29 @@
 
                     data.forEach(item => {
                         const row = `
-                                            <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                                <td class="py-3 text-center">${item.pK_FK_Documento}</td>
-                                                <td class="py-3 text-center">${item.pK_FK_Proveedor}</td>
-                                                <td class="py-3 text-center">${item.fecha_Compra}</td>
-                                                <td class="py-3 text-center">${item.fK_CondicionPago}</td>
-                                                <td class="py-3 text-center">₡${item.total}</td>
-                                                <td class="py-3 text-center">${item.estado}</td>
-                                                <td class="py-3 text-center">
-                                                    <div class="flex justify-center space-x-2">
-                                                        <a href="/Inventario/ActualizarIngreso/${item.pK_FK_Documento}" class="text-blue-600 hover:text-blue-900" title="Editar">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                                <form method="post" action="/Inventario/DesactivarIngreso/${item.pK_FK_Documento}" class="eliminar-form" data-documento="${item.pK_FK_Documento}">
-                                                            <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                            <input type="hidden" name="estado" value="${item.estado}">
-                                                             <input type="hidden" name="documento" value="${item.pK_FK_Documento}">
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        `;
+                                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                        <td class="py-3 text-center">${item.pK_FK_Documento}</td>
+                                        <td class="py-3 text-center">${item.pK_FK_Proveedor}</td>
+                                        <td class="py-3 text-center">${item.fecha_Compra}</td>
+                                        <td class="py-3 text-center">${item.fK_CondicionPago}</td>
+                                        <td class="py-3 text-center">₡${item.total}</td>
+                                        <td class="py-3 text-center">${item.estado}</td>
+                                        <td class="py-3 text-center">
+                                            <div class="flex justify-center space-x-2">
+                                                <a href="#" class="text-blue-600 hover:text-blue-900 editar-ingreso" data-documento="${item.pK_FK_Documento}" data-estado="${item.estado}" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form method="post" action="/Inventario/DesactivarIngreso/${item.pK_FK_Documento}" class="eliminar-form">
+                                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                    <input type="hidden" name="estado" value="${item.estado}">
+                                                    <input type="hidden" name="documento" value="${item.pK_FK_Documento}">
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
                         tableBody.innerHTML += row;
                     });
 
@@ -131,17 +141,16 @@
                     document.getElementById('expiry_date').addEventListener('input', filtrarTabla);
                     document.getElementById('PK_FK_Proveedor').addEventListener('change', filtrarTabla);
                     document.getElementById('document_number').addEventListener('input', filtrarTabla);
+                    document.getElementById('estado').addEventListener('change', filtrarTabla);
 
                     // Agregar la funcionalidad de eliminación con verificación de estado
                     document.querySelectorAll('.eliminar-form').forEach(function (form) {
                         form.addEventListener('submit', function (event) {
                             event.preventDefault(); // Detener el envío normal del formulario
 
-
                             // Obtener el estado y el PK del documento desde el formulario
                             var estado = this.querySelector('input[name="estado"]').value;
                             var pkDocumento = this.querySelector('input[name="documento"]').value; // Obtener el valor desde el atributo data-documento
-
 
                             if (estado.toLowerCase() === 'completado') {
                                 // Mostrar mensaje de error si el estado es "aplicado"
@@ -201,17 +210,33 @@
                             }
                         });
                     });
+
+                    // Agregar funcionalidad de edición
+                    document.querySelectorAll('.editar-ingreso').forEach(function (link) {
+                        link.addEventListener('click', function (event) {
+                            event.preventDefault(); // Detener el comportamiento predeterminado del enlace
+
+                            // Obtener el estado y el PK del documento desde los atributos data-
+                            var estado = this.getAttribute('data-estado');
+                            var pkDocumento = this.getAttribute('data-documento');
+
+                            if (estado.toLowerCase() === 'completado') {
+                                // Mostrar mensaje de error si el estado es "completado"
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'No se puede editar',
+                                    text: 'No se puede editar un ingreso con estado "completado".',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                // Redirigir a la página de actualización si el estado no es "completado"
+                                window.location.href = `/Inventario/ActualizarIngreso?pkDocumento=${pkDocumento}`;
+                            }
+                        });
+                    });
                 })
-                .catch(error => {
-                    console.error('Error al obtener los ingresos:', error);
-                    // Mostrar un mensaje de error en caso de fallo
-                    const errorDiv = document.getElementById('error-message');
-                    if (errorDiv) {
-                        errorDiv.textContent = 'Error al obtener los ingresos. Por favor, inténtelo de nuevo más tarde.';
-                    } else {
-                        console.error('Elemento error-message no encontrado en el DOM.');
-                    }
-                });
+                .catch(error => console.error('Error al obtener los datos:', error));
         }
 
         // Función para filtrar la tabla de ingresos por búsqueda
@@ -221,6 +246,7 @@
             const expiryDate = document.getElementById('expiry_date').value.toLowerCase();
             const PK_FK_Proveedor = document.getElementById('PK_FK_Proveedor').value.toLowerCase();
             const documentNumber = document.getElementById('document_number').value.toLowerCase();
+            const estado = document.getElementById('estado').value.toLowerCase();
 
             // Obtener todas las filas de la tabla
             const filas = document.querySelectorAll('#bodyTablaIngresos tr');
@@ -232,8 +258,9 @@
                 const matchExpiryDate = expiryDate === '' || fechaCompra <= new Date(expiryDate);
                 const matchPK_FK_Proveedor = PK_FK_Proveedor === '' || cells[1].textContent.toLowerCase().includes(PK_FK_Proveedor);
                 const matchDocumentNumber = documentNumber === '' || cells[0].textContent.toLowerCase().includes(documentNumber);
+                const matchEstado = estado === '' || cells[5].textContent.toLowerCase().includes(estado);
 
-                if (matchEntryDate && matchExpiryDate && matchPK_FK_Proveedor && matchDocumentNumber) {
+                if (matchEntryDate && matchExpiryDate && matchPK_FK_Proveedor && matchDocumentNumber && matchEstado) {
                     fila.style.display = '';
                 } else {
                     fila.style.display = 'none';
@@ -242,7 +269,10 @@
         }
 
         // Llamar a obtenerYListarIngresos al cargar la página
-        document.addEventListener('DOMContentLoaded', obtenerYListarIngresos);
+        document.addEventListener('DOMContentLoaded', function () {
+            obtenerYListarIngresos();
+            filtrarTabla();
+        });
     </script>
 </body>
 </html>

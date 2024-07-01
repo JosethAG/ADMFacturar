@@ -49,7 +49,7 @@ namespace ADM.API.Controllers
             {
 				List<DBParameter> parameters = new List<DBParameter>
 					{
-						new DBParameter("@PK_IngresoMercaderia", PK)
+						new DBParameter("@PK_FK_Documento", PK)
 					};
 				DataTable tIngresoMercaderia = DBData.List("sp_ObtenerIngresoMercaderia", parameters);
                 string jsonArticle = JsonConvert.SerializeObject(tIngresoMercaderia);
@@ -182,21 +182,6 @@ namespace ADM.API.Controllers
             }
         }
 
-
-
-
-        //Metodos Api para salida de Mercaderia
-
-
-        //[HttpGet]
-        //[Route("ListarSalidaMercaderia")]
-        //public IEnumerable<SalidaMercaderia> ListaSalidaMercaderia()
-        //{
-        //    DataTable tSalidaMercaderia = DBData.List("sp_ListarSalidaMercaderia");
-        //    string jsonArticle = JsonConvert.SerializeObject(tSalidaMercaderia);
-        //    var result = JsonProvider.DeserializeSimple<IEnumerable<SalidaMercaderia>>(jsonArticle);
-        //    return result;
-        //}
 
 
     }
