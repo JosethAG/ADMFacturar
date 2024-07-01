@@ -3746,3 +3746,11 @@ VALUES
     GETDATE()
 );
 
+INSERT INTO TBL_Usuario (Nombre, Correo, Contra, Rol, Estado, FK_Usuario_Creacion, FK_Usuario_Modificacion, Fecha_Creacion, Fecha_Modificacion)
+VALUES 
+('Juan Perez', 'juan.perez@example.com', 'ContraseñaSegura1', 'Administrador', 1, 'admin', 'admin', GETDATE(), GETDATE()),
+('Maria Gomez', 'maria.gomez@example.com', 'ContraseñaSegura2', 'Usuario', 1, 'admin', 'admin', GETDATE(), GETDATE()),
+('Carlos Lopez', 'carlos.lopez@example.com', 'ContraseñaSegura3', 'Administrador', 1, 'admin', 'admin', GETDATE(), GETDATE()),
+('Ana Martinez', 'ana.martinez@example.com', 'ContraseñaSegura4', 'Usuario', 1, 'admin', 'admin', GETDATE(), GETDATE()),
+('Pedro Sanchez', 'pedro.sanchez@example.com', 'ContraseñaSegura5', 'Usuario', 0, 'admin', 'admin', GETDATE(), GETDATE());
+
