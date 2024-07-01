@@ -18,13 +18,13 @@ namespace ADM.API.Controllers
 
         [HttpGet]
         [Route("Listar")]
-        public IEnumerable<Seguridad> ListaSeguridades(string? Usuario)
+        public IEnumerable<Usuario> ListaUsuarios(string? Usuario)
         {
-            DataTable tSeguridad = null;
+            DataTable tUsuario = null;
 
             if (Usuario == null)
             {
-                tSeguridad = DBData.List("sp_ListarUsuario");
+                tUsuario = DBData.List("sp_ListarUsuario");
             }
             else
             {
@@ -32,16 +32,16 @@ namespace ADM.API.Controllers
                     {
                         new DBParameter("@Nombre", Usuario)
                     };
-                tSeguridad = DBData.List("sp_ListarUsuarioxUsuario", parameters);
+                tUsuario = DBData.List("sp_ListarUsuarioxUsuario", parameters);
             }
-            string jsonArticle = JsonConvert.SerializeObject(tSeguridad);
-            var result = JsonProvider.DeserializeSimple<IEnumerable<Seguridad>>(jsonArticle);
+            string jsonArticle = JsonConvert.SerializeObject(tUsuario);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<Usuario>>(jsonArticle);
             return result;
         }
 
         [HttpGet]
         [Route("Obtener/{PK}")]
-        public Seguridad ObtenerSeguridad(string? PK)
+        public Usuario ObtenerSeguridad(string? PK)
         {
             if (PK != null)
             {
@@ -49,33 +49,33 @@ namespace ADM.API.Controllers
                     {
                         new DBParameter("@PK_IdUsuario", PK)
                     };
-                DataTable tSeguridad = DBData.List("sp_ObtenerUsuario", parameters);
-                string jsonArticle = JsonConvert.SerializeObject(tSeguridad);
-                var result = JsonProvider.DeserializeSimple<IEnumerable<Seguridad>>(jsonArticle);
+                DataTable tUsuario = DBData.List("sp_ObtenerUsuario", parameters);
+                string jsonArticle = JsonConvert.SerializeObject(tUsuario);
+                var result = JsonProvider.DeserializeSimple<IEnumerable<Usuario>>(jsonArticle);
 
 
                 return result.FirstOrDefault();
             }
             else
             {
-                return new Seguridad();
+                return new Usuario();
             }
         }
 
         [HttpPost]
         [Route("Crear")]
-        public bool CrearSeguridad(Seguridad Seguridad)
+        public bool CrearSeguridad(Usuario usuario)
         {
             List<DBParameter> parameters = new List<DBParameter>
             {
-                new DBParameter("@P_PK_IdUsuario", Seguridad.PK_IdUsuario.ToString()),
-                new DBParameter("@P_Nombre", Seguridad.Usuario),
-                new DBParameter("@P_Correo", Seguridad.Correo),
-                new DBParameter("@P_Contra", Seguridad.Contra),
-                new DBParameter("@P_Rol", Seguridad.Rol.ToString()), //El rol en la bd es int
-                new DBParameter("@P_Estado", Seguridad.Estado.ToString()),
-                new DBParameter("@P_FK_Usuario_Creacion", Seguridad.FK_Usuario_Creacion),
-                new DBParameter("@P_FK_Usuario_Modificacion", Seguridad.FK_Usuario_Modificacion),
+                new DBParameter("@P_PK_IdUsuario", usuario.PK_IdUsuario.ToString()),
+                new DBParameter("@P_Nombre", usuario.Nombre),
+                new DBParameter("@P_Correo", usuario.Correo),
+                new DBParameter("@P_Contra", usuario.Contra),
+                new DBParameter("@P_Rol", usuario.Rol), 
+                new DBParameter("@P_Estado", usuario.Estado.ToString()),
+                new DBParameter("@P_FK_Usuario_Creacion", usuario.FK_Usuario_Creacion),
+                new DBParameter("@P_FK_Usuario_Modificacion", usuario.FK_Usuario_Modificacion),
                 new DBParameter("@P_Fecha_Creacion", DateTime.Now.ToString("yyyy-MM-dd")),
                 new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
             };
@@ -87,18 +87,18 @@ namespace ADM.API.Controllers
 
         [HttpPost]
         [Route("Actualizar")]
-        public bool ActualizarSeguridad(Seguridad Seguridad)
+        public bool ActualizarSeguridad(Usuario usuario)
         {
             List<DBParameter> parameters = new List<DBParameter>
             {
-                new DBParameter("@P_PK_IdUsuario", Seguridad.PK_IdUsuario.ToString()),
-                new DBParameter("@P_Nombre", Seguridad.Usuario),
-                new DBParameter("@P_Correo", Seguridad.Correo),
-                new DBParameter("@P_Contra", Seguridad.Contra),
-                new DBParameter("@P_Rol", Seguridad.Rol.ToString()), //El rol en la bd es int
-                new DBParameter("@P_Estado", Seguridad.Estado.ToString()),
-                new DBParameter("@P_FK_Usuario_Creacion", Seguridad.FK_Usuario_Creacion),
-                new DBParameter("@P_FK_Usuario_Modificacion", Seguridad.FK_Usuario_Modificacion),
+                new DBParameter("@P_PK_IdUsuario", usuario.PK_IdUsuario.ToString()),
+                new DBParameter("@P_Nombre", usuario.Nombre),
+                new DBParameter("@P_Correo", usuario.Correo),
+                new DBParameter("@P_Contra", usuario.Contra),
+                new DBParameter("@P_Rol", usuario.Rol), //El rol en la bd es int
+                new DBParameter("@P_Estado", usuario.Estado.ToString()),
+                new DBParameter("@P_FK_Usuario_Creacion", usuario.FK_Usuario_Creacion),
+                new DBParameter("@P_FK_Usuario_Modificacion", usuario.FK_Usuario_Modificacion),
                 new DBParameter("@P_Fecha_Creacion", DateTime.Now.ToString("yyyy-MM-dd")),
                 new DBParameter("@P_Fecha_Modificacion", DateTime.Now.ToString("yyyy-MM-dd"))
             };

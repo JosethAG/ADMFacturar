@@ -22,7 +22,7 @@ namespace ADMFacturar.Controllers
             _httpClient.BaseAddress = new Uri("https://localhost:7270/api");
         }
 
-        [Authorize(Roles = "Administrador")]
+        //[Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
             {
@@ -31,27 +31,29 @@ namespace ADMFacturar.Controllers
                 if (resp.IsSuccessStatusCode)
                 {
                     var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-                    var seguridades = JsonConvert.DeserializeObject<IEnumerable<Seguridad>>(content);
-                    return View("Index", seguridades);
+                    var usuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
+                    ViewData["Usuarios"] = usuarios ?? new List<Usuario>();
+                    return View("Index");
                 }
 
-                return View(new List<Seguridad>());
-            }
+                return View();
+            
         }
+    }
 
-        [Authorize(Roles = "Administrador")]
+        //[Authorize(Roles = "Administrador")]
         public IActionResult CrearSeguridad()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> CrearSeguridad(Seguridad seguridad)
+        //[Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> CrearSeguridad(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                var json = JsonConvert.SerializeObject(seguridad);
+                var json = JsonConvert.SerializeObject(usuario);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
@@ -71,10 +73,10 @@ namespace ADMFacturar.Controllers
                 }
 
             }
-            return View(seguridad);
+            return View(usuario);
         }
 
-        [Authorize(Roles = "Administrador")]
+        //[Authorize(Roles = "Administrador")]
         public async Task<IActionResult> ActualizarSeguridad(int? PK)
         {
             var resp = await _httpClient.GetAsync($"api/Seguridad/Obtener/{PK}");
@@ -82,8 +84,8 @@ namespace ADMFacturar.Controllers
             if (resp.IsSuccessStatusCode)
             {
                 var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-                var seguridad = JsonConvert.DeserializeObject<Seguridad>(content);
-                return View("ActualizarSeguridad", seguridad); // Devuelve 'seguridad' en lugar de 'resp'
+                var usuario = JsonConvert.DeserializeObject<Usuario>(content);
+                return View("ActualizarSeguridad", usuario); // Devuelve 'usuario' en lugar de 'resp'
             }
 
             return NotFound();
@@ -91,12 +93,12 @@ namespace ADMFacturar.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> ActualizarSeguridad(Seguridad seguridad)
+        //[Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> ActualizarSeguridad(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                var json = JsonConvert.SerializeObject(seguridad);
+                var json = JsonConvert.SerializeObject(usuario);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
@@ -117,11 +119,11 @@ namespace ADMFacturar.Controllers
                 }
 
             }
-            return View(seguridad);
+            return View(usuario);
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
+        //[Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DesactivarSeguridad(string PK)
         {
             if (ModelState.IsValid)
