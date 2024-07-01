@@ -2133,6 +2133,34 @@ BEGIN
 END
 GO
 
+	/****** Object:  StoredProcedure [dbo].[sp_ObtenerIngresoMercaderia]    Script Date: 6/30/2024 3:37:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerIngresoMercaderia] 
+    @PK_FK_Documento varchar(50)
+
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+SELECT 
+    PK_FK_Documento,
+	Fecha_Compra,
+    PK_FK_Proveedor,
+    FK_CondicionPago
+FROM [dbo].[TBL_INGRESO_MERCADERIA] 
+WHERE PK_FK_Documento = @PK_FK_Documento
+GROUP BY 
+    PK_FK_Documento, 
+    PK_FK_Proveedor, 
+    FK_CondicionPago,
+	Fecha_Compra
+
+END
+
 
 -------------------------------------------------
 					/*Salida Inventario*/
@@ -2307,6 +2335,58 @@ END
 GO
 	
 
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerSalidaMercaderia]    Script Date: 6/30/2024 3:37:41 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerSalidaMercaderia]   
+    @PK_FK_Documento varchar(50)
+
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+SELECT 
+    PK_FK_Documento,
+	Fecha_Salida,
+	Tipo_Salida,
+    Observaciones
+FROM [dbo].[TBL_SALIDA_MERCADERIA] 
+WHERE PK_FK_Documento = @PK_FK_Documento
+GROUP BY 
+    PK_FK_Documento, 
+	Fecha_Salida,   
+	Tipo_Salida,
+	Observaciones
+
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_EliminarSalida]    Script Date: 6/29/2024 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Procedimiento almacenado para eliminar ingresos de mercadería por documento
+CREATE PROCEDURE [dbo].[sp_EliminarSalida]
+    @PK_FK_Documento varchar(50)
+AS
+BEGIN
+    -- Evita que el procedimiento se detenga y muestre un error en caso de no encontrar el registro
+    SET NOCOUNT ON;
+
+    -- Elimina los registros que coincidan con el PK_FK_Documento proporcionado
+    DELETE FROM [dbo].[TBL_SALIDA_MERCADERIA]
+    WHERE [PK_FK_Documento] = @PK_FK_Documento;
+
+    -- Opcional: Agregar manejo de errores o lógica adicional aquí
+
+END
+GO
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/

@@ -26,11 +26,12 @@ namespace ADM.APICliente.Controllers
 			if (resp.IsSuccessStatusCode)
 			{
 				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-				var articulos = JsonConvert.DeserializeObject<IEnumerable<ArticuloViewModel>>(content);
-				return View("Index", articulos); // Devuelve 'articulos' en lugar de 'resp'
+				var articulos = JsonConvert.DeserializeObject<IEnumerable<Articulo>>(content);
+				ViewData["Articulos"] = articulos ?? new List<Articulo>();
+				return View("Index");
 			}
 
-			return View(new List<ArticuloViewModel>());
+			return View();
 		}
 
 		public IActionResult CrearArticulo()
