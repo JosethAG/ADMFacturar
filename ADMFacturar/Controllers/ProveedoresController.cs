@@ -25,14 +25,15 @@ namespace ADM.APIProveedor.Controllers
                 {
                     var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
                     var proveedores = JsonConvert.DeserializeObject<IEnumerable<Proveedor>>(content);
-                    return View("Index", proveedores);
-                }
+					ViewData["Proveedores"] = proveedores ?? new List<Proveedor>();
+					return View("Index");
+				}
 
-                return View(new List<Proveedor>());
-            }
-        }
+				return View();
+			}
+		}
 
-        public IActionResult CrearProveedor()
+		public IActionResult CrearProveedor()
         {
             return View();
         }

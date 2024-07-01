@@ -25,10 +25,11 @@ namespace ADM.APICliente.Controllers
 				{
 					var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
 					var vendedores = JsonConvert.DeserializeObject<IEnumerable<Vendedor>>(content);
-					return View("Index", vendedores);
+					ViewData["Vendedores"] = vendedores ?? new List<Vendedor>();
+					return View("Index");
 				}
 
-				return View(new List<Vendedor>());
+				return View();
 			}
 		}
 
