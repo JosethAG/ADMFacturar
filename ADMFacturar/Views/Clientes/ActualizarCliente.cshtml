@@ -20,135 +20,140 @@
 </head>
 <body>
 
-<form asp-action="ActualizarCliente" method="post" class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-md" id="formupdate">
-	>
-	<div class="border-b border-gray-700 pb-6">
-		<h2 class="text-lg font-semibold leading-7 text-white">Modificar Cliente</h2>
-	</div>
-	<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-		<div class="sm:col-span-2">
-			<label for="TipoIdentificacion" class="block text-sm font-medium text-gray-300">Tipo de Identificación</label>
-			<div class="mt-2">
-				<select asp-for="TipoIdentificacion" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-					<option value="1">Físico</option>
-					<option value="2">Jurídico</option>
-				</select>
-			</div>
+	<form asp-action="ActualizarCliente" method="post" class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-md" id="formupdate">
+
+		<div class="border-b border-gray-700 pb-6">
+			<h2 class="text-lg font-semibold leading-7 text-white">Actualizar cliente</h2>
 		</div>
-		<div class="sm:col-span-2">
-			<label for="Identificacion" class="block text-sm font-medium text-gray-300">Número de Identificación</label>
-			<div class="mt-2">
-				<input asp-for="Identificacion" type="number" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+		<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+			<div>
+				<label for="TipoIdentificacion" class="block text-sm font-medium text-gray-300">Tipo de Identificación</label>
+				<div class="mt-2">
+					<select asp-for="TipoIdentificacion" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						<option value="1">Físico</option>
+						<option value="2">Jurídico</option>
+					</select>
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="Nombre" class="block text-sm font-medium text-gray-300">Nombre</label>
-			<div class="mt-2">
-				<input asp-for="Nombre" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+			<div>
+				<label for="Identificacion" class="block text-sm font-medium text-gray-300">Número de Identificación</label>
+				<div class="mt-2">
+					<input asp-for="Identificacion" type="number" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="Telefono" class="block text-sm font-medium text-gray-300">Teléfono</label>
-			<div class="mt-2">
-				<input asp-for="Telefono" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+			<div>
+				<label for="Nombre" class="block text-sm font-medium text-gray-300">Nombre</label>
+				<div class="mt-2">
+					<input asp-for="Nombre" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="Correo" class="block text-sm font-medium text-gray-300">Correo</label>
-			<div class="mt-2">
-				<input asp-for="Correo" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+			<div>
+				<label for="Telefono" class="block text-sm font-medium text-gray-300">Teléfono</label>
+				<div class="mt-2">
+					<input asp-for="Telefono" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="FK_CondicionPago" class="block text-sm font-medium text-gray-300">Condición de Pago</label>
-			<div class="mt-2">
-				<select asp-for="FK_CondicionPago" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-					<option value="1">Contado</option>
-					<option value="2">Crédito 30 Días</option>
-					<option value="3">Crédito 60 Días</option>
-				</select>
+			<div>
+				<label for="Correo" class="block text-sm font-medium text-gray-300">Correo</label>
+				<div class="mt-2">
+					<input asp-for="Correo" type="email" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="FK_Transporte" class="block text-sm font-medium text-gray-300">Transporte</label>
-			<div class="mt-2">
-				<select asp-for="FK_Transporte" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-					<option value="1">Transporte</option>
-					<option value="2">Personal</option>
-				</select>
+			<div>
+				<label for="FK_CondicionPago" class="block text-sm font-medium text-gray-300">Condición de Pago</label>
+				<div class="mt-2">
+					<select asp-for="FK_CondicionPago" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						<option value="1">Contado</option>
+						<option value="2">Crédito 30 Días</option>
+						<option value="3">Crédito 60 Días</option>
+						<option value="4">Crédito 90 Días</option>
+						<option value="5">Anticipo 50%</option>
+					</select>
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="FK_Vendedor" class="block text-sm font-medium text-gray-300">Vendedor</label>
-			<div class="mt-2">
-				<select asp-for="FK_Vendedor" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-					<option value="1">Juan</option>
-					<option value="2">María</option>
-				</select>
+			<div>
+				<label for="FK_Transporte" class="block text-sm font-medium text-gray-300">Transporte</label>
+				<div class="mt-2">
+					<select asp-for="FK_Transporte" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						<option value="1">Personal</option>
+						<option value="2">Caribeños</option>
+					</select>
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="Provincia" class="block text-sm font-medium text-gray-300">Provincia</label>
-			<div class="mt-2">
-				<select asp-for="Provincia" id="Provincia" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" onchange="filterCantones()">
-					<option value="">Seleccione una provincia</option>
-					@if (provincias != null)
-					{
-						@foreach (var provincia in provincias)
+			<div>
+				<label for="FK_Vendedor" class="block text-sm font-medium text-gray-300">Vendedor</label>
+				<div class="mt-2">
+					<select asp-for="FK_Vendedor" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						<option value="1">Juan Perez</option>
+						<option value="2">Maria Lopez</option>
+						<option value="3">Carlos Jimenez</option>
+						<option value="4">Ana Gonzalez</option>
+						<option value="5">Luis Fernandez</option>
+					</select>
+				</div>
+			</div>
+			<div>
+				<label for="Provincia" class="block text-sm font-medium text-gray-300">Provincia</label>
+				<div class="mt-2">
+					<select asp-for="Provincia" id="Provincia" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" onchange="filterCantones()">
+						<option value="">Seleccione una provincia</option>
+						@if (provincias != null)
 						{
-							<option value="@provincia.ID_PROVINCIA">@provincia.NOMBRE</option>
+							@foreach (var provincia in provincias)
+							{
+								<option value="@provincia.ID_PROVINCIA">@provincia.NOMBRE</option>
+							}
 						}
-					}
-				</select>
+					</select>
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="Canton" class="block text-sm font-medium text-gray-300">Cantón</label>
-			<div class="mt-2">
-				<select asp-for="Canton" id="Canton" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" onchange="filterDistritos()">
-					<option value="">Seleccione un cantón</option>
-					@if (cantones != null)
-					{
-						@foreach (var canton in cantones)
+			<div>
+				<label for="Canton" class="block text-sm font-medium text-gray-300">Cantón</label>
+				<div class="mt-2">
+					<select asp-for="Canton" id="Canton" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" onchange="filterDistritos()">
+						<option value="">Seleccione un cantón</option>
+						@if (cantones != null)
 						{
-							<option value="@canton.ID_CANTON" data-provincia="@canton.ID_PROVINCIA">@canton.NOMBRE</option>
+							@foreach (var canton in cantones)
+							{
+								<option value="@canton.ID_CANTON" data-provincia="@canton.ID_PROVINCIA">@canton.NOMBRE</option>
+							}
 						}
-					}
-				</select>
+					</select>
+				</div>
 			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="Distrito" class="block text-sm font-medium text-gray-300">Distrito</label>
-			<div class="mt-2">
-				<select asp-for="Distrito" id="Distrito" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-					<option value="">Seleccione un distrito</option>
-					@if (distritos != null)
-					{
-						@foreach (var distrito in distritos)
+			<div>
+				<label for="Distrito" class="block text-sm font-medium text-gray-300">Distrito</label>
+				<div class="mt-2">
+					<select asp-for="Distrito" id="Distrito" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						<option value="">Seleccione un distrito</option>
+						@if (distritos != null)
 						{
-							<option value="@distrito.ID_DISTRITO" data-provincia="@distrito.ID_PROVINCIA" data-canton="@distrito.ID_CANTON">@distrito.NOMBRE</option>
+							@foreach (var distrito in distritos)
+							{
+								<option value="@distrito.ID_DISTRITO" data-provincia="@distrito.ID_PROVINCIA" data-canton="@distrito.ID_CANTON">@distrito.NOMBRE</option>
+							}
 						}
-					}
-				</select>
+					</select>
+				</div>
+			</div>
+			<div>
+				<label for="OtrasSenas" class="block text-sm font-medium text-gray-300">Barrio y otras señas</label>
+				<div class="mt-2">
+					<input asp-for="OtrasSenas" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+				</div>
+			</div>
+			<div>
+				<label for="Estado" class="block text-sm font-medium text-gray-300">Estado</label>
+				<div class="mt-2">
+					<select asp-for="Estado" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						<option value="true">Activo</option>
+						<option value="false">Inactivo</option>
+					</select>
+				</div>
 			</div>
 		</div>
-		<div class="sm:col-span-2">
-			<label for="OtrasSenas" class="block text-sm font-medium text-gray-300">Barrio y Otras Señas</label>
-			<div class="mt-2">
-				<input asp-for="OtrasSenas" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-			</div>
-		</div>
-		<div class="sm:col-span-2">
-			<label for="Estado" class="block text-sm font-medium text-gray-300">Estado</label>
-			<div class="mt-2">
-				<select asp-for="Estado" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-					<option value="true">Activo</option>
-					<option value="false">Inactivo</option>
-				</select>
-			</div>
-		</div>
-	</div>
-	<div class="mt-6 flex justify-end gap-x-4">
+		<div class="mt-6 flex justify-end gap-x-4">
 		<input asp-for="PK_Cliente" value="@Model.PK_Cliente" type="hidden" />
 		<input asp-for="FK_Usuario_Creacion" value="1" type="hidden" />
 		<input asp-for="FK_Usuario_Modificacion" value="1" type="hidden" />

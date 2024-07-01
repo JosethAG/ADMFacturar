@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 
+using Microsoft.AspNetCore.Authentication;
+
 namespace ADM.APICliente.Controllers
 {
 	public class ClientesController : Controller
@@ -24,11 +26,12 @@ namespace ADM.APICliente.Controllers
 			if (resp.IsSuccessStatusCode)
 			{
 				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-				var clientes = JsonConvert.DeserializeObject<IEnumerable<ClienteViewModel>>(content);
-				return View("Index", clientes); // Devuelve 'clientes' en lugar de 'resp'
+				var clientes = JsonConvert.DeserializeObject<IEnumerable<Cliente>>(content);
+				ViewData["Clientes"] = clientes ?? new List<Cliente>();
+				return View("Index");
 			}
 
-			return View(new List<ClienteViewModel>());
+			return View();
 		}
 
 		public async Task<IActionResult> CrearCliente()

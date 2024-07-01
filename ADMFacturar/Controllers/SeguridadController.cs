@@ -4,6 +4,11 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+
 
 
 namespace ADMFacturar.Controllers
@@ -17,6 +22,7 @@ namespace ADMFacturar.Controllers
             _httpClient.BaseAddress = new Uri("https://localhost:7270/api");
         }
 
+        //[Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
             {
@@ -25,25 +31,29 @@ namespace ADMFacturar.Controllers
                 if (resp.IsSuccessStatusCode)
                 {
                     var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-                    var seguridades = JsonConvert.DeserializeObject<IEnumerable<Seguridad>>(content);
-                    return View("Index", seguridades);
+                    var usuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
+                    ViewData["Usuarios"] = usuarios ?? new List<Usuario>();
+                    return View("Index");
                 }
 
-                return View(new List<Seguridad>());
-            }
+                return View();
+            
         }
+    }
 
+        //[Authorize(Roles = "Administrador")]
         public IActionResult CrearSeguridad()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearSeguridad(Seguridad seguridad)
+        //[Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> CrearSeguridad(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                var json = JsonConvert.SerializeObject(seguridad);
+                var json = JsonConvert.SerializeObject(usuario);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
@@ -63,9 +73,10 @@ namespace ADMFacturar.Controllers
                 }
 
             }
-            return View(seguridad);
+            return View(usuario);
         }
 
+        //[Authorize(Roles = "Administrador")]
         public async Task<IActionResult> ActualizarSeguridad(int? PK)
         {
             var resp = await _httpClient.GetAsync($"api/Seguridad/Obtener/{PK}");
@@ -73,8 +84,8 @@ namespace ADMFacturar.Controllers
             if (resp.IsSuccessStatusCode)
             {
                 var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-                var seguridad = JsonConvert.DeserializeObject<Seguridad>(content);
-                return View("ActualizarSeguridad", seguridad); // Devuelve 'seguridad' en lugar de 'resp'
+                var usuario = JsonConvert.DeserializeObject<Usuario>(content);
+                return View("ActualizarSeguridad", usuario); // Devuelve 'usuario' en lugar de 'resp'
             }
 
             return NotFound();
@@ -82,11 +93,12 @@ namespace ADMFacturar.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> ActualizarSeguridad(Seguridad seguridad)
+        //[Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> ActualizarSeguridad(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                var json = JsonConvert.SerializeObject(seguridad);
+                var json = JsonConvert.SerializeObject(usuario);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
@@ -107,10 +119,11 @@ namespace ADMFacturar.Controllers
                 }
 
             }
-            return View(seguridad);
+            return View(usuario);
         }
 
         [HttpPost]
+        //[Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DesactivarSeguridad(string PK)
         {
             if (ModelState.IsValid)
@@ -139,46 +152,64 @@ namespace ADMFacturar.Controllers
         
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> Login(string correo, string contra)
         {
-            try
+            var data = new
             {
-                var json = JsonConvert.SerializeObject(request);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                Correo = correo,
+                Contra = contra
+            };
 
-                using (var response = await _httpClient.PostAsync("/api/Seguridad/Login", content))
+            // Convertir el objeto a JSON
+            var json = JsonConvert.SerializeObject(data);
+
+            // Crear contenido JSON para la solicitud
+            var cont = new StringContent(json, Encoding.UTF8, "application/json");
+
+            // Realizar la solicitud POST al API con los parámetros en el cuerpo
+            var resp = await _httpClient.PostAsync("api/Seguridad/Login/", cont);
+
+            var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+            var Iusuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
+            List<Usuario> usuarios = Iusuarios.ToList();
+            Usuario usuario = new Usuario();
+
+
+            foreach (var u in usuarios)
+            {
+                usuario.PK_IdUsuario = u.PK_IdUsuario;
+                usuario.Nombre = u.Nombre;
+                usuario.Correo = u.Correo;
+                usuario.Contra = u.Contra;
+                usuario.Rol = u.Rol;
+            }
+
+            if (usuario != null)
+            {
+                var claims = new List<Claim>
                 {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var responseContent = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<dynamic>(responseContent);
+                    new Claim(ClaimTypes.Name, usuario.Nombre),
+                    new Claim("Correo", usuario.Correo),
+                    new Claim(ClaimTypes.Role, usuario.Rol)
+                };
 
-                        if (result.redirectTo != null && result.redirectTo == "/Home/Index")
-                        {
-                            Console.WriteLine("Login exitoso. Redireccionando a la página principal.");
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Error en las credenciales. No se pudo iniciar sesión.");
-                            ModelState.AddModelError(string.Empty, "Usuario o contraseña incorrectos.");
-                            return View("Login");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error al conectar con el servidor API.");
-                        ModelState.AddModelError(string.Empty, "Datos Incorrectos, ingréselos de nuevo.");
-                        return View("Login");
-                    }
-                }
-            }
-            catch (Exception ex)
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                return RedirectToAction("Index", "Home");
+            } else
             {
-                Console.WriteLine($"Error al realizar la solicitud de login: {ex.Message}");
-                ModelState.AddModelError(string.Empty, "Error interno del servidor.");
-                return View("Login");
+                return View();
             }
+
+        }
+
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Seguridad");
         }
     }
 }

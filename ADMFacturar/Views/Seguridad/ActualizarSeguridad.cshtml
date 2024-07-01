@@ -1,4 +1,4 @@
-﻿@model Seguridad
+﻿@model Usuario
 
 <form asp-action="ActualizarSeguridad" method="post" class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-md">
     <div class="border-b border-gray-700 pb-6">
@@ -8,8 +8,8 @@
         <div class="sm:col-span-2">
             <label for="Usuario" class="block text-sm font-medium text-gray-300">Usuario</label>
             <div class="mt-2">
-                <input asp-for="Usuario" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-                <span asp-validation-for="Usuario" class="text-sm text-red-600"></span>
+                <input asp-for="Nombre" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                <span asp-validation-for="Nombre" class="text-sm text-red-600"></span>
             </div>
         </div>
         <div class="sm:col-span-2">
@@ -30,9 +30,8 @@
             <label for="Rol" class="block text-sm font-medium text-gray-300">Rol</label>
             <div class="mt-2">
                 <select asp-for="Rol" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="1">Administrador</option>
-                    <option value="2">Usuario</option>
-                    <option value="3">Otro</option>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Usuario">Usuario</option>
                 </select>
                 <span asp-validation-for="Rol" class="text-sm text-red-600"></span>
             </div>
