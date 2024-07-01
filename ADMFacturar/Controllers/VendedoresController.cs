@@ -1,4 +1,5 @@
 ﻿using ADM.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -6,7 +7,8 @@ using System.Text;
 
 namespace ADM.APICliente.Controllers
 {
-	public class VendedoresController : Controller
+    [Authorize(Roles = "Administrador, Usuario")]
+    public class VendedoresController : Controller
 	{
 		private readonly HttpClient _httpClient;
 
