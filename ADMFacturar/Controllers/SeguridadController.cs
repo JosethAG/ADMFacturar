@@ -211,5 +211,7 @@ namespace ADMFacturar.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Seguridad");
         }
+
+
     }
 }
