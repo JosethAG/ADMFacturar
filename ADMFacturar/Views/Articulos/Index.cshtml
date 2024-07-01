@@ -1,152 +1,359 @@
-﻿@model IEnumerable<ArticuloViewModel>
-<link href="~/css/custom.css" rel="stylesheet" />
+﻿@using ADM.Models
+@model Articulo
 
-<div class="w-full">
-</div>
+@{
+	var articulos = ViewData["Articulos"] as List<Articulo>;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ingreso de Articulos</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+	<link href="~/css/custom.css" rel="stylesheet" />
+	<!-- SweetAlert2 CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
 
-<!--                  Formulario                        -->
-<form>
-	<div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
-		<h2 class="text-lg font-bold mb-4">Filtro de Articulos</h2>
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
-			<div class="sm:col-span-1">
-				<label for="nombre_articulo" class="block text-sm font-medium">Nombre de Articulo</label>
-				<div class="mt-1">
-					<input type="text" id="nombre_articulo" name="nombre_articulo" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+	<div class="w-full">
+	</div>
+
+	<!--                  Formulario                        -->
+	<form>
+		<div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+			<h2 class="text-lg font-bold mb-4">Filtro de Articulos</h2>
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+				<div class="sm:col-span-1">
+					<label for="nombre_articulo" class="block text-sm font-medium">Nombre de Articulo</label>
+					<div class="mt-1">
+						<input type="text" id="nombre_articulo" name="nombre_articulo" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</form>
-<!--Final de From-->
-<div class="w-full mt-8">
-	<div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
-		<h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Articulos</h3>
-		<div>
-			<a asp-action="CrearArticulo" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Artículo</a>
-		</div>
-	</div>
+	</form>
+	<!--Final de From-->
+	<div class="w-full mt-8">
+		<div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+			<h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Articulos</h3>
+			<div>
+				@* <a asp-action="CrearArticulo" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Arituclo	</a> *@
+				<a onclick="abrirModal('modalCrearArticulo')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Artículo</a>
 
-	<!--                  Tabla                        -->
-	<div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
-		<table class="min-w-full leading-normal">
-			<thead>
-				<tr class="bg-gray-800 text-white">
-					<th class="py-3 text-center">Código de Artículo</th>
-					<th class="py-3 text-center">Descripción de Artículo</th>
-					<th class="py-3 text-center">Código de Barras</th>
-					<th class="py-3 text-center">Proveedor</th>
-					<th class="py-3 text-center">Cantidad</th>
-					<th class="py-3 text-center">Costo</th>
-					<th class="py-3 text-center">Precio Unitario</th>
-					<th class="py-3 text-center">Estado</th>
-					<th class="py-3 text-center">Acciones</th>
-				</tr>
-			</thead>
-			<tbody id="bodyTablaArticulos" class="text-gray-700">
-				@if (Model != null && Model.Any())
-				{
-					@foreach (var item in Model)
+			</div>
+		</div>
+
+		<!--                  Tabla                        -->
+		<div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+			<table class="min-w-full leading-normal">
+				<thead>
+					<tr class="bg-gray-800 text-white">
+						<th class="py-3 text-center">Código de Artículo</th>
+						<th class="py-3 text-center">Descripción de Artículo</th>
+						<th class="py-3 text-center">Código de Barras</th>
+						<th class="py-3 text-center">Proveedor</th>
+						<th class="py-3 text-center">Cantidad</th>
+						<th class="py-3 text-center">Costo</th>
+						<th class="py-3 text-center">Precio Unitario</th>
+						<th class="py-3 text-center">Estado</th>
+						<th class="py-3 text-center">Acciones</th>
+					</tr>
+				</thead>
+				<tbody id="bodyTablaArticulos" class="text-gray-700">
+					@if (articulos != null)
 					{
-						<tr class="border-b border-gray-200 hover:bg-gray-100">
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.PK_Articulo)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Descripcion)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Codigo_Barras)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.FK_Proveedor)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Cantidad)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Costo)</td>
-							<td class="py-3 text-center">@Html.DisplayFor(modelItem => item.Precio)</td>
-							<td class="py-3 text-center">
-								@if (item.Estado == true)
-								{
-									<span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
-								}
-								else
-								{
-									<span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
-								}
-							</td>
-							@* <td class="p-3 border border-gray-300"> *@
-							<td>
-								<div class="flex justify-center space-x-2">
-									<a asp-action="ActualizarArticulo" asp-route-PK="@item.PK_Articulo" class="text-blue-600 hover:text-blue-900" title="Editar">
-										<i class="fas fa-edit"></i>
-									</a>
-									<form method="post" asp-action="DesactivarArticulo" asp-route-PK="@item.PK_Articulo" onsubmit="return mostrarConfirmacion(event)">
-										<button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-											<i class="fa-solid fa-ban"></i>
-										</button>
-									</form>
-								</div>
-							</td>
+						@foreach (var articulo in articulos)
+						{
+							<tr class="border-b border-gray-200 hover:bg-gray-100">
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.PK_Articulo)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.Descripcion)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.Codigo_Barras)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.FK_Proveedor)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.Cantidad)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.Costo)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.Precio)</td>
+								<td class="py-3 text-center">
+									@if (articulo.Estado == true)
+									{
+										<span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
+									}
+									else
+									{
+										<span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
+									}
+								</td>
+								@* <td class="p-3 border border-gray-300"> *@
+								<td>
+									<div class="flex justify-center space-x-2">
+										<a asp-action="ActualizarArticulo" asp-route-PK="@articulo.PK_Articulo" class="text-blue-600 hover:text-blue-900" title="Editar">
+											<i class="fas fa-edit"></i>
+										</a>
+										<form method="post" asp-action="DesactivarArticulo" class="desactivar-form">
+											<input type="hidden" name="PK_Articulo" value="@articulo.PK_Articulo">
+											<button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+												<i class="fa-solid fa-ban"></i>
+											</button>
+										</form>
+									</div>
+								</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="14">No hay datos disponibles.</td>
 						</tr>
 					}
-				}
-				else
-				{
-					<tr>
-						<td colspan="9">No hay datos disponibles.</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-</div>
-<!--                  Final Tabla                        -->
-<!-- Modal de confirmación -->
-<div id="confirmacionModal" class="fixed inset-0 z-10 overflow-y-auto hidden">
-	<div class="flex items-center justify-center min-h-screen">
-		<div class="bg-white rounded-lg p-6 shadow-xl">
-			<div class="mb-4 text-center">
-				<p class="text-lg font-semibold">¿Seguro que deseas desactivar este Artículo?</p>
-			</div>
-			<div class="text-center">
-				<button onclick="confirmarDesactivacion()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">Confirmar</button>
-				<button onclick="cancelarDesactivacion()" class="border border-gray-300 hover:bg-gray-200 font-semibold py-2 px-4 rounded">Cancelar</button>
-			</div>
+				</tbody>
+			</table>
 		</div>
 	</div>
-</div>
 
 
+	<!--                  Modal de Crear Template                        -->
+	<div id="modalCrearArticulo" class="modal">
+		<div class="modal-content">
+			<form asp-action="CrearArticulo" method="post" class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-md" id="formcreate">
+				<div class="border-b border-gray-700 pb-6">
+					<h2 class="text-lg font-semibold leading-7 text-white">Creación de nuevo Artículo</h2>
+				</div>
+				<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+					<div>
+						<label for="PK_Articulo" class="block text-sm font-medium text-gray-300">Código Artículo</label>
+						<div class="mt-2">
+							<input asp-for="PK_Articulo" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						</div>
+					</div>
+					<div>
+						<label for="Descripcion" class="block text-sm font-medium text-gray-300">Descripción</label>
+						<div class="mt-2">
+							<input asp-for="Descripcion" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						</div>
+					</div>
+					<div>
+						<label for="Codigo_Barras" class="block text-sm font-medium text-gray-300">Código de Barras</label>
+						<div class="mt-2">
+							<input asp-for="Codigo_Barras" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						</div>
+					</div>
+					<div>
+						<label for="FK_Proveedor" class="block text-sm font-medium text-gray-300">Proveedor</label>
+						<div class="mt-2">
+							<select asp-for="FK_Proveedor" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+								<option value="1">Proveedor 1</option>
+								<option value="2">Proveedor 2</option>
+								<option value="3">Proveedor 3</option>
+								<option value="4">Proveedor 4</option>
+								<option value="5">Proveedor 5</option>
+								<option value="6">Proveedor 6</option>
+							</select>
+						</div>
+					</div>
+					<div>
+						<label for="Cantidad" class="block text-sm font-medium text-gray-300">Cantidad</label>
+						<div class="mt-2">
+							<input asp-for="Cantidad" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						</div>
+					</div>
+					<div>
+						<label for="Costo" class="block text-sm font-medium text-gray-300">Costo</label>
+						<div class="mt-2">
+							<input asp-for="Costo" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						</div>
+					</div>
+					<div>
+						<label for="Precio" class="block text-sm font-medium text-gray-300">Precio</label>
+						<div class="mt-2">
+							<input asp-for="Precio" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+						</div>
+					</div>
+					<div>
+						<label for="Estado" class="block text-sm font-medium text-gray-300">Estado</label>
+						<div class="mt-2">
+							<select asp-for="Estado" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+								<option value="true">Activo</option>
+								<option value="false">Inactivo</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="mt-6 flex justify-end gap-x-4">
+					<input asp-for="FK_Usuario_Creacion" value="1" type="hidden" />
+					<input asp-for="FK_Usuario_Modificacion" value="1" type="hidden" />
+					<button type="submit" id="btnGuardar" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
+					<button asp-action="Index" class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!--                  Final Modal de Crear Tempalte                        -->
+	<!--                  Modal de Actualizar Template                        -->
+	<!--                  Final Modal de Actualizar Tempalte                        -->
 
-<script>
-	// Función para mostrar modal de confirmación de desactivación
-	function mostrarConfirmacion(event) {
-		event.preventDefault();
-		document.getElementById('confirmacionModal').classList.remove('hidden');
-		window.confirmarDesactivacion = function () {
-			event.target.closest('form').submit();
-		};
-		window.cancelarDesactivacion = function () {
-			document.getElementById('confirmacionModal').classList.add('hidden');
-		};
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script>
 
-		return false;
-	}
+		// Función para mostrar modal de confirmación de desactivación
+		function mostrarConfirmacion(event) {
+			event.preventDefault();
+			document.getElementById('confirmacionModal').classList.remove('hidden');
+			window.confirmarDesactivacion = function () {
+				event.target.closest('form').submit();
+			};
+			window.cancelarDesactivacion = function () {
+				document.getElementById('confirmacionModal').classList.add('hidden');
+			};
 
-	// Función para filtrar la tabla de artículos por nombre
-	function filtrarTabla() {
-		// Obtener el valor de búsqueda del campo de nombre
-		const nombreArticulo = document.getElementById('nombre_articulo').value.toLowerCase();
+			return false;
+		}
 
-		// Obtener todas las filas de la tabla
-		const filas = document.querySelectorAll('#bodyTablaArticulos tr');
+		// Función para filtrar la tabla de artículos por nombre
+		function filtrarTabla() {
+			// Obtener el valor de búsqueda del campo de nombre
+			const nombreArticulo = document.getElementById('nombre_articulo').value.toLowerCase();
 
-		filas.forEach(fila => {
-			const cells = fila.getElementsByTagName('td');
-			const matchNombre = cells[1].textContent.toLowerCase().includes(nombreArticulo);
+			// Obtener todas las filas de la tabla
+			const filas = document.querySelectorAll('#bodyTablaArticulos tr');
 
-			if (matchNombre) {
-				fila.style.display = '';
+			filas.forEach(fila => {
+				const cells = fila.getElementsByTagName('td');
+				const matchNombre = cells[1].textContent.toLowerCase().includes(nombreArticulo);
+
+				if (matchNombre) {
+					fila.style.display = '';
+				} else {
+					fila.style.display = 'none';
+				}
+			});
+		}
+
+		// Enlazar evento de input para el campo de nombre de artículo
+		document.getElementById('nombre_articulo').addEventListener('input', filtrarTabla);
+
+
+		document.getElementById('btnGuardar').addEventListener('click', function (event) {
+			event.preventDefault(); // Detener el envío normal del formulario
+
+			// Validar campos requeridos
+			var codigoArticulo = document.querySelector('[name="PK_Articulo"]').value;
+			var descripcion = document.querySelector('[name="Descripcion"]').value;
+			var codigoBarras = document.querySelector('[name="Codigo_Barras"]').value;
+			var proveedor = document.querySelector('[name="FK_Proveedor"]').value;
+			var cantidad = document.querySelector('[name="Cantidad"]').value;
+			var costo = document.querySelector('[name="Costo"]').value;
+			var precio = document.querySelector('[name="Precio"]').value;
+			var estado = document.querySelector('[name="Estado"]').value;
+
+			if (!codigoArticulo || !descripcion || !codigoBarras || !proveedor || !cantidad || !costo || !precio || !estado) {
+				// Mostrar mensaje de error con SweetAlert2 si no están completos los campos
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Por favor complete todos los campos requeridos.',
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'OK'
+				});
 			} else {
-				fila.style.display = 'none';
+				// Crear objeto FormData con los datos del formulario
+				var formData = new FormData(document.getElementById('formcreate'));
+
+				// Enviar los datos al controlador utilizando fetch
+				fetch('/Articulos/CrearArticulo', {
+					method: 'POST',
+					body: formData
+				})
+					.then(response => {
+						if (response.ok) {
+							// Mostrar mensaje de éxito con SweetAlert2
+							Swal.fire({
+								icon: 'success',
+								title: 'Guardado Correctamente',
+								showConfirmButton: true,
+								confirmButtonColor: '#3085d6',
+								confirmButtonText: 'OK'
+							}).then((result) => {
+								// Redirigir a la página de índice de artículos después de guardar
+								window.location.href = '/Articulos/Index';
+							});
+						} else {
+							throw new Error('Error al guardar los datos');
+						}
+					})
+					.catch(error => {
+						// Mostrar mensaje de error con SweetAlert2
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: error.message,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonText: 'OK'
+						});
+					});
 			}
 		});
-	}
+		// <!-- Inicio Validación botón desactivar -->
+		document.querySelectorAll('.desactivar-form').forEach(function (form) {
+			form.addEventListener('submit', function (event) {
+				event.preventDefault(); // Detener el envío normal del formulario
 
-	// Enlazar evento de input para el campo de nombre de artículo
-	document.getElementById('nombre_articulo').addEventListener('input', filtrarTabla);
+				// Obtener la PK del Articulo desde el formulario
+				var pkArticulo = this.querySelector('input[name="PK_Articulo"]').value;
 
-	
-</script>
+				// Mostrar mensaje de confirmación con SweetAlert2
+				Swal.fire({
+					title: '¿Está seguro?',
+					text: "¿Desea desactivar este articulo?",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Sí, desactivar',
+					cancelButtonText: 'Cancelar'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						// Enviar la solicitud para desactivar el articulo
+						fetch(`/Articulos/DesactivarArticulo?PK=${pkArticulo}`, {
+							method: 'POST'
+						})
+							.then(response => {
+								if (response.ok) {
+									// Mostrar mensaje de éxito con SweetAlert2
+									Swal.fire({
+										icon: 'success',
+										title: 'Articulo desactivado correctamente',
+										showConfirmButton: true,
+										confirmButtonColor: '#3085d6',
+										confirmButtonText: 'OK'
+									}).then((result) => {
+										// Recargar la página después de desactivar
+										location.reload();
+									});
+								} else {
+									throw new Error('Error al desactivar el Cliente');
+								}
+							})
+							.catch(error => {
+								// Mostrar mensaje de error con SweetAlert2
+								Swal.fire({
+									icon: 'error',
+									title: 'Error',
+									text: error.message,
+									confirmButtonColor: '#3085d6',
+									cancelButtonColor: '#d33',
+									confirmButtonText: 'OK'
+								});
+							});
+					}
+				});
+			});
+		});
+		// <!-- Fin Validación botón desactivar -->
+
+	</script>
+</body>
+</html>
