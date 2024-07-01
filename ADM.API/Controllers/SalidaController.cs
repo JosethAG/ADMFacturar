@@ -115,6 +115,52 @@ namespace ADM.API.Controllers
                 return result;
             }
         }
+        [HttpPost]
+        [Route("EliminarSalida/{PK_FK_Documento}")]
+        public bool EliminarIngreso(string PK_FK_Documento)
+        {
+            if (string.IsNullOrEmpty(PK_FK_Documento))
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+
+        {
+            new DBParameter("@PK_FK_Documento", PK_FK_Documento),
+        };
+
+                var result = DBData.Execute("sp_EliminarSalida", parameters);
+
+                return result;
+            }
+        }
+
+
+        [HttpGet]
+        [Route("Obtener/{PK}")]
+        public SalidaMercaderia ObtenerSalidaMercaderia(string? PK)
+        {
+            if (PK != null)
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@PK_FK_Documento", PK)
+                    };
+                DataTable tIngresoMercaderia = DBData.List("sp_ObtenerSalidaMercaderia", parameters);
+                string jsonArticle = JsonConvert.SerializeObject(tIngresoMercaderia);
+                var result = JsonProvider.DeserializeSimple<IEnumerable<SalidaMercaderia>>(jsonArticle);
+
+
+                return result.FirstOrDefault();
+            }
+            else
+            {
+                return new SalidaMercaderia();
+            }
+        }
+
 
 
 
