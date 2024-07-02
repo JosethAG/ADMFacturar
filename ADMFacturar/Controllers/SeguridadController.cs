@@ -149,7 +149,7 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        
+
 
         [HttpPost]
         public async Task<IActionResult> Login(string correo, string contra)
@@ -169,41 +169,35 @@ namespace ADMFacturar.Controllers
             // Realizar la solicitud POST al API con los parámetros en el cuerpo
             var resp = await _httpClient.PostAsync("api/Seguridad/Login/", cont);
 
-            var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-            var Iusuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
-            List<Usuario> usuarios = Iusuarios.ToList();
-            Usuario usuario = new Usuario();
-
-
-            foreach (var u in usuarios)
+            if (resp.IsSuccessStatusCode)
             {
-                usuario.PK_IdUsuario = u.PK_IdUsuario;
-                usuario.Nombre = u.Nombre;
-                usuario.Correo = u.Correo;
-                usuario.Contra = u.Contra;
-                usuario.Rol = u.Rol;
-            }
+                var content = await resp.Content.ReadAsStringAsync(); // Lee la respuesta del API
+                var Iusuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
+                List<Usuario> usuarios = Iusuarios.ToList();
+                Usuario usuario = usuarios.FirstOrDefault(); // Obtén el primer usuario si existe
 
-            if (usuario != null)
-            {
-                var claims = new List<Claim>
+                if (usuario != null)
                 {
-                    new Claim(ClaimTypes.Name, usuario.Nombre),
-                    new Claim("Correo", usuario.Correo),
-                    new Claim(ClaimTypes.Role, usuario.Rol)
-                };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-                return RedirectToAction("Index", "Home");
-            } else
+                    var claims = new List<Claim>
             {
-                return View();
+                new Claim(ClaimTypes.Name, usuario.Nombre),
+                new Claim("Correo", usuario.Correo),
+                new Claim(ClaimTypes.Role, usuario.Rol)
+            };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
+            // Si llegamos aquí, significa que las credenciales son inválidas o hubo un error
+            ModelState.AddModelError(string.Empty, "Las credenciales proporcionadas son incorrectas.");
+            return View();
         }
+
 
 
         public async Task<IActionResult> Logout()
