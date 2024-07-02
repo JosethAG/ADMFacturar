@@ -1,4 +1,5 @@
 ﻿using ADM.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -7,6 +8,7 @@ using System.Text;
 
 namespace ADM.APIIngresoMercaderia.Controllers
 {
+    [Authorize(Roles = "Administrador, Usuario")]
     public class InventarioController : Controller
     {
         private readonly HttpClient _httpClient;

@@ -10,8 +10,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(option =>
     {
         option.LoginPath = "/Seguridad/Login";
-        option.ExpireTimeSpan = TimeSpan.Zero;
-        option.AccessDeniedPath = "/";
+        option.ExpireTimeSpan = TimeSpan.FromDays(365 * 10); // 10 años de duración
+        option.SlidingExpiration = false;
+        option.AccessDeniedPath = "/Home/AccDenied";
     });
 
 var app = builder.Build();

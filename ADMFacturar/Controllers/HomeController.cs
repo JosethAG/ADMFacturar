@@ -19,7 +19,7 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult AccDenied()
         {
             return View();
         }
