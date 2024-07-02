@@ -1,9 +1,11 @@
 ﻿using ADM.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace ADMFacturar.Controllers
 {
+    [Authorize(Roles = "Administrador, Usuario")]
     public class AdministracionController : Controller
     {
         private readonly HttpClient _httpClient;

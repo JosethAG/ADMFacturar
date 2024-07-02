@@ -22,7 +22,7 @@ namespace ADMFacturar.Controllers
             _httpClient.BaseAddress = new Uri("https://localhost:7270/api");
         }
 
-        //[Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
             {
@@ -38,17 +38,17 @@ namespace ADMFacturar.Controllers
 
                 return View();
             
+            }
         }
-    }
 
-        //[Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult CrearSeguridad()
         {
             return View();
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> CrearSeguridad(Usuario usuario)
         {
             if (ModelState.IsValid)
@@ -76,7 +76,7 @@ namespace ADMFacturar.Controllers
             return View(usuario);
         }
 
-        //[Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> ActualizarSeguridad(int? PK)
         {
             var resp = await _httpClient.GetAsync($"api/Seguridad/Obtener/{PK}");
@@ -93,7 +93,7 @@ namespace ADMFacturar.Controllers
 
 
         [HttpPost]
-        //[Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> ActualizarSeguridad(Usuario usuario)
         {
             if (ModelState.IsValid)
@@ -123,7 +123,7 @@ namespace ADMFacturar.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DesactivarSeguridad(string PK)
         {
             if (ModelState.IsValid)
@@ -211,5 +211,7 @@ namespace ADMFacturar.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Seguridad");
         }
+
+
     }
 }
