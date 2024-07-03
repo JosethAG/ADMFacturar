@@ -31,11 +31,13 @@ namespace ADMFacturar.Controllers
                 if (resp.IsSuccessStatusCode)
                 {
                     var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-                    var seguridades = JsonConvert.DeserializeObject<IEnumerable<Seguridad>>(content);
-                    return View("Index", seguridades);
+                    var usuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
+                    ViewData["Usuarios"] = usuarios ?? new List<Usuario>();
+                    return View("Index");
                 }
 
-                return View(new List<Seguridad>());
+                return View();
+            
             }
         }
 
@@ -47,11 +49,11 @@ namespace ADMFacturar.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> CrearSeguridad(Seguridad seguridad)
+        public async Task<IActionResult> CrearSeguridad(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                var json = JsonConvert.SerializeObject(seguridad);
+                var json = JsonConvert.SerializeObject(usuario);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
@@ -71,7 +73,7 @@ namespace ADMFacturar.Controllers
                 }
 
             }
-            return View(seguridad);
+            return View(usuario);
         }
 
         [Authorize(Roles = "Administrador")]
@@ -82,8 +84,8 @@ namespace ADMFacturar.Controllers
             if (resp.IsSuccessStatusCode)
             {
                 var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-                var seguridad = JsonConvert.DeserializeObject<Seguridad>(content);
-                return View("ActualizarSeguridad", seguridad); // Devuelve 'seguridad' en lugar de 'resp'
+                var usuario = JsonConvert.DeserializeObject<Usuario>(content);
+                return View("ActualizarSeguridad", usuario); // Devuelve 'usuario' en lugar de 'resp'
             }
 
             return NotFound();
@@ -92,11 +94,11 @@ namespace ADMFacturar.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> ActualizarSeguridad(Seguridad seguridad)
+        public async Task<IActionResult> ActualizarSeguridad(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                var json = JsonConvert.SerializeObject(seguridad);
+                var json = JsonConvert.SerializeObject(usuario);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
@@ -117,7 +119,7 @@ namespace ADMFacturar.Controllers
                 }
 
             }
-            return View(seguridad);
+            return View(usuario);
         }
 
         [HttpPost]
@@ -147,7 +149,7 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        
+
 
         [HttpPost]
         public async Task<IActionResult> Login(string correo, string contra)
@@ -167,41 +169,35 @@ namespace ADMFacturar.Controllers
             // Realizar la solicitud POST al API con los parámetros en el cuerpo
             var resp = await _httpClient.PostAsync("api/Seguridad/Login/", cont);
 
-            var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
-            var Iusuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
-            List<Usuario> usuarios = Iusuarios.ToList();
-            Usuario usuario = new Usuario();
-
-
-            foreach (var u in usuarios)
+            if (resp.IsSuccessStatusCode)
             {
-                usuario.PK_IdUsuario = u.PK_IdUsuario;
-                usuario.Nombre = u.Nombre;
-                usuario.Correo = u.Correo;
-                usuario.Contra = u.Contra;
-                usuario.Rol = u.Rol;
-            }
+                var content = await resp.Content.ReadAsStringAsync(); // Lee la respuesta del API
+                var Iusuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
+                List<Usuario> usuarios = Iusuarios.ToList();
+                Usuario usuario = usuarios.FirstOrDefault(); // Obtén el primer usuario si existe
 
-            if (usuario != null)
-            {
-                var claims = new List<Claim>
+                if (usuario != null)
                 {
-                    new Claim(ClaimTypes.Name, usuario.Nombre),
-                    new Claim("Correo", usuario.Correo),
-                    new Claim(ClaimTypes.Role, usuario.Rol)
-                };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-                return RedirectToAction("Index", "Home");
-            } else
+                    var claims = new List<Claim>
             {
-                return View();
+                new Claim(ClaimTypes.Name, usuario.Nombre),
+                new Claim("Correo", usuario.Correo),
+                new Claim(ClaimTypes.Role, usuario.Rol)
+            };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
+            // Si llegamos aquí, significa que las credenciales son inválidas o hubo un error
+            ModelState.AddModelError(string.Empty, "Las credenciales proporcionadas son incorrectas.");
+            return View();
         }
+
 
 
         public async Task<IActionResult> Logout()
@@ -209,5 +205,7 @@ namespace ADMFacturar.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Seguridad");
         }
+
+
     }
 }

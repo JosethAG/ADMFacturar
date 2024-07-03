@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
-
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ADM.APICliente.Controllers
 {
-	public class ClientesController : Controller
+    [Authorize(Roles = "Administrador, Usuario")]
+    public class ClientesController : Controller
 	{
 		private readonly HttpClient _httpClient;
 
