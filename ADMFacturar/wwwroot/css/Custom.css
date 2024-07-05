@@ -98,6 +98,7 @@
     align-items: center;
     text-align: center;
 }
+
 .mr-img {
     margin-right: 10rem;
 }
@@ -171,23 +172,23 @@
 
 .btnCrear {
     background-color: transparent;
-    border: 1px solid #3182ce; 
-    color: #3182ce; 
-    width: 2rem; 
-    height: 2rem; 
+    border: 1px solid #3182ce;
+    color: #3182ce;
+    width: 2rem;
+    height: 2rem;
     font-weight: bold;
-    padding: 0.25rem 0.5rem; 
-    border-radius: 0.375rem; 
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s; 
-    margin: 0.25rem; 
-    outline: none; 
-    box-shadow: none; 
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0.25rem;
+    outline: none;
+    box-shadow: none;
 }
 
     .btnCrear:hover {
-        background-color: #3182ce; 
-        color: #ffffff; 
+        background-color: #3182ce;
+        color: #ffffff;
     }
 
 .btnEditar {
@@ -358,14 +359,14 @@
     align-content: center;
     background-color: none;
     color: white;
-    transition: background-color 0.3s; 
-    margin-right:10px
+    transition: background-color 0.3s;
+    margin-right: 10px
 }
 
-#DivCard:hover {
-    background-color: #ffffff;
-    color: #1444A8;
-}
+    #DivCard:hover {
+        background-color: #ffffff;
+        color: #1444A8;
+    }
 
 /*Apartado de time line*/
 /* Contenedor principal */
@@ -412,7 +413,7 @@
 .timeline-item {
     margin-bottom: 30px;
     position: relative;
-    background-color:none
+    background-color: none
 }
 
 /* Estilos de la caja de fecha */
@@ -439,26 +440,607 @@
 }
 
 
-/*Estilo de la alerta agregada a crear*/
-/*.alert {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;*/ /* Ancho del 100% del contenedor */
-    /*max-width: 600px;*/ /* Ancho máximo */
-    /*padding: 20px;
-    background-color: #3b82f6;*/ /* Color de fondo */
-    /*border: 1px solid #cccccc;*/ /* Borde */
-    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/ /* Sombra */
-    /*color: #333333;*/ /* Color del texto */
-    /*font-size: 1.6rem;*/ /* Tamaño del texto */
-    /*text-align: center;*/ /* Centrar el texto */
-    /*z-index: 1000;*/ /* Z-index para estar por encima de otros elementos */
-    /*opacity: 0;*/ /* Inicialmente oculta */
-    /*transition: opacity 0.3s ease-in-out;*/ /* Transición suave al mostrar/ocultar */
-/*}
 
-    .alert.show {
-        opacity: 1;*/ /* Mostrar la alerta cambiando la opacidad */
-    /*}*/
+
+/* Estilo para DataTables Proveedores*/
+#tablaProveedores_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaProveedores_length,
+#tablaProveedores_filter,
+#tablaProveedores_info,
+#tablaProveedores_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaProveedores_paginate {
+    float: right;
+}
+
+#tablaProveedores_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaProveedores tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+
+/* Estilo para DataTables Articulos */
+#tablaArticulos_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaArticulos_length,
+#tablaArticulos_filter,
+#tablaArticulos_info,
+#tablaArticulos_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaArticulos_paginate {
+    float: right;
+}
+
+#tablaArticulos_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaArticulos tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+
+
+/* Estilo para DataTables Clientes  */
+#tablaClientes_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaClientes_length,
+#tablaClientes_filter,
+#tablaClientes_info,
+#tablaClientes_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaClientes_paginate {
+    float: right;
+}
+
+#tablaClientes_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaClientes tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+
+/* Estilo para DataTables Transportes*/
+#tablaTransportes_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaTransportes_length,
+#tablaTransportes_filter,
+#tablaTransportes_info,
+#tablaTransportes_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaTransportes_paginate {
+    float: right;
+}
+
+#tablaTransportes_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaTransportes tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+/* Estilo para DataTables Vendedores */
+#tablaVendedores_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaVendedores_length,
+#tablaVendedores_filter,
+#tablaVendedores_info,
+#tablaVendedores_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaVendedores_paginate {
+    float: right;
+}
+
+#tablaVendedores_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaVendedores tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+
+/* Estilo para DataTables Segurtidad */
+#tablaSeguridad_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaSeguridad_length,
+#tablaSeguridad_filter,
+#tablaSeguridad_info,
+#tablaSeguridad_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaSeguridad_paginate {
+    float: right;
+}
+
+#tablaSeguridad_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaSeguridad tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+
+/* Estilo para DataTables Ingresos*/
+#tablaIngresos_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaIngresos_length,
+#tablaIngresos_filter,
+#tablaIngresos_info,
+#tablaIngresos_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaIngresos_paginate {
+    float: right;
+}
+
+#tablaIngresos_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaIngresos tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+
+
+/* Estilo para DataTables Salidas */
+#tablaSalidas_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaSalidas_length,
+#tablaSalidas_filter,
+#tablaSalidas_info,
+#tablaSalidas_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaSalidas_paginate {
+    float: right;
+}
+
+#tablaSalidas_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaSalidas tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+/* Estilo para DataTables Existencias */
+#tablaExistencias_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaExistencias_length,
+#tablaExistencias_filter,
+#tablaExistencias_info,
+#tablaExistencias_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaExistencias_paginate {
+    float: right;
+}
+
+#tablaExistencias_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaExistencias tbody tr:hover {
+    background-color: #f7fafc;
+}
+
