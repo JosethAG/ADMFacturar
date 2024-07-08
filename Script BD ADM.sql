@@ -1,3 +1,4 @@
+drop database ADM;
 create database ADM;
 use ADM;
 
