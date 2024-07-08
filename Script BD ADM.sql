@@ -328,6 +328,102 @@ GO
 ALTER TABLE [dbo].[TBL_SALIDA_MERCADERIA] CHECK CONSTRAINT [FK_TBL_SALIDA_MERCADERIA_TBL_INV_ARTICULO]
 GO
 
+
+/****** Object:  Table [dbo].[TBL_CONSECUTIVO]    Script Date: 7/6/2024 12:17:19 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_CONSECUTIVO](
+	[PK_Consecutivo] [varchar](50) NOT NULL,
+	[Descripcion] [varchar](50) NOT NULL,
+	[Consecutivo] int NOT NULL,
+ CONSTRAINT [PK_TBL_CONSECUTIVO] PRIMARY KEY CLUSTERED 
+(
+	[PK_Consecutivo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+/****** Object:  Table [dbo].[TBL_FACTURA]    Script Date: 7/7/2024 12:06:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_FACTURA](
+	[PK_Factura] [varchar](50) NOT NULL,
+	[Fecha] [datetime] NOT NULL,
+	[FK_Cliente] [varchar](50) NOT NULL,
+	[FK_VENDEDOR] [varchar](100) NULL,
+	[FK_Condicion_Pago] [varchar](10) NOT NULL,			
+	[Transporte] [bigint] NULL,
+	[Subtotal] [decimal](18, 3) NULL,
+	[Descuento] [decimal](18, 3) NULL,	
+	[Total] [decimal](18, 3) NULL,
+	[Devolucion] [int] NULL,
+	[Estado] [varchar](50) NOT NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NOT NULL,
+ CONSTRAINT [PK_TBL_FACTURA] PRIMARY KEY CLUSTERED 
+(
+	[PK_Factura] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+	
+/****** Object:  Table [dbo].[TBL_FACTURA_LINEA]    Script Date: 7/7/2024 12:06:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TBL_FACTURA_LINEA](
+	[PK_FK_Factura] [varchar](50) NOT NULL,
+	[Linea] [int] IDENTITY(1,1) NOT NULL,
+	[FK_Articulo] [varchar](50) NOT NULL,
+	[Cantidad] INT NULL,
+	[Costo] [decimal](18, 3) NULL,
+	[Precio] [decimal](18, 3) NULL,	
+	[A_Devolver] int NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NOT NULL,
+ CONSTRAINT [PK_TBL_FACTURA_LINEA] PRIMARY KEY CLUSTERED 
+(
+	[PK_FK_Factura] ASC,
+	[Linea] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[TBL_FACTURA] ADD  CONSTRAINT [DF_TBL_FACTURA_Fecha_Creacion]  DEFAULT (getdate()) FOR [Fecha_Creacion]
+GO
+ALTER TABLE [dbo].[TBL_FACTURA] ADD  CONSTRAINT [DF_TBL_FACTURA_Fecha_Modificacion]  DEFAULT (getdate()) FOR [Fecha_Modificacion]
+GO
+ALTER TABLE [dbo].[TBL_FACTURA] ADD  DEFAULT ((0)) FOR [TRANSPORTE]
+GO
+ALTER TABLE [dbo].[TBL_FACTURA_LINEA] ADD  CONSTRAINT [DF_TBL_FACTURA_LINEA_Fecha_Creacion]  DEFAULT (getdate()) FOR [Fecha_Creacion]
+GO
+ALTER TABLE [dbo].[TBL_FACTURA_LINEA] ADD  CONSTRAINT [DF_TBL_FACTURA_LINEA_Fecha_Modificacion]  DEFAULT (getdate()) FOR [Fecha_Modificacion]
+GO
+ALTER TABLE [dbo].[TBL_FACTURA_LINEA] ADD  DEFAULT ((0)) FOR [COSTO]
+GO
+ALTER TABLE [dbo].[TBL_FACTURA_LINEA]  WITH NOCHECK ADD  CONSTRAINT [FK_TBL_FACTURA_LINEA_TBL_FACTURA] FOREIGN KEY([PK_FK_Factura])
+REFERENCES [dbo].[TBL_FACTURA] ([PK_Factura])
+GO
+ALTER TABLE [dbo].[TBL_FACTURA_LINEA] CHECK CONSTRAINT [FK_TBL_FACTURA_LINEA_TBL_FACTURA]
+GO
+ALTER TABLE [dbo].[TBL_FACTURA_LINEA]  WITH CHECK ADD  CONSTRAINT [FK_TBL_FACTURA_LINEA_TBL_ARTICULO] FOREIGN KEY([FK_Articulo])
+REFERENCES [dbo].[TBL_ARTICULO] ([PK_Articulo])
+GO
+ALTER TABLE [dbo].[TBL_FACTURA_LINEA] CHECK CONSTRAINT [FK_TBL_FACTURA_LINEA_TBL_ARTICULO]
+
+	
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
@@ -2382,6 +2478,167 @@ END
 GO
 
 	
+-------------------------------------------------
+		/*Facturacion*/
+-------------------------------------------------
+
+
+
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerConsecutivo]    Script Date: 7/6/2024 1:08:58 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ObtenerConsecutivo]
+    @PK_Consecutivo varchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+       Consecutivo
+    FROM 
+        dbo.[TBL_CONSECUTIVO]
+	WHERE PK_Consecutivo = @PK_Consecutivo
+
+END;
+
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/7/2024 1:29:46 PM ******/
+CREATE PROCEDURE [dbo].[sp_InsertarFactura]
+    @PK_Factura VARCHAR(50),
+    @FK_Cliente VARCHAR(50),
+    @FK_Condicion_Pago VARCHAR(10),
+    @Transporte BIGINT = NULL,
+    @Subtotal DECIMAL(18, 3) = NULL,
+    @Descuento DECIMAL(18, 3) = NULL,
+    @Total DECIMAL(18, 3) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @FK_VENDEDOR VARCHAR(100); -- Declarar la variable para el vendedor
+
+    -- Obtener el vendedor asociado al cliente
+    SELECT @FK_VENDEDOR = FK_Vendedor
+    FROM TBL_CLIENTES
+    WHERE PK_Cliente = @FK_Cliente;
+
+    INSERT INTO dbo.TBL_FACTURA (
+        PK_Factura,
+        Fecha,
+        FK_Cliente,
+        FK_VENDEDOR,
+        FK_Condicion_Pago,
+        Transporte,
+        Subtotal,
+        Descuento,
+        Total,
+        Devolucion,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    )
+    VALUES (
+        @PK_Factura,
+        GETDATE(),
+        @FK_Cliente,
+        @FK_VENDEDOR, -- Usar el valor del vendedor obtenido
+        @FK_Condicion_Pago,
+        @Transporte,
+        @Subtotal,
+        @Descuento,
+        @Total,
+        0,
+        'Facturado',
+        'a',
+        'a',
+        GETDATE(),
+        GETDATE()
+    );
+
+    -- Aumentar en uno la columna Consecutivo para el PK_Consecutivo 01
+    UPDATE dbo.TBL_CONSECUTIVO
+    SET Consecutivo = Consecutivo + 1
+    WHERE PK_Consecutivo = '01';
+END;
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/7/2024 1:39:13 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_InsertarFacturaLinea]
+    @PK_FK_Factura VARCHAR(50),
+    @FK_Articulo VARCHAR(50),
+    @Cantidad int,
+	@Precio decimal(18,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	    DECLARE @Costo decimal(18,2); -- Declarar la variable para el costo		
+
+    -- Obtener el COSTO asociado al articulo
+    SELECT @Costo = Costo
+    FROM TBL_ARTICULO
+    WHERE PK_Articulo = @FK_Articulo;
+
+	
+    INSERT INTO dbo.TBL_FACTURA_LINEA (
+        PK_FK_Factura,
+        FK_Articulo,
+        Cantidad,
+        Costo,
+        Precio,
+        A_Devolver,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    )
+    VALUES (
+        @PK_FK_Factura,
+        @FK_Articulo,
+        @Cantidad,
+        @Costo,
+        @Precio,
+        0,
+        'a',
+        'a',
+        GETDATE(),
+        GETDATE()
+    );
+END;
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_obtenerProductoFacturacion]    Script Date: 7/7/2024 7:47:58 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_obtenerProductoFacturacion]
+    @PK_Articulo VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT [PK_Articulo] AS Producto,
+           [Cantidad],
+           [Precio] AS precioUnitario
+    FROM [ADM].[dbo].[TBL_ARTICULO]
+    WHERE [PK_Articulo] = @PK_Articulo;
+END;
+
+
+
+	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
 ----------------------------------------------------------------------------------------------------
@@ -3753,4 +4010,12 @@ VALUES
 ('Carlos Lopez', 'carlos.lopez@example.com', 'ContraseñaSegura3', 'Administrador', 1, 'admin', 'admin', GETDATE(), GETDATE()),
 ('Ana Martinez', 'ana.martinez@example.com', 'ContraseñaSegura4', 'Usuario', 1, 'admin', 'admin', GETDATE(), GETDATE()),
 ('Pedro Sanchez', 'pedro.sanchez@example.com', 'ContraseñaSegura5', 'Usuario', 0, 'admin', 'admin', GETDATE(), GETDATE());
+
+
+
+GO
+INSERT [dbo].[TBL_CONSECUTIVO] ([PK_Consecutivo], [Descripcion], [Consecutivo]) VALUES (N'01', N'Factura', 1010000001)
+GO
+INSERT [dbo].[TBL_CONSECUTIVO] ([PK_Consecutivo], [Descripcion], [Consecutivo]) VALUES (N'02', N'Nota de Crédito', 1020000001)
+GO
 
