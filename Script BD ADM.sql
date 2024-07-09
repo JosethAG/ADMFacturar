@@ -2569,7 +2569,7 @@ BEGIN
 END;
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/7/2024 1:39:13 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/8/2024 7:22:17 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2615,10 +2615,16 @@ BEGIN
         GETDATE(),
         GETDATE()
     );
+	
+    -- Rebaja existencia de inventario
+    UPDATE dbo.TBL_ARTICULO
+    SET Cantidad = Cantidad - @Cantidad
+    WHERE PK_Articulo = @FK_Articulo;
+
 END;
 
 GO
-
+	
 /****** Object:  StoredProcedure [dbo].[sp_obtenerProductoFacturacion]    Script Date: 7/7/2024 7:47:58 PM ******/
 SET ANSI_NULLS ON
 GO
