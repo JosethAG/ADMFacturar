@@ -424,6 +424,149 @@ REFERENCES [dbo].[TBL_ARTICULO] ([PK_Articulo])
 GO
 ALTER TABLE [dbo].[TBL_FACTURA_LINEA] CHECK CONSTRAINT [FK_TBL_FACTURA_LINEA_TBL_ARTICULO]
 
+
+GO
+
+/****** Object:  Table [dbo].[TBL_DOCUMENTO_CC]    Script Date: 7/8/2024 7:22:40 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_DOCUMENTO_CC](
+	[PK_Documento_CC] [varchar](50) NOT NULL,
+	[FK_Cliente] [varchar](50) NOT NULL,
+	[Fecha_Documento] [datetime] NOT NULL,
+	[Fecha_Vencimiento] [datetime] NOT NULL,
+	[Total_XC] [decimal](18, 2) NULL,
+	[Saldo_Pendiente] [decimal](18, 2) NULL,
+	[Estado] [varchar](20) NOT NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50) NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[PK_Documento_CC] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TBL_DOCUMENTO_CC] ADD  DEFAULT (getdate()) FOR [Fecha_Creacion]
+GO
+
+
+GO
+
+/****** Object:  Table [dbo].[TBL_ABONOSXC]    Script Date: 7/8/2024 7:22:29 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_ABONOSXC](
+	[Numero_Abono] [varchar](50) NOT NULL,
+	[FK_Documento_CC] [varchar](50) NOT NULL,
+	[FK_Cliente] [varchar](50) NOT NULL,
+	[Fecha_Documento] [datetime] NOT NULL,
+	[Monto_Total] [decimal](18, 2) NOT NULL,
+	[Saldo_Pendiente] [decimal](18, 2) NOT NULL,
+	[Monto_Abonado] [decimal](18, 2) NOT NULL,
+	[Tipo_Pago] [varchar](50) NULL,
+	[Banco] [varchar](100) NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50) NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Numero_Abono] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TBL_ABONOSXC] ADD  DEFAULT (getdate()) FOR [Fecha_Creacion]
+GO
+
+ALTER TABLE [dbo].[TBL_ABONOSXC]  WITH CHECK ADD  CONSTRAINT [FK_TBL_ABONOSXC_TBL_DOCUMENTO_CC] FOREIGN KEY([FK_Documento_CC])
+REFERENCES [dbo].[TBL_DOCUMENTO_CC] ([PK_Documento_CC])
+GO
+
+ALTER TABLE [dbo].[TBL_ABONOSXC] CHECK CONSTRAINT [FK_TBL_ABONOSXC_TBL_DOCUMENTO_CC]
+GO
+
+
+
+GO
+
+/****** Object:  Table [dbo].[TBL_DOCUMENTO_CP]    Script Date: 7/8/2024 7:22:51 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_DOCUMENTO_CP](
+	[PK_Documento] [varchar](50) NOT NULL,
+	[FK_Proveedor] [varchar](50) NOT NULL,
+	[Fecha_Documento] [datetime] NOT NULL,
+	[Fecha_Vence] [datetime] NOT NULL,
+	[Observaciones] [varchar](300) NULL,
+	[Monto] [decimal](18, 2) NOT NULL,
+	[Saldo_Pendiente] [decimal](18, 2) NOT NULL,
+	[Anulado] [varchar](1) NOT NULL,
+	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
+	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
+	[Fecha_Creacion] [datetime] NOT NULL,
+	[Fecha_Modificacion] [datetime] NOT NULL,
+ CONSTRAINT [PK_TBL_DOCUMENTO_CP_1] PRIMARY KEY CLUSTERED 
+(
+	[PK_Documento] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TBL_DOCUMENTO_CP] ADD  CONSTRAINT [DF_TBL_DOCUMENTO_CP_Fecha_Creacion]  DEFAULT (getdate()) FOR [Fecha_Creacion]
+GO
+
+ALTER TABLE [dbo].[TBL_DOCUMENTO_CP] ADD  CONSTRAINT [DF_TBL_DOCUMENTO_CP_Fecha_Modificacion]  DEFAULT (getdate()) FOR [Fecha_Modificacion]
+GO
+
+
+GO
+
+/****** Object:  Table [dbo].[TBL_ABONOS]    Script Date: 7/8/2024 7:22:23 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_ABONOS](
+	[Numero_Recibo] [varchar](50) NOT NULL,
+	[FK_Documento] [varchar](50) NOT NULL,
+	[FK_Proveedor] [varchar](50) NOT NULL,
+	[Fecha_Documento] [datetime] NOT NULL,
+	[Monto] [decimal](18, 2) NOT NULL,
+	[Saldo_Pendiente] [decimal](18, 2) NOT NULL,
+	[Monto_Abonado] [decimal](18, 2) NOT NULL,
+	[Tipo_Documento] [varchar](50) NULL,
+	[Banco] [varchar](100) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Numero_Recibo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TBL_ABONOS]  WITH CHECK ADD  CONSTRAINT [FK_TBL_ABONOS_TBL_DOCUMENTO_CP] FOREIGN KEY([FK_Documento])
+REFERENCES [dbo].[TBL_DOCUMENTO_CP] ([PK_Documento])
+GO
+
+ALTER TABLE [dbo].[TBL_ABONOS] CHECK CONSTRAINT [FK_TBL_ABONOS_TBL_DOCUMENTO_CP]
+GO
 	
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
@@ -2644,6 +2787,390 @@ BEGIN
 END;
 
 
+
+
+-------------------------------------------------
+		/*Abonos-AbonoXC---Documento_CP-Documento_CC*/
+-------------------------------------------------
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarAbonosxDocumento]    Script Date: 7/8/2024 7:23:04 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarAbono]    ******/
+
+ALTER PROCEDURE  [dbo].[sp_ListarAbonosxDocumento]
+    @FK_Documento VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        Numero_Recibo,
+        FK_Documento,
+        FK_Proveedor,
+        Fecha_Documento,
+        Monto,
+        Saldo_Pendiente,
+        Monto_Abonado,
+        Tipo_Documento,
+        Banco
+    FROM 
+        dbo.TBL_ABONOS
+    WHERE 
+        FK_Documento = @FK_Documento;
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarAbonosxDocumentoCC]    Script Date: 7/8/2024 7:23:06 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarAbono]    ******/
+
+ALTER PROCEDURE  [dbo].[sp_ListarAbonosxDocumentoCC]
+    @FK_Documento_CC VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        Numero_Abono,
+        FK_Documento_CC,
+        FK_Cliente,
+        Fecha_Documento,
+        Monto_Total,
+        Saldo_Pendiente,
+        Monto_Abonado,
+        Tipo_Pago,
+        Banco
+    FROM 
+        dbo.TBL_ABONOSXC
+    WHERE 
+        FK_Documento_CC = @FK_Documento_CC;
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarAbono]    Script Date: 7/8/2024 7:23:13 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[sp_InsertarAbono]
+    @PK_Documento VARCHAR(50),
+    @Monto_Abonado DECIMAL(18, 2),
+    @Tipo_Documento VARCHAR(50) = NULL,
+    @Banco VARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @FK_Proveedor VARCHAR(50);
+    DECLARE @Fecha_Documento DATETIME;
+    DECLARE @Monto DECIMAL(18, 2);
+    DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+
+    -- Obtener datos del documento
+    SELECT @FK_Proveedor = FK_Proveedor,
+           @Fecha_Documento = Fecha_Documento,
+           @Monto = Monto,
+           @Saldo_Pendiente = Saldo_Pendiente
+    FROM dbo.TBL_DOCUMENTO_CP
+    WHERE PK_Documento = @PK_Documento;
+
+    -- Validar si el valor a abonar es igual a 0
+    IF @Monto_Abonado = 0
+    BEGIN
+        -- Retornar 3 si la validación falla
+        RETURN 3;
+    END
+
+    -- Validar si el valor a abonar es mayor al saldo pendiente
+    IF @Monto_Abonado > @Saldo_Pendiente
+    BEGIN
+        -- Retornar 2 si la validación falla
+        RETURN 2;
+    END
+
+    -- Validar si el valor a abonar es un número negativo
+    IF @Monto_Abonado < 0
+    BEGIN
+        -- Retornar 4 si la validación falla
+        RETURN 4;
+    END
+
+    -- Validar si el saldo pendiente es igual a 0
+    IF @Saldo_Pendiente <= 0
+    BEGIN
+        -- Retornar 5 si la validación falla
+        RETURN 5;
+    END
+
+    -- Calcular nuevo saldo pendiente
+    SET @Saldo_Pendiente = @Saldo_Pendiente - @Monto_Abonado;
+
+    -- Insertar el nuevo abono
+    INSERT INTO dbo.TBL_ABONOS (
+        FK_Documento,
+        FK_Proveedor,
+        Fecha_Documento,
+        Monto,
+        Saldo_Pendiente,
+        Monto_Abonado,
+        Tipo_Documento,
+        Banco
+    )
+    VALUES (
+        @PK_Documento,
+        @FK_Proveedor,
+        @Fecha_Documento,
+        @Monto,
+        @Saldo_Pendiente,
+        @Monto_Abonado,
+        @Tipo_Documento,
+        @Banco
+    );
+
+    -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CP
+    UPDATE dbo.TBL_DOCUMENTO_CP
+    SET Saldo_Pendiente = @Saldo_Pendiente
+    WHERE PK_Documento = @PK_Documento;
+
+    -- Retornar 1 si la operación es exitosa
+    RETURN 1;
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    Script Date: 7/8/2024 7:23:16 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    ******/
+
+ALTER PROCEDURE [dbo].[sp_InsertarAbonoXC]
+    @PK_Documento_CC VARCHAR(50),
+    @Monto_Abonado DECIMAL(18, 2),
+    @Tipo_Pago VARCHAR(50) = NULL,
+    @Banco VARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @FK_Cliente VARCHAR(50);
+    DECLARE @Fecha_Documento DATETIME;
+    DECLARE @Monto_Total DECIMAL(18, 2);
+    DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+
+    -- Obtener datos del documento
+    SELECT @FK_Cliente = FK_Cliente,
+           @Fecha_Documento = Fecha_Documento,
+           @Monto_Total = Total_XC,
+           @Saldo_Pendiente = Saldo_Pendiente
+    FROM dbo.TBL_DOCUMENTO_CC
+    WHERE PK_Documento_CC = @PK_Documento_CC;
+
+    -- Validar si el valor a abonar es igual a 0
+    IF @Monto_Abonado = 0
+    BEGIN
+        -- Retornar 3 si la validación falla
+        RETURN 3;
+    END
+
+    -- Validar si el valor a abonar es mayor al saldo pendiente
+    IF @Monto_Abonado > @Saldo_Pendiente
+    BEGIN
+        -- Retornar 2 si la validación falla
+        RETURN 2;
+    END
+
+    -- Validar si el valor a abonar es un número negativo
+    IF @Monto_Abonado < 0
+    BEGIN
+        -- Retornar 4 si la validación falla
+        RETURN 4;
+    END
+
+    -- Validar si el saldo pendiente es igual a 0
+    IF @Saldo_Pendiente <= 0
+    BEGIN
+        -- Retornar 5 si la validación falla
+        RETURN 5;
+    END
+
+    -- Calcular nuevo saldo pendiente
+    SET @Saldo_Pendiente = @Saldo_Pendiente - @Monto_Abonado;
+
+    -- Insertar el nuevo abono
+    INSERT INTO dbo.TBL_ABONOSXC (
+        FK_Documento_CC,
+        FK_Cliente,
+        Fecha_Documento,
+        Monto_Total,
+        Saldo_Pendiente,
+        Monto_Abonado,
+        Tipo_Pago,
+        Banco
+    )
+    VALUES (
+        @PK_Documento_CC,
+        @FK_Cliente,
+        @Fecha_Documento,
+        @Monto_Total,
+        @Saldo_Pendiente,
+        @Monto_Abonado,
+        @Tipo_Pago,
+        @Banco
+    );
+
+    -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CC
+    UPDATE dbo.TBL_DOCUMENTO_CC
+    SET Saldo_Pendiente = @Saldo_Pendiente
+    WHERE PK_Documento_CC = @PK_Documento_CC;
+
+    -- Retornar 1 si la operación es exitosa
+    RETURN 1;
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarDocumentosCC]    Script Date: 7/8/2024 7:23:23 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[sp_ListarDocumentosCC]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Documento_CC,
+        FK_Factura,
+        FK_Cliente,
+		Fecha_Documento,
+        Fecha_Vencimiento,
+        Total_XC,
+        Saldo_Pendiente,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_DOCUMENTO_CC
+    ORDER BY 
+        PK_Documento_CC;
+END;
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarDocumentosCCxCliente]    Script Date: 7/8/2024 7:23:25 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[sp_ListarDocumentosCCxCliente]
+    @FK_Cliente VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Documento_CC,
+        FK_Cliente,
+		Fecha_Documento,
+        Fecha_Vencimiento,
+        Total_XC,
+        Saldo_Pendiente,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_DOCUMENTO_CC 
+    WHERE 
+        FK_Cliente LIKE '%' + @FK_Cliente + '%'
+    ORDER BY 
+        PK_Documento_CC;
+END;
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarDocumentosCP]    Script Date: 7/8/2024 7:23:26 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[sp_ListarDocumentosCP]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Documento,
+        FK_Proveedor,
+        Fecha_Documento,
+        Fecha_Vence,
+        Observaciones,
+        Monto,
+        Saldo_Pendiente,
+        Anulado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_DOCUMENTO_CP
+    ORDER BY 
+        PK_Documento;
+END;
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ListarDocumentosCPxProveedor]    Script Date: 7/8/2024 7:23:28 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[sp_ListarDocumentosCPxProveedor]
+    @FK_Proveedor VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Documento,
+        FK_Proveedor,
+        Fecha_Documento,
+        Fecha_Vence,
+        Observaciones,
+        Monto,
+        Saldo_Pendiente,
+        Anulado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_DOCUMENTO_CP 
+    WHERE 
+        FK_Proveedor LIKE '%' + @FK_Proveedor + '%'
+    ORDER BY 
+        PK_Documento;
+END;
 
 	
 ----------------------------------------------------------------------------------------------------
