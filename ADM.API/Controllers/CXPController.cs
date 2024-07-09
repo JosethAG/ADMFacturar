@@ -112,8 +112,9 @@ namespace ADM.API.Controllers
             {
                 List<DBParameter> parameters = new List<DBParameter>
         {
-            new DBParameter("@PK_Documento", abono.FK_Documento),
-            new DBParameter("@Monto_Abonado", abono.Monto_Abonado.ToString()), // Asegúrate de que DBParameter maneje bien el tipo decimal
+            new DBParameter("@Numero_Recibo", abono.Numero_Recibo), // Asegúrate de que coincida con el nombre del parámetro en tu procedimiento almacenado
+            new DBParameter("@FK_Documento", abono.FK_Documento),
+            new DBParameter("@Monto_Abonado", abono.Monto_Abonado.ToString()), // Sin convertir a string
             new DBParameter("@Tipo_Documento", abono.Tipo_Documento),
             new DBParameter("@Banco", abono.Banco)
         };
@@ -154,6 +155,8 @@ namespace ADM.API.Controllers
 
             return BadRequest(ModelState);
         }
+
+
     }
 }
 

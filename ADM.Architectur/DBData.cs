@@ -114,7 +114,17 @@ namespace ADM.Architectur
 
                 foreach (var param in parameters)
                 {
-                    command.Parameters.Add(new SqlParameter(param.Name, param.Value));
+                    // Asegúrate de manejar correctamente los tipos de datos
+                    SqlParameter sqlParameter;
+                    if (param.Value == null)
+                    {
+                        sqlParameter = new SqlParameter(param.Name, DBNull.Value);
+                    }
+                    else
+                    {
+                        sqlParameter = new SqlParameter(param.Name, param.Value);
+                    }
+                    command.Parameters.Add(sqlParameter);
                 }
 
                 var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);
@@ -126,6 +136,9 @@ namespace ADM.Architectur
                 return (int)returnParameter.Value;
             }
         }
+
+
+
 
         public static int ExecuteCC(string storedProcedure, List<DBParameter> parameters)
         {
