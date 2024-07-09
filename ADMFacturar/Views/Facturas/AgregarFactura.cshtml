@@ -70,7 +70,7 @@
                     <div class="relative">
                         <label for="producto" class="block text-sm font-medium leading-6 text-white">Producto</label>
                         <div class="flex">
-                            <input type="text" id="producto" name="producto" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                            <input type="text" id="producto" name="producto" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
                             <!-- Botón de buscar producto -->
                             <button type="button" class="ml-2 mt-1 text-gray-400 hover:text-white" aria-label="Buscar producto" onclick="openModal()">
                                 <i class="fas fa-search"></i>
@@ -80,7 +80,7 @@
                     </div>
                     <div>
                         <label for="cantidad" class="block text-sm font-medium leading-6 text-white">Cantidad</label>
-                        <input type="number" id="cantidad" name="cantidad" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        <input type="number" id="cantidad" name="cantidad" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
                     </div>
                     <div class="flex items-end">
                         <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">Agregar</button>
@@ -217,11 +217,11 @@
 
                     filteredData.forEach(articulo => {
                         var row = `
-                                        <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer" onclick="seleccionarArticulo('${articulo.pK_Articulo}', '${articulo.descripcion}')">
-                                            <td class="py-3 px-4 border-b border-gray-700">${articulo.pK_Articulo}</td>
-                                            <td class="py-3 px-4 border-b border-gray-700">${articulo.descripcion}</td>
-                                        </tr>
-                                    `;
+                                <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer" onclick="seleccionarArticulo('${articulo.pK_Articulo}', '${articulo.descripcion}')">
+                                    <td class="py-3 px-4 border-b border-gray-700">${articulo.pK_Articulo}</td>
+                                    <td class="py-3 px-4 border-b border-gray-700">${articulo.descripcion}</td>
+                                </tr>
+                            `;
                         tableBody.innerHTML += row;
                     });
 
@@ -260,11 +260,11 @@
 
                     filteredData.forEach(cliente => {
                         var row = `
-                                        <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer" onclick="seleccionarCliente('${cliente.pK_Cliente}', '${cliente.nombre}')">
-                                            <td class="py-3 px-4 border-b border-gray-700">${cliente.pK_Cliente}</td>
-                                            <td class="py-3 px-4 border-b border-gray-700">${cliente.nombre}</td>
-                                        </tr>
-                                    `;
+                                <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer" onclick="seleccionarCliente('${cliente.pK_Cliente}', '${cliente.nombre}', '${cliente.fK_CondicionPago}', '${cliente.fK_Transporte}')">
+                                    <td class="py-3 px-4 border-b border-gray-700">${cliente.pK_Cliente}</td>
+                                    <td class="py-3 px-4 border-b border-gray-700">${cliente.nombre}</td>                 
+                                </tr>
+                            `;
                         tableBody.innerHTML += row;
                     });
 
@@ -279,8 +279,10 @@
             document.getElementById('modalCliente').classList.add('hidden');
         }
 
-        function seleccionarCliente(codigo, nombre) {
+        function seleccionarCliente(codigo, nombre, condicion,transporte) {
             document.getElementById('Cliente').value = codigo;
+            document.getElementById('CondicionPago').value = condicion;
+            document.getElementById('Transporte').value = transporte;
             closeModalCliente();
         }
 
@@ -357,27 +359,33 @@
             productos.forEach((prod, index) => {
                 const totalProducto = prod.cantidad * prod.precioUnitario;
                 const fila = `
-                                <tr class="even:bg-gray-700 hover:bg-gray-600">
-                                    <td class="py-3 px-4 border-b border-gray-700">${prod.producto}</td>
-                                    <td class="py-3 px-4 border-b border-gray-700">${prod.cantidad}</td>
-                                    <td class="py-3 px-4 border-b border-gray-700 flex items-center justify-center">
-                                         <input type="number" class="mt-1 block w-32 rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 text-center" style="padding-left: 10px;" value="${prod.precioUnitario}" onchange="actualizarPrecio(${index}, this.value)">
-                                   </td>
-                                    <td class="py-3 px-4 border-b border-gray-700">${totalProducto}</td>
-                                    <td class="py-3 px-4 border-b border-gray-700">
-                                        <button class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded" onclick="eliminarProducto(${index})">Eliminar</button>
-                                    </td>
-                                </tr>`;
+                        <tr class="even:bg-gray-700 hover:bg-gray-600">
+                            <td class="py-3 px-4 border-b border-gray-700">${prod.producto}</td>
+                            <td class="py-3 px-4 border-b border-gray-700">${prod.cantidad}</td>
+                            <td class="py-3 px-4 border-b border-gray-700 flex items-center justify-center">
+                                <input type="number" class="mt-1 block w-32 rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 text-center" style="padding-left: 10px;" value="${prod.precioUnitario}" onchange="actualizarPrecio(${index}, this.value)">
+                            </td>
+                            <td class="py-3 px-4 border-b border-gray-700">${totalProducto.toFixed(2)}</td>
+                            <td class="py-3 px-4 border-b border-gray-700">
+                                <button class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded" onclick="eliminarProducto(${index})">Eliminar</button>
+                            </td>
+                        </tr>`;
                 tablaProductos.innerHTML += fila;
                 subtotal += totalProducto;
             });
 
             const subtotalElement = document.getElementById('subtotal');
+            subtotalElement.textContent = subtotal.toFixed(2);
+
+            actualizarDescuentoTotal(); // Actualizar descuento y total cuando se actualiza la tabla de productos
+        }
+
+        function actualizarDescuentoTotal() {
+            const subtotal = parseFloat(document.getElementById('subtotal').textContent);
             const descuentoPorcentajeElement = document.getElementById('descuentoPorcentaje');
             const descuentoElement = document.getElementById('descuento');
             const totalElement = document.getElementById('total');
 
-            subtotalElement.textContent = subtotal.toFixed(2);
             const descuentoPorcentaje = parseFloat(descuentoPorcentajeElement.value) || 0;
             const descuento = (subtotal * descuentoPorcentaje) / 100;
             descuentoElement.textContent = descuento.toFixed(2);
@@ -394,11 +402,25 @@
             actualizarTablaProductos();
         };
 
+        document.getElementById('descuentoPorcentaje').addEventListener('input', function () {
+            actualizarDescuentoTotal();
+        });
+
         function guardarFactura() {
             const consecutivo = document.getElementById('Consecutivo').value || '';
             const cliente = document.getElementById('Cliente').value || '';
             const condicionPago = document.getElementById('CondicionPago').value || '';
             const transporte = document.getElementById('Transporte').value || '';
+
+            if (!cliente || !condicionPago || !transporte || productos.length === 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Debe completar todos los campos y agregar al menos un producto',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+                return;
+            }
 
             const encabezado = {
                 consecutivo: consecutivo,
