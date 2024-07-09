@@ -3176,6 +3176,60 @@ BEGIN
         PK_Documento;
 END;
 
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerDocumentoCP]    ******/
+CREATE PROCEDURE [dbo].[sp_ObtenerDocumentoCP]
+    @PK_Documento VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Documento,
+        FK_Proveedor,
+        Fecha_Documento,
+        Fecha_Vence,
+        Observaciones,
+        Monto,
+        Saldo_Pendiente,
+        Anulado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_DOCUMENTO_CP 
+    WHERE 
+        PK_Documento = @PK_Documento
+END;
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerDocumentoCC]    ******/
+CREATE PROCEDURE [dbo].[sp_ObtenerDocumentoCC]
+    @PK_Documento_CC VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PK_Documento_CC,
+        FK_Cliente,
+        Fecha_Documento,
+        Fecha_Vencimiento,
+        Total_XC,
+        Saldo_Pendiente,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    FROM 
+        dbo.TBL_DOCUMENTO_CC 
+    WHERE 
+        PK_Documento_CC = @PK_Documento_CC
+END;
+GO
+
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
