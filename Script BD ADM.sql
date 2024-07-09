@@ -2613,8 +2613,7 @@ END;
 
 GO
 
-
-GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/8/2024 9:15:17 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2718,8 +2717,6 @@ BEGIN
 	    END
 END;
 GO
-
-
 /****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/8/2024 7:22:17 PM ******/
 SET ANSI_NULLS ON
 GO
