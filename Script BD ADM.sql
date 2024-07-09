@@ -2799,14 +2799,7 @@ END;
 -------------------------------------------------
 GO
 /****** Object:  StoredProcedure [dbo].[sp_ListarAbonosxDocumento]    Script Date: 7/8/2024 7:23:04 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-/****** Object:  StoredProcedure [dbo].[sp_InsertarAbono]    ******/
-
-CREATE PROCEDURE  [dbo].[sp_ListarAbonosxDocumento]
+CREATE PROCEDURE [dbo].[sp_ListarAbonosxDocumento]
     @FK_Documento VARCHAR(50)
 AS
 BEGIN
@@ -2827,8 +2820,9 @@ BEGIN
     WHERE 
         FK_Documento = @FK_Documento;
 END
-
 GO
+
+
 /****** Object:  StoredProcedure [dbo].[sp_ListarAbonosxDocumentoCC]    Script Date: 7/8/2024 7:23:06 AM ******/
 SET ANSI_NULLS ON
 GO
@@ -2867,7 +2861,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[sp_InsertarAbono]
-    @PK_Documento VARCHAR(50),
+    @Numero_Recibo VARCHAR(50),
+    @FK_Documento VARCHAR(50),
     @Monto_Abonado DECIMAL(18, 2),
     @Tipo_Documento VARCHAR(50) = NULL,
     @Banco VARCHAR(100) = NULL
@@ -2886,7 +2881,7 @@ BEGIN
            @Monto = Monto,
            @Saldo_Pendiente = Saldo_Pendiente
     FROM dbo.TBL_DOCUMENTO_CP
-    WHERE PK_Documento = @PK_Documento;
+    WHERE PK_Documento = @FK_Documento;
 
     -- Validar si el valor a abonar es igual a 0
     IF @Monto_Abonado = 0
@@ -2921,6 +2916,7 @@ BEGIN
 
     -- Insertar el nuevo abono
     INSERT INTO dbo.TBL_ABONOS (
+        Numero_Recibo,
         FK_Documento,
         FK_Proveedor,
         Fecha_Documento,
@@ -2931,7 +2927,8 @@ BEGIN
         Banco
     )
     VALUES (
-        @PK_Documento,
+        @Numero_Recibo,
+        @FK_Documento,
         @FK_Proveedor,
         @Fecha_Documento,
         @Monto,
@@ -2944,14 +2941,15 @@ BEGIN
     -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CP
     UPDATE dbo.TBL_DOCUMENTO_CP
     SET Saldo_Pendiente = @Saldo_Pendiente
-    WHERE PK_Documento = @PK_Documento;
+    WHERE PK_Documento = @FK_Documento;
 
     -- Retornar 1 si la operación es exitosa
     RETURN 1;
 END
-
-
 GO
+
+
+select * from dbo.TBL_ABONOS
 /****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    Script Date: 7/8/2024 7:23:16 AM ******/
 SET ANSI_NULLS ON
 GO
@@ -4599,11 +4597,12 @@ VALUES
 
 INSERT INTO TBL_Usuario (Nombre, Correo, Contra, Rol, Estado, FK_Usuario_Creacion, FK_Usuario_Modificacion, Fecha_Creacion, Fecha_Modificacion)
 VALUES 
-('Juan Perez', 'juan.perez@example.com', 'ContraseñaSegura1', 'Administrador', 1, 'admin', 'admin', GETDATE(), GETDATE()),
-('Maria Gomez', 'maria.gomez@example.com', 'ContraseñaSegura2', 'Usuario', 1, 'admin', 'admin', GETDATE(), GETDATE()),
+('Juan Perez', 'juan.perez@example.com', '1', 'Administrador', 1, 'admin', 'admin', GETDATE(), GETDATE()),
+('Maria Gomez', 'maria.gomez@example.com', '1', 'Usuario', 1, 'admin', 'admin', GETDATE(), GETDATE()),
 ('Carlos Lopez', 'carlos.lopez@example.com', 'ContraseñaSegura3', 'Administrador', 1, 'admin', 'admin', GETDATE(), GETDATE()),
 ('Ana Martinez', 'ana.martinez@example.com', 'ContraseñaSegura4', 'Usuario', 1, 'admin', 'admin', GETDATE(), GETDATE()),
 ('Pedro Sanchez', 'pedro.sanchez@example.com', 'ContraseñaSegura5', 'Usuario', 0, 'admin', 'admin', GETDATE(), GETDATE());
+
 
 
 
@@ -4612,4 +4611,3 @@ INSERT [dbo].[TBL_CONSECUTIVO] ([PK_Consecutivo], [Descripcion], [Consecutivo]) 
 GO
 INSERT [dbo].[TBL_CONSECUTIVO] ([PK_Consecutivo], [Descripcion], [Consecutivo]) VALUES (N'02', N'Nota de Crédito', 1020000001)
 GO
-
