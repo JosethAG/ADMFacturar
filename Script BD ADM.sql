@@ -2614,7 +2614,12 @@ END;
 GO
 
 
-/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/7/2024 1:29:46 PM ******/
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE PROCEDURE [dbo].[sp_InsertarFactura]
     @PK_Factura VARCHAR(50),
     @FK_Cliente VARCHAR(50),
@@ -2634,6 +2639,7 @@ BEGIN
     FROM TBL_CLIENTES
     WHERE PK_Cliente = @FK_Cliente;
 
+    -- Insertar en TBL_FACTURA
     INSERT INTO dbo.TBL_FACTURA (
         PK_Factura,
         Fecha,
@@ -2673,8 +2679,46 @@ BEGIN
     UPDATE dbo.TBL_CONSECUTIVO
     SET Consecutivo = Consecutivo + 1
     WHERE PK_Consecutivo = '01';
+
+	       DECLARE @Dias INT;
+        SELECT @Dias = MAX(Dias)
+        FROM TBL_FACTURA IM
+        INNER JOIN TBL_CONDICIONES_PAGO CP ON IM.FK_Condicion_Pago = CP.PK_Condicion_Pago
+        WHERE PK_Factura = @PK_Factura;
+
+ IF EXISTS(SELECT 1 FROM TBL_FACTURA WHERE PK_Factura = @PK_Factura AND FK_Condicion_Pago <> 1)
+    BEGIN
+    -- Insertar en TBL_DOCUMENTO_CC
+    INSERT INTO dbo.TBL_DOCUMENTO_CC (
+        PK_Documento_CC,
+        FK_Cliente,
+        Fecha_Documento,
+        Fecha_Vencimiento,
+        Total_XC,
+        Saldo_Pendiente,
+        Estado,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+		Fecha_Modificacion
+    )
+    VALUES (
+        @PK_Factura,
+        @FK_Cliente,
+        GETDATE(),
+        DATEADD(DAY, @Dias, GETDATE()),
+        @Total,
+        @Total,
+        'Pendiente',
+        'a',
+        'a',
+        GETDATE(),
+		GETDATE()
+    );
+	    END
 END;
 GO
+
 
 /****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/8/2024 7:22:17 PM ******/
 SET ANSI_NULLS ON
