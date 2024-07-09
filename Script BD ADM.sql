@@ -501,42 +501,6 @@ GO
 
 GO
 
-/****** Object:  Table [dbo].[TBL_DOCUMENTO_CP]    Script Date: 7/8/2024 7:22:51 AM ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[TBL_DOCUMENTO_CP](
-	[PK_Documento] [varchar](50) NOT NULL,
-	[FK_Proveedor] [varchar](50) NOT NULL,
-	[Fecha_Documento] [datetime] NOT NULL,
-	[Fecha_Vence] [datetime] NOT NULL,
-	[Observaciones] [varchar](300) NULL,
-	[Monto] [decimal](18, 2) NOT NULL,
-	[Saldo_Pendiente] [decimal](18, 2) NOT NULL,
-	[Anulado] [varchar](1) NOT NULL,
-	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
-	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
-	[Fecha_Creacion] [datetime] NOT NULL,
-	[Fecha_Modificacion] [datetime] NOT NULL,
- CONSTRAINT [PK_TBL_DOCUMENTO_CP_1] PRIMARY KEY CLUSTERED 
-(
-	[PK_Documento] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[TBL_DOCUMENTO_CP] ADD  CONSTRAINT [DF_TBL_DOCUMENTO_CP_Fecha_Creacion]  DEFAULT (getdate()) FOR [Fecha_Creacion]
-GO
-
-ALTER TABLE [dbo].[TBL_DOCUMENTO_CP] ADD  CONSTRAINT [DF_TBL_DOCUMENTO_CP_Fecha_Modificacion]  DEFAULT (getdate()) FOR [Fecha_Modificacion]
-GO
-
-
-GO
-
 /****** Object:  Table [dbo].[TBL_ABONOS]    Script Date: 7/8/2024 7:22:23 AM ******/
 SET ANSI_NULLS ON
 GO
@@ -3054,9 +3018,8 @@ BEGIN
 
     SELECT 
         PK_Documento_CC,
-        FK_Factura,
         FK_Cliente,
-		Fecha_Documento,
+	Fecha_Documento,
         Fecha_Vencimiento,
         Total_XC,
         Saldo_Pendiente,
