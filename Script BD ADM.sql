@@ -3176,6 +3176,8 @@ BEGIN
         PK_Documento;
 END;
 
+GO
+
 /****** Object:  StoredProcedure [dbo].[sp_ObtenerDocumentoCP]    ******/
 CREATE PROCEDURE [dbo].[sp_ObtenerDocumentoCP]
     @PK_Documento VARCHAR(50)
