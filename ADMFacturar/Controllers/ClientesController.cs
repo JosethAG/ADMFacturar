@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using NuGet.Configuration;
 
 namespace ADM.APICliente.Controllers
 {
@@ -205,5 +206,25 @@ namespace ADM.APICliente.Controllers
 			return Ok();
 		}
 
-	}
+        public async Task<IActionResult> ListarClientes()
+        {
+
+
+            var respArts = await _httpClient.GetAsync($"api/Cliente/Listar/");
+
+            if (respArts.IsSuccessStatusCode)
+            {
+                var clienteJson = await respArts.Content.ReadAsStringAsync();
+                var clientes = JsonConvert.DeserializeObject<List<Cliente>>(clienteJson);
+                return Json(clientes);
+            }
+            else
+            {
+                return BadRequest("Error al obtener los clientes");
+            }
+
+        }
+
+
+    }
 }
