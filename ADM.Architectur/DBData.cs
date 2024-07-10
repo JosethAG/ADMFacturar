@@ -5,7 +5,7 @@ namespace ADM.Architectur
 {
     public class DBData
     {
-        public static string connectionString = "Data Source=LOCALHOST\\SQLEXPRESS;Initial Catalog=ADM;Integrated Security=True;";
+        public static string connectionString = "Data Source=LOCALHOST;Initial Catalog=ADM;Integrated Security=True;";
 
         public static DataSet TableList(string SPName, List<DBParameter> parameters = null)
         {
@@ -105,7 +105,62 @@ namespace ADM.Architectur
                 conn.Close();
             }
         }
+        public static int ExecuteCP(string storedProcedure, List<DBParameter> parameters)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(storedProcedure, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
 
+                foreach (var param in parameters)
+                {
+                    // Asegúrate de manejar correctamente los tipos de datos
+                    SqlParameter sqlParameter;
+                    if (param.Value == null)
+                    {
+                        sqlParameter = new SqlParameter(param.Name, DBNull.Value);
+                    }
+                    else
+                    {
+                        sqlParameter = new SqlParameter(param.Name, param.Value);
+                    }
+                    command.Parameters.Add(sqlParameter);
+                }
+
+                var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                connection.Open();
+                command.ExecuteNonQuery();
+
+                return (int)returnParameter.Value;
+            }
+        }
+
+
+
+
+        public static int ExecuteCC(string storedProcedure, List<DBParameter> parameters)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(storedProcedure, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                foreach (var param in parameters)
+                {
+                    command.Parameters.Add(new SqlParameter(param.Name, param.Value));
+                }
+
+                var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                connection.Open();
+                command.ExecuteNonQuery();
+
+                return (int)returnParameter.Value;
+            }
+        }
         public static bool ExecuteLoginValidation(string SPName, string usuario, string contrasena)
         {
             SqlConnection conn = new SqlConnection(connectionString);
