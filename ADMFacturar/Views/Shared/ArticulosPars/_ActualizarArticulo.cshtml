@@ -1,0 +1,77 @@
+﻿@model Articulo
+
+
+<form asp-action="ActualizarArticulo" method="post" class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-md" id="formupdate">
+    <div class="border-b border-gray-700 pb-6">
+        <h2 class="text-lg font-semibold leading-7 text-white">Actualizar Artículo</h2>
+    </div>
+    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-2">
+            <label for="PK_Articulo" class="block text-sm font-medium text-gray-300">Código Artículo</label>
+            <div class="mt-2">
+                <input asp-for="PK_Articulo" type="text" id="PKART" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Descripcion" class="block text-sm font-medium text-gray-300">Descripción</label>
+            <div class="mt-2">
+                <input asp-for="Descripcion" type="text" id="Descp" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Codigo_Barras" class="block text-sm font-medium text-gray-300">Código de Barras</label>
+            <div class="mt-2">
+                <input asp-for="Codigo_Barras" type="text" id="CodBarras" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="FK_Proveedor" class="block text-sm font-medium text-gray-300">Proveedor</label>
+            <div class="mt-2">
+                <select asp-for="FK_Proveedor" id="FKProveedor" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="0">Seleccione proveedor</option>
+                    <option value="1">Proveedor 1</option>
+                    <option value="2">Proveedor 2</option>
+                    <option value="3">Proveedor 3</option>
+                    <option value="4">Proveedor 4</option>
+                    <option value="5">Proveedor 5</option>
+                    <option value="6">Proveedor 6</option>
+                </select>
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Cantidad" class="block text-sm font-medium text-gray-300">Cantidad</label>
+            <div class="mt-2">
+                <input asp-for="Cantidad" type="number" id="Cant" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Costo" class="block text-sm font-medium text-gray-300">Costo</label>
+            <div class="mt-2">
+                <input asp-for="Costo" type="number" step="0.01" id="cost" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Precio" class="block text-sm font-medium text-gray-300">Precio</label>
+            <div class="mt-2">
+                <input asp-for="Precio" type="number" step="0.01" id="Price" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+        <div class="sm:col-span-2">
+            <label for="Estado" class="block text-sm font-medium text-gray-300">Estado</label>
+            <div class="mt-2">
+                <select asp-for="Estado" id="State" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-x-4">
+        <input asp-for="FK_Usuario_Creacion" value="1" type="hidden" />
+        <input asp-for="FK_Usuario_Modificacion" value="1" type="hidden" />
+        <input asp-for="Fecha_Creacion" value="@DateTime.Now" type="hidden" />
+        <input asp-for="Fecha_Modificacion" value="@DateTime.Now" type="hidden" />
+        <button type="submit" id="btnActualizar" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Actualizar</button>
+        <button asp-action="Index" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-red-500">Cancelar</button>
+    </div>
+</form>
