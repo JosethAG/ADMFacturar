@@ -520,7 +520,8 @@ CREATE TABLE dbo.TBL_ABONOS (
 -------------------------------------------------
 					/*Usuario*/
 -------------------------------------------------
-
+GO 
+	
 CREATE PROCEDURE sp_ValidarCredenciales
     @Correo VARCHAR(200),
     @Contra VARCHAR(100)
