@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ADM.APICliente.Controllers
 {
@@ -127,6 +128,22 @@ namespace ADM.APICliente.Controllers
 			return Ok();
 		}
 
+		/*Listado para obtener la información de los articulos a editar
+		Agregado el 9/7/24 por Joseth ref Angelo Listar clientes*/
+		public async Task<IActionResult> ObtenerArt(string PK)
+		{
+			var respArts = await _httpClient.GetAsync($"api/Articulo/Obtener/{PK}");
 
+			if (respArts.IsSuccessStatusCode)
+			{
+				var articuloJson = await respArts.Content.ReadAsStringAsync();
+				var articulo = JsonConvert.DeserializeObject<Articulo>(articuloJson);
+				return Ok(articulo);
+			}
+			else
+			{
+				return BadRequest("Error al obtener los articulo");
+			}
+		}
 	}
 }
