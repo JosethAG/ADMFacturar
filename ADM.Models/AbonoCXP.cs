@@ -11,6 +11,8 @@
         public double Monto_Abonado { get; set; }
         public string Tipo_Documento { get; set; }
         public string Banco { get; set; }
+
+        public DateTime Fecha_Abono { get; set; }  // Nueva propiedad Fecha_Abono
         public string? FK_Usuario_Creacion { get; set; }
         public string? FK_Usuario_Modificacion { get; set; }
         public DateTime Fecha_Creacion { get; set; }

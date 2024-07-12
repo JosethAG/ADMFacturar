@@ -31,28 +31,37 @@
                 </div>
             </div>
 
+
             <div>
                 <label for="FK_Documento" class="block text-sm font-medium text-gray-300">Documento</label>
                 <div class="mt-2">
                     <input asp-for="FK_Documento" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
+
             <div>
-                <label for="FK_Proveedor" class="block text-sm font-medium text-gray-300">Proveedor</label>
+                <label for="Fecha_Abono" class="block text-sm font-medium text-gray-300">Fecha de Abono</label>
                 <div class="mt-2">
-                    <input asp-for="FK_Proveedor" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
+                    <input asp-for="Fecha_Abono" type="date" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
+
             <div>
                 <label for="Monto_Abonado" class="block text-sm font-medium text-gray-300">Monto Abonado</label>
                 <div class="mt-2">
                     <input asp-for="Monto_Abonado" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
+
             <div>
                 <label for="Tipo_Documento" class="block text-sm font-medium text-gray-300">Tipo Documento</label>
                 <div class="mt-2">
-                    <input asp-for="Tipo_Documento" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                    <select asp-for="Tipo_Documento" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                        <option value="Factura">Factura</option>
+                        <option value="Sinpe">Sinpe</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Cheque">Cheque</option>
+                    </select>
                 </div>
             </div>
             <div>
@@ -61,6 +70,13 @@
                     <input asp-for="Banco" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
+            <div style="display: none;">
+                <label for="FK_Proveedor" class="block text-sm font-medium text-gray-300">Proveedor</label>
+                <div class="mt-2">
+                    <input asp-for="FK_Proveedor" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
+                </div>
+            </div>
+
         </div>
         <div class="mt-6 flex justify-end gap-x-4">
             <input asp-for="FK_Usuario_Creacion" value="1" type="hidden" />
@@ -73,78 +89,88 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('btnGuardar').addEventListener('click', function (event) {
-            event.preventDefault(); // Detener el envío normal del formulario
-
-            // Validar campos requeridos
-            var fk_Documento = document.querySelector('[name="FK_Documento"]').value;
-            var fk_Proveedor = document.querySelector('[name="FK_Proveedor"]').value;
-            var montoAbonado = document.querySelector('[name="Monto_Abonado"]').value;
-            var tipoDocumento = document.querySelector('[name="Tipo_Documento"]').value;
-            var banco = document.querySelector('[name="Banco"]').value;
-
-            if (!fk_Documento || !fk_Proveedor || !montoAbonado || !tipoDocumento || !banco) {
-                // Mostrar mensaje de error con SweetAlert2 si no están completos los campos
+        // Función para mostrar las alertas según el resultado de la validación
+        function mostrarAlerta(resultado) {
+            if (resultado === "1") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'El abono se ha creado correctamente.',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    window.location.href = '@Url.Action("Index", "Home")'; // Redirigir a la página de inicio o donde corresponda
+                });
+            } else if (resultado === "2") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Por favor complete todos los campos requeridos.',
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
+                    text: 'El monto abonado es mayor que el saldo pendiente.',
+                    confirmButtonText: 'OK'
+                });
+            } else if (resultado === "3") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El saldo pendiente es menor o igual a cero.',
+                    confirmButtonText: 'OK'
+                });
+            } else if (resultado === "4") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El monto abonado es un número negativo.',
+                    confirmButtonText: 'OK'
+                });
+            } else if (resultado === "5") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El saldo pendiente es igual a cero.',
                     confirmButtonText: 'OK'
                 });
             } else {
-                // Crear objeto FormData con los datos del formulario
-                var formData = new FormData(document.getElementById('formcreate'));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error desconocido al crear el abono.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
 
-                // Enviar los datos al controlador utilizando fetch
-                fetch('/CXP/CrearAbono', {
-                    method: 'POST',
+        // Escuchar el evento submit del formulario
+        document.getElementById('formcreate').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evitar que el formulario se envíe automáticamente
+
+            // Obtener el formulario
+            var form = event.target;
+
+            // Validar el formulario
+            if (form.checkValidity()) {
+                // Obtener los datos del formulario
+                var formData = new FormData(form);
+
+                // Realizar la petición AJAX o enviar el formulario según sea necesario
+                fetch(form.action, {
+                    method: form.method,
                     body: formData
                 })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json(); // Convertir la respuesta a JSON
-                        } else {
-                            throw new Error('Error al guardar los datos');
-                        }
-                    })
+                    .then(response => response.json())
                     .then(data => {
-                        // Verificar el resultado del procedimiento almacenado
-                        if (data.message) {
-                            // Si hay un mensaje de éxito
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Guardado Correctamente',
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                // Redirigir a la página de índice de proveedores después de guardar
-                                window.location.href = '/CXP/Index';
-                            });
-                        } else {
-                            // Si hay un mensaje de error
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: data.error || 'Error al guardar los datos.',
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'OK'
-                            });
-                        }
+                        mostrarAlerta(data); // Mostrar alerta según el resultado de la validación
                     })
                     .catch(error => {
-                        // Mostrar mensaje de error con SweetAlert2 si hay un error en la solicitud
+                        console.error('Error al realizar la solicitud:', error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: error.message || 'Error al guardar los datos.',
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
+                            text: 'Error al comunicarse con el servidor.',
                             confirmButtonText: 'OK'
                         });
                     });
+            } else {
+                form.reportValidity(); // Mostrar mensajes de validación del formulario
             }
         });
     </script>

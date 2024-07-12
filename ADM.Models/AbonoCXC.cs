@@ -6,9 +6,9 @@
         public string FK_Documento_CC { get; set; }
         public string FK_Cliente { get; set; }
         public DateTime Fecha_Documento { get; set; }
-        public decimal Monto_Total { get; set; }
-        public decimal Saldo_Pendiente { get; set; }
-        public decimal Monto_Abonado { get; set; }
+        public double Monto_Total { get; set; }
+        public double Saldo_Pendiente { get; set; }
+        public double Monto_Abonado { get; set; }
         public string Tipo_Pago { get; set; }
         public string Banco { get; set; }
         public string? FK_Usuario_Creacion { get; set; }
