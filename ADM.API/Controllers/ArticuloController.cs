@@ -9,6 +9,7 @@ using ADM.Architectur;
 using ADM.Architecture;
 using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ADM.API.Controllers
 {
@@ -93,9 +94,9 @@ namespace ADM.API.Controllers
 				DataTable tArticulo = DBData.List("sp_ObtenerArticulo", parameters);
 				string jsonArticle = JsonConvert.SerializeObject(tArticulo);
 				var result = JsonProvider.DeserializeSimple<IEnumerable<Articulo>>(jsonArticle);
+				Articulo art = result.FirstOrDefault();
 
-
-				return result.FirstOrDefault();
+				return art;
 			}
 			else
 			{
