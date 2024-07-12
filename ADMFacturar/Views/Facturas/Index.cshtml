@@ -1,4 +1,8 @@
-﻿<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+﻿@{
+    var vendedores = ViewData["Vendedores"] as List<Vendedor>;
+}
+
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
 <div class="max-w-7xl mx-auto p-4">
     <form class="bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -23,17 +27,19 @@
                     <label for="cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
                     <input type="text" id="cliente" name="cliente" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
-
                 <div class="sm:col-span-1">
-                    <label for="tipo_documento" class="block text-sm font-medium leading-6 text-white">Tipo Documento</label>
-                    <select id="tipo_documento" name="tipo_documento" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
-                        <option value="">Seleccione una opción</option>
-                        <option value="Pedido">Pedido</option>
-                        <option value="Factura">Factura</option>
-                        <option value="Nota de Crédito">Nota de Crédito</option>
+                    <label for="vendedor" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
+                    <select id="vendedor" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
+                        <option value="">Seleccione un Vendedor</option>
+                        @if (vendedores != null)
+                        {
+                            @foreach (var vendedor in vendedores)
+                            {
+                                <option value="@vendedor.Nombre">@vendedor.Nombre</option>
+                            }
+                        }
                     </select>
                 </div>
-
             </div>
         </div>
     </form>
@@ -55,38 +61,12 @@
                         <th class="py-3 px-4 text-center">Cliente</th>
                         <th class="py-3 px-4 text-center">Vendedor</th>
                         <th class="py-3 px-4 text-center">Condición Pago</th>
-                        <th class="py-3 px-4 text-center">Tipo</th>
                         <th class="py-3 px-4 text-center">Total</th>
+                        <th class="py-3 px-4 text-center">Estado</th>
                         <th class="py-3 px-4 text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="text-center">
-                    <tr class="even:bg-gray-700 hover:bg-gray-600">
-                        <td class="py-3 px-4 border-b border-gray-700">123456</td>
-                        <td class="py-3 px-4 border-b border-gray-700">2024-04-01</td>
-                        <td class="py-3 px-4 border-b border-gray-700">Cliente A</td>
-                        <td class="py-3 px-4 border-b border-gray-700">Vendedor A</td>
-                        <td class="py-3 px-4 border-b border-gray-700">Contado</td>
-                        <td class="py-3 px-4 border-b border-gray-700">Pedido</td>
-                        <td class="py-3 px-4 border-b border-gray-700">25000</td>
-                        <td class="py-3 px-4 border-b border-gray-700 flex justify-center space-x-2">
-                            <button class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded" title="Crear nota de Crédito">
-                                <i class="fas fa-credit-card"></i>
-                            </button>
-                            <button class="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded" title="Eliminar">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <button class="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded" title="Detalles">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-3 rounded" title="Imprimir">
-                                <i class="fas fa-print"></i>
-                            </button>
-                        </td>
-                    </tr>
+                <tbody id="bodyTablaFacturas" class="text-center">
                     <!-- Más filas -->
                 </tbody>
             </table>
@@ -95,3 +75,108 @@
 </div>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<script>
+    // Función para obtener y listar las facturas desde el backend
+    function obtenerYListarFacturas() {
+        fetch('/Facturas/ListarFacturas')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Datos recibidos del API:', data);
+
+                // Llenar la tabla con los datos recibidos
+                const tableBody = document.getElementById('bodyTablaFacturas');
+                tableBody.innerHTML = '';
+
+                data.forEach(item => {
+                    const row = `
+                            <tr class="even:bg-gray-700 hover:bg-gray-600">
+                                <td class="py-3 px-4 border-b border-gray-700">${item.documento}</td>
+                                <td class="py-3 px-4 border-b border-gray-700">${item.fecha}</td>
+                                <td class="py-3 px-4 border-b border-gray-700">${item.cliente}</td>
+                                <td class="py-3 px-4 border-b border-gray-700">${item.vendedor}</td>
+                                <td class="py-3 px-4 border-b border-gray-700">${item.condicionPago}</td>
+                                <td class="py-3 px-4 border-b border-gray-700">₡${item.total}</td>
+                                <td class="py-3 px-4 border-b border-gray-700">${item.estado}</td>
+                                <td class="py-3 px-4 border-b border-gray-700 flex justify-center space-x-2">
+                                    <button class="crear-nota-credito bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded" title="Crear nota de Crédito" data-estado="${item.estado}" data-documento="${item.documento}">
+                                        <i class="fas fa-credit-card"></i>
+                                    </button>
+                                    <button class="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded" title="Detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-3 rounded" title="Imprimir">
+                                        <i class="fas fa-print"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    tableBody.innerHTML += row;
+                });
+
+                // Agregar la funcionalidad de filtrado
+                document.getElementById('fecha_inicio').addEventListener('input', filtrarTabla);
+                document.getElementById('fecha_final').addEventListener('input', filtrarTabla);
+                document.getElementById('document_number').addEventListener('input', filtrarTabla);
+                document.getElementById('cliente').addEventListener('input', filtrarTabla);
+                document.getElementById('vendedor').addEventListener('change', filtrarTabla);
+            })
+            .catch(error => console.error('Error al obtener los datos:', error));
+    }
+
+    // Función para filtrar la tabla de facturas por búsqueda
+    function filtrarTabla() {
+        // Obtener el valor de búsqueda de cada campo
+        const fechaInicio = document.getElementById('fecha_inicio').value;
+        const fechaFinal = document.getElementById('fecha_final').value;
+        const documentNumber = document.getElementById('document_number').value.toLowerCase();
+        const cliente = document.getElementById('cliente').value.toLowerCase();
+        const vendedor = document.getElementById('vendedor').value.toLowerCase();
+
+        // Obtener todas las filas de la tabla
+        const filas = document.querySelectorAll('#bodyTablaFacturas tr');
+
+        filas.forEach(fila => {
+            const cells = fila.getElementsByTagName('td');
+            const fecha = cells[1].textContent.trim();
+            const matchFechaInicio = fechaInicio === '' || new Date(fecha) >= new Date(fechaInicio);
+            const matchFechaFinal = fechaFinal === '' || new Date(fecha) <= new Date(fechaFinal);
+            const matchDocumentNumber = documentNumber === '' || cells[0].textContent.toLowerCase().includes(documentNumber);
+            const matchCliente = cliente === '' || cells[2].textContent.toLowerCase().includes(cliente);
+            const matchVendedor = vendedor === '' || cells[3].textContent.toLowerCase().includes(vendedor);
+
+            if (matchFechaInicio && matchFechaFinal && matchDocumentNumber && matchCliente && matchVendedor) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
+            }
+        });
+    }
+
+    // Llamar a obtenerYListarFacturas al cargar la página
+    document.addEventListener('DOMContentLoaded', function () {
+        obtenerYListarFacturas();
+    });
+
+    // Agregar funcionalidad de nota de crédito
+    document.addEventListener('click', function (event) {
+        if (event.target.closest('.crear-nota-credito')) {
+            const button = event.target.closest('.crear-nota-credito');
+            const estado = button.getAttribute('data-estado');
+            const consecutivo = button.getAttribute('data-documento');
+
+            if (estado.toLowerCase() === 'anulada') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'No se puede editar',
+                    text: 'No se puede generar una NC a una factura con estado "anulada".',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                window.location.href = `/Facturas/GenerarNC?consecutivo=${consecutivo}`;
+            }
+        }
+    });
+
+</script>
