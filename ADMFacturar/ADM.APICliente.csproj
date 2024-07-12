@@ -21,6 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Shared\ArticulosPars\_ActualizarArticulo.cshtml" />
+    <None Include="Views\Shared\ArticulosPars\_CrearArticulo.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>

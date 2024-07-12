@@ -476,18 +476,11 @@ CREATE TABLE [dbo].[TBL_ABONOSXC](
 	[Monto_Abonado] [decimal](18, 2) NOT NULL,
 	[Tipo_Pago] [varchar](50) NULL,
 	[Banco] [varchar](100) NULL,
-	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
-	[FK_Usuario_Modificacion] [varchar](50) NULL,
-	[Fecha_Creacion] [datetime] NOT NULL,
-	[Fecha_Modificacion] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[Numero_Abono] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[TBL_ABONOSXC] ADD  DEFAULT (getdate()) FOR [Fecha_Creacion]
 GO
 
 ALTER TABLE [dbo].[TBL_ABONOSXC]  WITH CHECK ADD  CONSTRAINT [FK_TBL_ABONOSXC_TBL_DOCUMENTO_CC] FOREIGN KEY([FK_Documento_CC])
@@ -496,41 +489,29 @@ GO
 
 ALTER TABLE [dbo].[TBL_ABONOSXC] CHECK CONSTRAINT [FK_TBL_ABONOSXC_TBL_DOCUMENTO_CC]
 GO
-
+USE ADM
 
 
 GO
 
 /****** Object:  Table [dbo].[TBL_ABONOS]    Script Date: 7/8/2024 7:22:23 AM ******/
-SET ANSI_NULLS ON
-GO
+CREATE TABLE dbo.TBL_ABONOS (
+    Numero_Recibo VARCHAR(50) NOT NULL,
+    FK_Documento VARCHAR(50) NOT NULL,
+    FK_Proveedor VARCHAR(50) NOT NULL,
+    Fecha_Documento DATETIME NOT NULL,
+    Monto DECIMAL(18, 2) NOT NULL,
+    Saldo_Pendiente DECIMAL(18, 2) NOT NULL,
+    Monto_Abonado DECIMAL(18, 2) NOT NULL,
+    Tipo_Documento VARCHAR(50) NULL,
+    Banco VARCHAR(100) NULL,
+    Fecha_Abono DATETIME NULL,
+    PRIMARY KEY (FK_Documento, Numero_Recibo),  -- Clave primaria compuesta
+    CONSTRAINT FK_TBL_ABONOS_TBL_DOCUMENTO_CP FOREIGN KEY(FK_Documento)
+        REFERENCES dbo.TBL_DOCUMENTO_CP(PK_Documento)
+);
 
-SET QUOTED_IDENTIFIER ON
-GO
 
-CREATE TABLE [dbo].[TBL_ABONOS](
-	[Numero_Recibo] [varchar](50) NOT NULL,
-	[FK_Documento] [varchar](50) NOT NULL,
-	[FK_Proveedor] [varchar](50) NOT NULL,
-	[Fecha_Documento] [datetime] NOT NULL,
-	[Monto] [decimal](18, 2) NOT NULL,
-	[Saldo_Pendiente] [decimal](18, 2) NOT NULL,
-	[Monto_Abonado] [decimal](18, 2) NOT NULL,
-	[Tipo_Documento] [varchar](50) NULL,
-	[Banco] [varchar](100) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[Numero_Recibo] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[TBL_ABONOS]  WITH CHECK ADD  CONSTRAINT [FK_TBL_ABONOS_TBL_DOCUMENTO_CP] FOREIGN KEY([FK_Documento])
-REFERENCES [dbo].[TBL_DOCUMENTO_CP] ([PK_Documento])
-GO
-
-ALTER TABLE [dbo].[TBL_ABONOS] CHECK CONSTRAINT [FK_TBL_ABONOS_TBL_DOCUMENTO_CP]
-GO
 	
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
@@ -539,7 +520,8 @@ GO
 -------------------------------------------------
 					/*Usuario*/
 -------------------------------------------------
-
+GO 
+	
 CREATE PROCEDURE sp_ValidarCredenciales
     @Correo VARCHAR(200),
     @Contra VARCHAR(100)
@@ -2810,6 +2792,7 @@ BEGIN
         FK_Documento,
         FK_Proveedor,
         Fecha_Documento,
+        Fecha_Abono, -- Nueva columna agregada
         Monto,
         Saldo_Pendiente,
         Monto_Abonado,
@@ -2856,16 +2839,13 @@ END
 
 GO
 /****** Object:  StoredProcedure [dbo].[sp_InsertarAbono]    Script Date: 7/8/2024 7:23:13 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE PROCEDURE [dbo].[sp_InsertarAbono]
     @Numero_Recibo VARCHAR(50),
     @FK_Documento VARCHAR(50),
     @Monto_Abonado DECIMAL(18, 2),
     @Tipo_Documento VARCHAR(50) = NULL,
-    @Banco VARCHAR(100) = NULL
+    @Banco VARCHAR(100) = NULL,
+    @Fecha_Abono DATETIME
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -2874,6 +2854,7 @@ BEGIN
     DECLARE @Fecha_Documento DATETIME;
     DECLARE @Monto DECIMAL(18, 2);
     DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+    DECLARE @ExistingCount INT;
 
     -- Obtener datos del documento
     SELECT @FK_Proveedor = FK_Proveedor,
@@ -2911,6 +2892,18 @@ BEGIN
         RETURN 5;
     END
 
+    -- Verificar si ya existe el Numero_Recibo para el mismo FK_Documento
+    SELECT @ExistingCount = COUNT(*)
+    FROM dbo.TBL_ABONOS
+    WHERE FK_Documento = @FK_Documento
+      AND Numero_Recibo = @Numero_Recibo;
+
+    IF @ExistingCount > 0
+    BEGIN
+        -- Retornar 6 si ya existe el Numero_Recibo para este FK_Documento
+        RETURN 6;
+    END
+
     -- Calcular nuevo saldo pendiente
     SET @Saldo_Pendiente = @Saldo_Pendiente - @Monto_Abonado;
 
@@ -2924,7 +2917,8 @@ BEGIN
         Saldo_Pendiente,
         Monto_Abonado,
         Tipo_Documento,
-        Banco
+        Banco,
+        Fecha_Abono
     )
     VALUES (
         @Numero_Recibo,
@@ -2935,7 +2929,8 @@ BEGIN
         @Saldo_Pendiente,
         @Monto_Abonado,
         @Tipo_Documento,
-        @Banco
+        @Banco,
+        @Fecha_Abono
     );
 
     -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CP
@@ -2949,7 +2944,8 @@ END
 GO
 
 
-select * from dbo.TBL_ABONOS
+
+
 /****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    Script Date: 7/8/2024 7:23:16 AM ******/
 SET ANSI_NULLS ON
 GO
@@ -2958,7 +2954,18 @@ GO
 
 /****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    ******/
 
+USE [ADM]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    Script Date: 7/9/2024 9:24:59 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    ******/
+
 CREATE PROCEDURE [dbo].[sp_InsertarAbonoXC]
+    @Numero_Abono VARCHAR(50),
     @PK_Documento_CC VARCHAR(50),
     @Monto_Abonado DECIMAL(18, 2),
     @Tipo_Pago VARCHAR(50) = NULL,
@@ -3013,6 +3020,7 @@ BEGIN
 
     -- Insertar el nuevo abono
     INSERT INTO dbo.TBL_ABONOSXC (
+	Numero_Abono,
         FK_Documento_CC,
         FK_Cliente,
         Fecha_Documento,
@@ -3023,6 +3031,7 @@ BEGIN
         Banco
     )
     VALUES (
+	@Numero_Abono,
         @PK_Documento_CC,
         @FK_Cliente,
         @Fecha_Documento,
