@@ -2773,6 +2773,72 @@ BEGIN
     WHERE [PK_Articulo] = @PK_Articulo;
 END;
 
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarFacturas]    Script Date: 7/11/2024 6:27:30 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarFacturas]
+AS
+BEGIN
+    SET NOCOUNT ON;
+SELECT  [PK_Factura] as Documento
+      ,CONVERT(varchar, f.Fecha, 23) as Fecha
+      ,C.Nombre AS Cliente
+      ,V.Nombre AS Vendedor
+      ,cp.Descripcion as CondicionPago
+      ,T.Descripcion AS Transporte
+      ,[Total]
+      ,f.[Estado]
+  FROM [ADM].[dbo].[TBL_FACTURA] F
+  INNER JOIN TBL_CLIENTES C
+   ON F.FK_Cliente = C.PK_Cliente
+  INNER JOIN TBL_VENDEDORES V
+   ON F.FK_VENDEDOR = V.PK_Vendedor
+  INNER JOIN TBL_CONDICIONES_PAGO CP
+   ON F.FK_Condicion_Pago = CP.PK_Condicion_Pago
+  INNER JOIN TBL_TRANSPORTES T
+   ON F.Transporte = T.PK_Medio_Transporte
+   ORDER BY F.Fecha_Creacion DESC
+
+END
+
+
+
+-- Procedimiento almacenado para obtener el encabezado de la factura
+CREATE PROCEDURE sp_ObtenerFacturaEncabezado
+    @PK_Factura NVARCHAR(50)
+AS
+BEGIN
+    SELECT PK_Factura, FK_Cliente, FK_Condicion_Pago, Transporte
+    FROM [TBL_FACTURA]
+    WHERE PK_Factura = @PK_Factura
+END
+
+GO
+-- Procedimiento almacenado para obtener los productos de la factura
+CREATE PROCEDURE sp_ObtenerFacturaProductos
+    @PK_FK_Factura NVARCHAR(50)
+AS
+BEGIN
+    SELECT FK_Articulo, Cantidad, Precio
+    FROM [TBL_FACTURA_LINEA]
+    WHERE PK_FK_Factura = @PK_FK_Factura
+END
+GO
+-- Procedimiento almacenado para obtener los totales de la factura
+CREATE PROCEDURE sp_ObtenerFacturaTotales
+    @PK_Factura NVARCHAR(50)
+AS
+BEGIN
+    SELECT Subtotal, Descuento, Total
+    FROM [TBL_FACTURA]
+    WHERE PK_Factura = @PK_Factura
+END
+	
 
 
 
