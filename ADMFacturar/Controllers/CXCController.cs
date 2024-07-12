@@ -63,11 +63,6 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        public IActionResult CrearAbono()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> CrearAbono(AbonoCXC abono)
         {
@@ -83,27 +78,12 @@ namespace ADMFacturar.Controllers
 
                     if (response.IsSuccessStatusCode)
                     {
-                        // Verificar el resultado del procedimiento almacenado
-                        var resultado = JsonConvert.DeserializeObject<int>(responseContent);
-                        switch (resultado)
-                        {
-                            case 0:
-                                ModelState.AddModelError(string.Empty, "Error: Saldo Pendiente es igual o menor a 0.");
-                                break;
-                            case 2:
-                                ModelState.AddModelError(string.Empty, "Error: Monto Abonado es mayor que el Saldo Pendiente.");
-                                break;
-                            case 1:
-                                TempData["SuccessMessage"] = "Abono creado correctamente.";
-                                return RedirectToAction("Index");
-                            default:
-                                ModelState.AddModelError(string.Empty, "Error al guardar los datos.");
-                                break;
-                        }
+                        TempData["SuccessMessage"] = responseContent;
+                        return RedirectToAction("Index");
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Error al guardar los datos: " + response.ReasonPhrase + " - " + responseContent);
+                        ModelState.AddModelError(string.Empty, responseContent);
                     }
                 }
                 catch (Exception ex)
