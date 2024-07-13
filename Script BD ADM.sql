@@ -366,6 +366,10 @@ CREATE TABLE [dbo].[TBL_FACTURA](
 	[Total] [decimal](18, 3) NULL,
 	[Devolucion] [int] NULL,
 	[Estado] [varchar](50) NOT NULL,
+	[Fac_Referencia] [varchar](50) NULL,
+	[Comentario] [varchar](200) NULL,
+	[Motivo] [varchar](20) NULL,
+	[Tipo_Doc] [varchar](20) NULL,
 	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
 	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
 	[Fecha_Creacion] [datetime] NOT NULL,
@@ -2595,7 +2599,8 @@ END;
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/8/2024 9:15:17 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/13/2024 2:02:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2633,6 +2638,7 @@ BEGIN
         Total,
         Devolucion,
         Estado,
+	Tipo_Doc,
         FK_Usuario_Creacion,
         FK_Usuario_Modificacion,
         Fecha_Creacion,
@@ -2649,7 +2655,8 @@ BEGIN
         @Descuento,
         @Total,
         0,
-        'Facturado',
+        'Completado',
+	'F',
         'a',
         'a',
         GETDATE(),
@@ -2694,10 +2701,11 @@ BEGIN
         'a',
         'a',
         GETDATE(),
-		GETDATE()
+	GETDATE()
     );
-	    END
+   END
 END;
+
 GO
 /****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/8/2024 7:22:17 PM ******/
 SET ANSI_NULLS ON
@@ -2785,26 +2793,34 @@ CREATE PROCEDURE [dbo].[sp_ListarFacturas]
 AS
 BEGIN
     SET NOCOUNT ON;
-SELECT  [PK_Factura] as Documento
-      ,CONVERT(varchar, f.Fecha, 23) as Fecha
-      ,C.Nombre AS Cliente
-      ,V.Nombre AS Vendedor
-      ,cp.Descripcion as CondicionPago
-      ,T.Descripcion AS Transporte
-      ,[Total]
-      ,f.[Estado]
-  FROM [ADM].[dbo].[TBL_FACTURA] F
-  INNER JOIN TBL_CLIENTES C
-   ON F.FK_Cliente = C.PK_Cliente
-  INNER JOIN TBL_VENDEDORES V
-   ON F.FK_VENDEDOR = V.PK_Vendedor
-  INNER JOIN TBL_CONDICIONES_PAGO CP
-   ON F.FK_Condicion_Pago = CP.PK_Condicion_Pago
-  INNER JOIN TBL_TRANSPORTES T
-   ON F.Transporte = T.PK_Medio_Transporte
-   ORDER BY F.Fecha_Creacion DESC
+
+    SELECT  
+        [PK_Factura] as Documento,
+        CASE WHEN LEN(F.Fac_Referencia) > 0 THEN F.Fac_Referencia ELSE ' ' END as Fac_Referencia,
+        CONVERT(varchar, f.Fecha, 23) as Fecha,
+        C.Nombre AS Cliente,
+        CASE 
+            WHEN F.Tipo_Doc = 'F' THEN 'Factura'
+            WHEN F.Tipo_Doc = 'NC' THEN 'Nota de Crédito'
+            ELSE 'Desconocido'
+        END as TipoDoc,
+        [Total]
+    FROM 
+        [ADM].[dbo].[TBL_FACTURA] F
+    INNER JOIN 
+        TBL_CLIENTES C ON F.FK_Cliente = C.PK_Cliente
+    INNER JOIN 
+        TBL_VENDEDORES V ON F.FK_VENDEDOR = V.PK_Vendedor
+    INNER JOIN 
+        TBL_CONDICIONES_PAGO CP ON F.FK_Condicion_Pago = CP.PK_Condicion_Pago
+    INNER JOIN 
+        TBL_TRANSPORTES T ON F.Transporte = T.PK_Medio_Transporte
+    ORDER BY 
+        F.Fecha_Creacion DESC;
 
 END
+
+GO
 
 
 
@@ -2838,10 +2854,177 @@ BEGIN
     FROM [TBL_FACTURA]
     WHERE PK_Factura = @PK_Factura
 END
+
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarNC]    Script Date: 7/13/2024 12:29:16 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarNC]
+    @PK_Factura VARCHAR(50),
+    @Fac_Original VARCHAR(50),
+    @FK_Cliente VARCHAR(50),
+    @Comentario VARCHAR(200),
+    @Motivo VARCHAR(50),
+    @Total DECIMAL(18, 3) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+	   	  
+    DECLARE @FK_VENDEDOR VARCHAR(50); -- Declarar la variable para el vendedor
+    DECLARE @FK_Condicion_Pago VARCHAR(50); -- Declarar la variable para el CantidOriginal	
+    DECLARE @Transporte VARCHAR(50); -- Declarar la variable para el precio		
+
+
+    -- Obtener el vendedor asociado a la factura original
+    SELECT @FK_VENDEDOR = FK_Vendedor
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @Fac_Original;
+
+    SELECT @FK_Condicion_Pago = FK_Condicion_Pago
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @Fac_Original;
+
+	SELECT @Transporte = Transporte
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @Fac_Original;
 	
+    -- Obtener el motivo de la factura
+    SELECT @Motivo = Motivo
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @Fac_Original;
 
 
+    -- Insertar en TBL_FACTURA
+    INSERT INTO dbo.TBL_FACTURA (
+        PK_Factura,
+        Fecha,
+        FK_Cliente,
+        FK_VENDEDOR,
+        FK_Condicion_Pago,
+        Transporte,
+        Subtotal,
+        Descuento,
+        Total,
+        Devolucion,
+        Estado,
+		Fac_Referencia,
+		Comentario,
+		Motivo,
+		Tipo_Doc,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    )
+    VALUES (
+        @PK_Factura,
+        GETDATE(),
+        @FK_Cliente,
+        @FK_VENDEDOR, -- Usar el valor del vendedor obtenido
+        @FK_Condicion_Pago,
+        @Transporte,
+        0,
+        0,
+        @Total,
+        0,
+        'Completado',
+		@Fac_Original,
+		@Comentario,
+		@Motivo,
+		'NC',
+        'a',
+        'a',
+        GETDATE(),
+        GETDATE()
+    );
 
+    -- Aumentar en uno la columna Consecutivo para el PK_Consecutivo 01
+    UPDATE dbo.TBL_CONSECUTIVO
+    SET Consecutivo = Consecutivo + 1
+    WHERE PK_Consecutivo = '02'; 
+
+END;
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarNCLinea]    Script Date: 7/13/2024 12:09:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_InsertarNCLinea]
+    @PK_FK_Factura VARCHAR(50),
+    @FK_Articulo VARCHAR(50),
+    @Cantidad INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Costo DECIMAL(18,2); -- Declarar la variable para el costo		
+    DECLARE @CantidOriginal INT; -- Declarar la variable para el CantidOriginal	
+    DECLARE @Precio DECIMAL(18,2); -- Declarar la variable para el precio		
+    DECLARE @Motivo VARCHAR(50); -- Declarar la variable para el motivo
+
+    -- Obtener el COSTO asociado al articulo
+    SELECT @Costo = Costo
+    FROM TBL_FACTURA_LINEA
+    WHERE FK_Articulo = @FK_Articulo;
+
+    SELECT @CantidOriginal = Cantidad
+    FROM TBL_FACTURA_LINEA
+    WHERE FK_Articulo = @FK_Articulo;
+
+    SELECT @Precio = Precio
+    FROM TBL_FACTURA_LINEA
+    WHERE FK_Articulo = @FK_Articulo;
+	
+    -- Obtener el motivo de la factura
+    SELECT @Motivo = Motivo
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @PK_FK_Factura;
+
+    INSERT INTO dbo.TBL_FACTURA_LINEA (
+        PK_FK_Factura,
+        FK_Articulo,
+        Cantidad,
+        Costo,
+        Precio,
+        A_Devolver,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    )
+    VALUES (
+        @PK_FK_Factura,
+        @FK_Articulo,
+        @CantidOriginal,
+        @Costo,
+        @Precio,
+        @Cantidad,
+        'a',
+        'a',
+        GETDATE(),
+        GETDATE()
+    );
+
+    -- Actualizar la existencia de inventario
+    IF @Motivo = 'Devolucion'
+    BEGIN
+        UPDATE dbo.TBL_ARTICULO
+        SET Cantidad = Cantidad + @Cantidad
+        WHERE PK_Articulo = @FK_Articulo;
+    END
+
+END;
+
+GO
+	
 -------------------------------------------------
 		/*Abonos-AbonoXC---Documento_CP-Documento_CC*/
 -------------------------------------------------
