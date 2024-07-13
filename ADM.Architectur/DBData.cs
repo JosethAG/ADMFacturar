@@ -5,7 +5,7 @@ namespace ADM.Architectur
 {
     public class DBData
     {
-        public static string connectionString = "Data Source=LOCALHOST;Initial Catalog=ADM;Integrated Security=True;";
+        public static string connectionString = "Data Source=LOCALHOST\\SQLEXPRESS;Initial Catalog=ADM;Integrated Security=True;";
 
         public static DataSet TableList(string SPName, List<DBParameter> parameters = null)
         {
@@ -137,9 +137,6 @@ namespace ADM.Architectur
             }
         }
 
-
-
-
         public static int ExecuteCC(string storedProcedure, List<DBParameter> parameters)
         {
             using (var connection = new SqlConnection(connectionString))
@@ -149,7 +146,17 @@ namespace ADM.Architectur
 
                 foreach (var param in parameters)
                 {
-                    command.Parameters.Add(new SqlParameter(param.Name, param.Value));
+                    // Asegúrate de manejar correctamente los tipos de datos
+                    SqlParameter sqlParameter;
+                    if (param.Value == null)
+                    {
+                        sqlParameter = new SqlParameter(param.Name, DBNull.Value);
+                    }
+                    else
+                    {
+                        sqlParameter = new SqlParameter(param.Name, param.Value);
+                    }
+                    command.Parameters.Add(sqlParameter);
                 }
 
                 var returnParameter = command.Parameters.Add("@ReturnVal", SqlDbType.Int);

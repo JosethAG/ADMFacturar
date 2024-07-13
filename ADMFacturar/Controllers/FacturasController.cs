@@ -18,10 +18,43 @@ namespace ADMFacturar.Controllers
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7270/api");
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var respProv = await _httpClient.GetAsync("api/Vendedor/Listar");
+            if (respProv.IsSuccessStatusCode)
+            {
+
+                var dataProv = await respProv.Content.ReadAsStringAsync();
+                var vendedores = JsonConvert.DeserializeObject<List<Vendedor>>(dataProv);
+                ViewData["Vendedores"] = vendedores ?? new List<Vendedor>();
+            }
+            else
+            {
+                ViewData["Vendedores"] = new List<Vendedor>();
+            }
+
             return View();
         }
+
+        public async Task<IActionResult> ListarFacturas()
+
+
+        {
+            var resp = await _httpClient.GetAsync($"api/Facturas/Listar");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var facturas = JsonConvert.DeserializeObject<IEnumerable<FacturaVM>>(content);
+                return Json(facturas); // Devuelve 'Ingreso' en lugar de 'resp'
+            }
+
+            else
+            {
+                return BadRequest("Error al obtener los ingresos");
+            }
+        }
+
 
         public IActionResult RegistroAnulaciones()
         {
@@ -69,7 +102,7 @@ namespace ADMFacturar.Controllers
         [HttpPost]
         public async Task<IActionResult> GuardarFactura([FromBody] FacturaViewModel factura)
         {
-            
+
             if (factura == null)
             {
                 return BadRequest(new { success = false, message = "Factura no proporcionada" });
@@ -82,7 +115,7 @@ namespace ADMFacturar.Controllers
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-                var response = await _httpClient.PostAsync("api/Facturas/Crear", content);                
+                var response = await _httpClient.PostAsync("api/Facturas/Crear", content);
                 string responseContent = await response.Content.ReadAsStringAsync();
                 Console.WriteLine("Response from API: " + responseContent);
 
@@ -95,14 +128,11 @@ namespace ADMFacturar.Controllers
                 {
                     return Json(new { success = false, message = "Error al guardar la factura en la API" });
                 }
-               
+
             }
             return View();
 
         }
-
-
-
 
 
         public async Task<IActionResult> ObtenerProducto(string producto)
@@ -134,33 +164,67 @@ namespace ADMFacturar.Controllers
         }
 
 
+        public async Task<IActionResult> GenerarNC(string? consecutivo)
+        {
+
+            // Concatenamos el valor "01" al final de la URL de la API
+            var restConc = await _httpClient.GetAsync("api/Facturas/ObtenerConsecutivo/02");
+            if (restConc.IsSuccessStatusCode)
+            {
+                var dataConc = await restConc.Content.ReadAsStringAsync();
+
+                // Verifica el formato del JSON devuelto
+                var consec = JsonConvert.DeserializeObject<ConsecutivoViewModel>(dataConc);
+
+                // Manejo la respuesta
+                ViewData["Consecutivo"] = consec;
+            }
+            else
+            {
+                ViewData["Consecutivo"] = new List<ConsecutivoViewModel>();
+            }
+
+            var resp = await _httpClient.GetAsync($"api/Facturas/Obtener/{consecutivo}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var factura = JsonConvert.DeserializeObject<FacturaViewModel>(content);
+                return View("AgregarNC", factura); // Devuelve 'clientes' en lugar de 'resp'
+            }
+
+            return NotFound();
+
+        }
+
+
 
         public IActionResult Anular()
-    {
-        return View();
+        {
+            return View();
+        }
+
+        public IActionResult Imprimir()
+        {
+            return View();
+        }
+
+        public IActionResult EditarFactura()
+        {
+            return View();
+        }
+
+        public IActionResult AgregarNC()
+        {
+            return View();
+        }
+
+        public IActionResult DetallesFactura()
+        {
+            return View();
+        }
+
+
+
     }
-
-    public IActionResult Imprimir()
-    {
-        return View();
-    }
-
-    public IActionResult EditarFactura()
-    {
-        return View();
-    }
-
-    public IActionResult AgregarNotadeCredito()
-    {
-        return View();
-    }
-
-    public IActionResult DetallesFactura()
-    {
-        return View();
-    }
-
-
-
-}
 }
