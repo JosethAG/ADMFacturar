@@ -1,0 +1,122 @@
+﻿@model FacturaViewModel
+
+@{
+    var consecutivo = ViewData["Consecutivo"] as ConsecutivoViewModel;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturación Avanzada</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto p-4">
+        <!-- Formulario de Encabezado de Factura -->
+        <form class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-lg font-semibold leading-7 text-white mb-4">Nota de Crédito</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <label for="Consecutivo" class="block text-sm font-medium leading-6 text-white">Consecutivo</label>
+                    <input type="text" id="consecutivo" name="consecutivo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@((ViewData["Consecutivo"] as ConsecutivoViewModel)?.Consecutivo)">
+                </div>
+                <div class="relative">
+                    <label for="facturaOriginal" class="block text-sm font-medium leading-6 text-white">Factura Referencia</label>
+                    <div class="flex">
+                        <input type="text" id="facturaOriginal" name="facturaOriginal" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.Consecutivo">
+                    </div>
+                </div>
+                <div class="relative">
+                    <label for="Cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                    <div class="flex">
+                        <input type="text" id="cliente" name="cliente" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.Cliente">
+                    </div>
+                </div>
+                <div>
+                    <label for="motivo" class="block text-sm font-medium leading-6 text-white">Motivo</label>
+                    <select id="motivo" name="motivo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 37px;">
+                        <option value="1">Devolución</option>
+                        <option value="2">Daño</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <label for="Comentario" class="block text-sm font-medium leading-6 text-white">Comentario</label>
+                    <div class="flex">
+                        <input type="text" id="Comentario" name="Comentario" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Tabla de Productos -->
+        <div class="overflow-auto">
+            <table class="min-w-full bg-gray-800 text-white">
+                <thead class="bg-gray-900">
+                    <tr>
+                        <th class="py-3 px-4 text-center">Producto</th>
+                        <th class="py-3 px-4 text-center">Cantidad</th>
+                        <th class="py-3 px-4 text-center">Precio</th>
+                        <th class="py-3 px-4 text-center">Cantidad a Devolver</th>
+                        <th class="py-3 px-4 text-center">Total</th>            
+                    </tr>
+                </thead>
+                <tbody id="tablaProductos" class="text-center">
+                    @foreach (var producto in Model.Productos)
+                    {
+                        <tr>
+                            <td class="py-3 px-4">@producto.Producto</td>
+                            <td class="py-3 px-4">@producto.Cantidad</td>
+                            <td class="py-3 px-4">@producto.precioUnitario</td>
+                            <td class="py-3 px-4">
+                                <input type="number" min="0" max="@producto.Cantidad" value="0" class="cantidadDevolver mt-1 block w-32 rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 text-center" style="padding-left: 10px;" data-precio="@producto.precioUnitario" oninput="calcularTotales()">
+                            </td>
+                            <td class="py-3 px-4 totalProducto">0</td>
+                            <td class="py-3 px-4">
+                                <!-- Aquí puedes agregar acciones como botones de editar, eliminar, etc. -->
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-right py-2 px-4">Subtotal</td>
+                        <td class="py-2 px-4"><span id="subtotal">0</span></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right py-2 px-4">Total</td>
+                        <td class="py-2 px-4"><span id="total">0</span></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- Botón de Guardar Factura -->
+        <div class="flex justify-end mt-4">
+            <button id="guardarFactura" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">Guardar Factura</button>
+        </div>
+    </div>
+
+    <script>
+        function calcularTotales() {
+            var filas = document.querySelectorAll("#tablaProductos tr");
+            var subtotal = 0;
+            filas.forEach(function (fila) {
+                var cantidadDevolver = parseFloat(fila.querySelector(".cantidadDevolver").value);
+                var precio = parseFloat(fila.querySelector(".cantidadDevolver").getAttribute("data-precio"));
+                var totalProducto = cantidadDevolver * precio;
+                fila.querySelector(".totalProducto").textContent = totalProducto.toFixed(2);
+                subtotal += totalProducto;
+            });
+            document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+            document.getElementById("total").textContent = subtotal.toFixed(2);
+        }
+    </script>
+</body>
+</html>
