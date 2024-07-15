@@ -480,8 +480,10 @@ CREATE TABLE [dbo].[TBL_ABONOSXC](
 	[Monto_Abonado] [decimal](18, 2) NOT NULL,
 	[Tipo_Pago] [varchar](50) NULL,
 	[Banco] [varchar](100) NULL,
+	[Fecha_Abono] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
 (
+	[FK_Documento_CC] ASC,
 	[Numero_Abono] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
@@ -3076,6 +3078,7 @@ BEGIN
         FK_Documento_CC,
         FK_Cliente,
         Fecha_Documento,
+		Fecha_Abono,
         Monto_Total,
         Saldo_Pendiente,
         Monto_Abonado,
@@ -3084,8 +3087,11 @@ BEGIN
     FROM 
         dbo.TBL_ABONOSXC
     WHERE 
-        FK_Documento_CC = @FK_Documento_CC;
+        FK_Documento_CC = @FK_Documento_CC
+	ORDER BY
+		Fecha_Abono;
 END
+
 
 
 GO
@@ -3206,7 +3212,8 @@ CREATE PROCEDURE [dbo].[sp_InsertarAbonoXC]
     @FK_Documento_CC VARCHAR(50),
     @Monto_Abonado DECIMAL(18, 2),
     @Tipo_Pago VARCHAR(50) = NULL,
-    @Banco VARCHAR(100) = NULL
+    @Banco VARCHAR(100) = NULL,
+	@Fecha_Abono Datetime
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -3215,6 +3222,7 @@ BEGIN
     DECLARE @Fecha_Documento DATETIME;
     DECLARE @Monto_Total DECIMAL(18, 2);
     DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+	DECLARE @ExistingCount INT;
 
     -- Obtener datos del documento
     SELECT @FK_Cliente = FK_Cliente,
@@ -3251,6 +3259,17 @@ BEGIN
         -- Retornar 5 si la validación falla
         RETURN 5;
     END
+	-- Verificar si ya existe el Numero_Recibo para el mismo FK_Documento
+    SELECT @ExistingCount = COUNT(*)
+    FROM dbo.TBL_ABONOSXC
+    WHERE FK_Documento_CC = @FK_Documento_CC
+      AND Numero_Abono = @Numero_Abono;
+
+    IF @ExistingCount > 0
+    BEGIN
+        -- Retornar 6 si ya existe el Numero_Recibo para este FK_Documento
+        RETURN 6;
+    END
 
     -- Calcular nuevo saldo pendiente
     SET @Saldo_Pendiente = @Saldo_Pendiente - @Monto_Abonado;
@@ -3265,7 +3284,8 @@ BEGIN
         Saldo_Pendiente,
         Monto_Abonado,
         Tipo_Pago,
-        Banco
+        Banco,
+		Fecha_Abono
     )
     VALUES (
 	@Numero_Abono,
@@ -3276,7 +3296,8 @@ BEGIN
         @Saldo_Pendiente,
         @Monto_Abonado,
         @Tipo_Pago,
-        @Banco
+        @Banco,
+		@Fecha_Abono
     );
 
     -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CC
