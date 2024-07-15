@@ -197,6 +197,42 @@ namespace ADMFacturar.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GuardarNC([FromBody] FacturaViewModel factura)
+        {
+
+            if (factura == null)
+            {
+                return BadRequest(new { success = false, message = "Factura no proporcionada" });
+            }
+
+
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(factura);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+                var response = await _httpClient.PostAsync("api/Facturas/CrearNC", content);
+                string responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Error al guardar la factura en la API" });
+                }
+
+            }
+            return View();
+
+        }
+
+
 
 
         public IActionResult Anular()

@@ -261,6 +261,64 @@ namespace ADM.API.Controllers
             return !result;
         }
 
+        [HttpPost]
+        [Route("CrearNC")]
+        public bool CrearNC([FromBody] FacturaViewModel factura)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Received Factura: " + JsonConvert.SerializeObject(factura));
+
+            // Parameters for the Factura table
+            List<DBParameter> facturaParameters = new List<DBParameter>
+        {
+            new DBParameter("@PK_Factura", factura.Encabezado.Consecutivo),
+            new DBParameter("@Fac_Original", factura.Encabezado.facturaOriginal),
+            new DBParameter("@FK_Cliente", factura.Encabezado.Cliente),
+            new DBParameter("@Comentario", factura.Encabezado.comentario),
+            new DBParameter("@Motivo", factura.Encabezado.motivo),
+            new DBParameter("@Total", factura.Total.ToString()),
+
+
+        };
+
+            var result = DBData.Execute("sp_InsertarNC", facturaParameters);
+
+            // If inserting the factura is successful, insert the products
+            if (!result)
+            {
+                foreach (var producto in factura.Productos)
+                {
+                    List<DBParameter> productoParameters = new List<DBParameter>
+                {
+                    new DBParameter("@PK_FK_Factura", factura.Encabezado.Consecutivo),
+                    new DBParameter("@FK_Articulo", producto.Producto),
+                    new DBParameter("@Cantidad", producto.Cantidad.ToString()),
+                };
+
+                    var productoResult = DBData.Execute("sp_InsertarNCLinea", productoParameters);
+
+                    if (productoResult)
+                    {
+                        // Log and return false if any product insertion fails
+                        Console.WriteLine("Failed to insert product: " + JsonConvert.SerializeObject(producto));
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // Log and return false if inserting the factura fails
+                Console.WriteLine("Failed to insert factura");
+                return false;
+            }
+
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + !result);
+
+            return !result;
+        }
+
+
 
 
         [HttpGet]

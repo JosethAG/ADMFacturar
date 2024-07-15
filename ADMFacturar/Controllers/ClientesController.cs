@@ -20,6 +20,11 @@ namespace ADM.APICliente.Controllers
 			_httpClient.BaseAddress = new Uri("https://localhost:7270/api");
 		}
 
+		/*
+		 * Metodo de inicio 
+		 * Modificación 13/07/24 por Joseth Araya
+		 * Reducción de código sobre ViewData con metodo de ObtenerDatosDeApi
+		 */
 		public async Task<IActionResult> Index()
 		{
 			var resp = await _httpClient.GetAsync("api/Cliente/ListarClientesVM");
@@ -29,49 +34,27 @@ namespace ADM.APICliente.Controllers
 				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
 				var clientes = JsonConvert.DeserializeObject<IEnumerable<Cliente>>(content);
 				ViewData["Clientes"] = clientes ?? new List<Cliente>();
+				ViewData["Provincias"] = await ObtenerDatosDeApi<Provincia>("api/Direccion/Listar/Provincia");
+				ViewData["Cantones"] = await ObtenerDatosDeApi<Canton>("api/Direccion/Listar/Canton");
+				ViewData["Distritos"] = await ObtenerDatosDeApi<Distrito>("api/Direccion/Listar/Distrito");
+
+
 				return View("Index");
 			}
 
 			return View();
 		}
 
+		/*
+		 * Metodo de Crear 
+		 * Modificación 13/07/24 por Joseth Araya
+		 * Reducción de código sobre ViewData con metodo de ObtenerDatosDeApi
+		 */
 		public async Task<IActionResult> CrearCliente()
 		{
-			var respProv = await _httpClient.GetAsync("api/Direccion/Listar/Provincia");
-			if (respProv.IsSuccessStatusCode)
-			{
-				var dataProv = await respProv.Content.ReadAsStringAsync();
-				var provincias = JsonConvert.DeserializeObject<List<Provincia>>(dataProv);
-				ViewData["Provincias"] = provincias ?? new List<Provincia>();
-			}
-			else
-			{
-				ViewData["Provincias"] = new List<Provincia>();
-			}
-
-			var respCanton = await _httpClient.GetAsync("api/Direccion/Listar/Canton");
-			if (respCanton.IsSuccessStatusCode)
-			{
-				var dataCanton = await respCanton.Content.ReadAsStringAsync();
-				var cantones = JsonConvert.DeserializeObject<List<Canton>>(dataCanton);
-				ViewData["Cantones"] = cantones ?? new List<Canton>();
-			}
-			else
-			{
-				ViewData["Cantones"] = new List<Canton>();
-			}
-
-			var respDist = await _httpClient.GetAsync("api/Direccion/Listar/Distrito");
-			if (respDist.IsSuccessStatusCode)
-			{
-				var dataDist = await respDist.Content.ReadAsStringAsync();
-				var distritos = JsonConvert.DeserializeObject<List<Distrito>>(dataDist);
-				ViewData["Distritos"] = distritos ?? new List<Distrito>();
-			}
-			else
-			{
-				ViewData["Distritos"] = new List<Distrito>();
-			}
+			ViewData["Provincias"] = await ObtenerDatosDeApi<Provincia>("api/Direccion/Listar/Provincia");
+			ViewData["Cantones"] = await ObtenerDatosDeApi<Canton>("api/Direccion/Listar/Canton");
+			ViewData["Distritos"] = await ObtenerDatosDeApi<Distrito>("api/Direccion/Listar/Distrito");
 
 			return View();
 		}
@@ -105,44 +88,16 @@ namespace ADM.APICliente.Controllers
 			return View(cliente);
 		}
 
-
+		/*
+		 * Metodo de Actualizar 
+		 * Modificación 13/07/24 por Joseth Araya
+		 * Reducción de código sobre ViewData con metodo de ObtenerDatosDeApi
+		 */
 		public async Task<IActionResult> ActualizarCliente(string? PK)
 		{
-			var respProv = await _httpClient.GetAsync("api/Direccion/Listar/Provincia");
-			if (respProv.IsSuccessStatusCode)
-			{
-				var dataProv = await respProv.Content.ReadAsStringAsync();
-				var provincias = JsonConvert.DeserializeObject<List<Provincia>>(dataProv);
-				ViewData["Provincias"] = provincias ?? new List<Provincia>();
-			}
-			else
-			{
-				ViewData["Provincias"] = new List<Provincia>();
-			}
-
-			var respCanton = await _httpClient.GetAsync("api/Direccion/Listar/Canton");
-			if (respCanton.IsSuccessStatusCode)
-			{
-				var dataCanton = await respCanton.Content.ReadAsStringAsync();
-				var cantones = JsonConvert.DeserializeObject<List<Canton>>(dataCanton);
-				ViewData["Cantones"] = cantones ?? new List<Canton>();
-			}
-			else
-			{
-				ViewData["Cantones"] = new List<Canton>();
-			}
-
-			var respDist = await _httpClient.GetAsync("api/Direccion/Listar/Distrito");
-			if (respDist.IsSuccessStatusCode)
-			{
-				var dataDist = await respDist.Content.ReadAsStringAsync();
-				var distritos = JsonConvert.DeserializeObject<List<Distrito>>(dataDist);
-				ViewData["Distritos"] = distritos ?? new List<Distrito>();
-			}
-			else
-			{
-				ViewData["Distritos"] = new List<Distrito>();
-			}
+			ViewData["Provincias"] = await ObtenerDatosDeApi<Provincia>("api/Direccion/Listar/Provincia");
+			ViewData["Cantones"] = await ObtenerDatosDeApi<Canton>("api/Direccion/Listar/Canton");
+			ViewData["Distritos"] = await ObtenerDatosDeApi<Distrito>("api/Direccion/Listar/Distrito");
 
 			var resp = await _httpClient.GetAsync($"api/Cliente/Obtener/{PK}");
 
@@ -208,8 +163,6 @@ namespace ADM.APICliente.Controllers
 
         public async Task<IActionResult> ListarClientes()
         {
-
-
             var respArts = await _httpClient.GetAsync($"api/Cliente/Listar/");
 
             if (respArts.IsSuccessStatusCode)
@@ -225,6 +178,38 @@ namespace ADM.APICliente.Controllers
 
         }
 
+		/*Listado para obtener la información de los articulos a editar
+		Agregado el 13/7/24 por Joseth Araya ref Angelo Delgado Listar clientes*/
+		public async Task<IActionResult> ObtenerCliente(string PK)
+		{
+			var respArts = await _httpClient.GetAsync($"api/Cliente/Obtener/{PK}");
 
-    }
+			if (respArts.IsSuccessStatusCode)
+			{
+				var clienteJson = await respArts.Content.ReadAsStringAsync();
+				var cliente = JsonConvert.DeserializeObject<Cliente>(clienteJson);
+				return Ok(cliente);
+			}
+			else
+			{
+				return BadRequest("Error al obtener los cliente");
+			}
+		}
+
+		/* 
+		 * Metodo encargado de obtener toda la información, generado para obtener listas para viewbags
+		 * Agregado el 13/7/24 por Joseth Araya
+	    */
+		private async Task<List<T>> ObtenerDatosDeApi<T>(string endpoint)
+		{
+			var response = await _httpClient.GetAsync(endpoint);
+			if (response.IsSuccessStatusCode)
+			{
+				var data = await response.Content.ReadAsStringAsync();
+				return JsonConvert.DeserializeObject<List<T>>(data) ?? new List<T>();
+			}
+			return new List<T>();
+		}
+	}
+
 }
