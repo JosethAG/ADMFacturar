@@ -8,74 +8,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>Detalles de AbonosCC</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salida de Inventario</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="~/css/custom.css" rel="stylesheet" />
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body>
     <form>
         <div class="border-b border-gray-900/10 pb-12">
-            <h2 class="text-base font-semibold leading-7 text-white">Detalle de Saldo de Documento</h2>
+            <h2 class="text-base font-semibold leading-7 text-white">Detalle del Documento</h2>
             <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
 
 
-                <div class="sm:col-span-2 sm:col-start-1">
-                    <label for="email" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                <div class="sm:col-span-2">
+                    <label for="city" class="block text-sm font-medium leading-6 text-white">Documento</label>
                     <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="America America">
-                    </div>
-                </div>
-
-                <div class="sm:col-span-2 ">
-                    <label for="city" class="block text-sm font-medium leading-6 text-white">Factura</label>
-                    <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="000001">
+                        <input type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@abonos.FirstOrDefault()?.FK_Documento_CC">
                     </div>
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="region" class="block text-sm font-medium leading-6 text-white">Fecha Factura</label>
+                    <label for="city" class="block text-sm font-medium leading-6 text-white">Total Factura</label>
                     <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="10/02/2024">
+                        <input type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@abonos.FirstOrDefault()?.Monto_Total.ToString("C")">
                     </div>
                 </div>
+
                 <!-- Fin de Datos-->
             </div>
         </div>
     </form>
-    <div class="w-full">
+    <div class="w-full  mt-8 bg-gray-800 p-6 rounded-lg shadow-lg" ">
         <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
             <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Detalles de AbonosCC</h3>
         </div>
 
-        <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
-            <table class="min-w-full leading-normal">
-                <thead>
-                    <tr class="bg-gray-800 text-white">
-                        <th class="text-center py-3">Abono</th>
-                        <th class="text-center py-3">Documento</th>
-                        <th class="text-center py-3">Cliente</th>
-                        <th class="text-center py-3">Tipo Pago</th>
-                        <th class="text-center py-3">Total Deuda</th>
-                        <th class="text-center py-3">Saldo Pendiente</th>
-                        <th class="text-center py-3">Monto Abonado</th>
+        <div class="overflow-auto mt-4">
+            <table class="min-w-full bg-gray-800 text-white">
+                <thead class="bg-gray-900">
+                    <tr>
+                        <th class="py-3 px-4 text-center">Abono</th>
+                        <th class="py-3 px-4 text-center">Documento</th>
+                        <th class="py-3 px-4 text-center">Fehca Abono</th>
+                        <th class="py-3 px-4 text-center">Saldo Pendiente</th>
+                        <th class="py-3 px-4 text-center">Monto Abonado</th>
+                        <th class="py-3 px-4 text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="bodyTablaAbonos" class="text-gray-700">
+                <tbody id="bodyTablaAbonos" class="text-center">
                     @if (abonos != null)
                     {
                         foreach (var abono in abonos)
                         {
                             <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => abono.Numero_Abono)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => abono.FK_Documento_CC)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => abono.FK_Cliente)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => abono.Tipo_Pago)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => abono.Monto_Total)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => abono.Saldo_Pendiente)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => abono.Monto_Abonado)</td>
-
+                                <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => abono.Numero_Abono)</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => abono.FK_Documento_CC)</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@Html.Raw(abono.Fecha_Abono.ToString("dd/MM/yyyy"))</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => abono.Saldo_Pendiente)</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => abono.Monto_Abonado)</td>
+                                <td>
+                                    <div class="py-3 px-4 border-b border-gray-700 flex justify-center space-x-2">
+                                        <form method="post" asp-action="EliminarAbono" class="desactivar-form">
+                                            <input type="hidden" name="Numero_Abono" value="@abono.Numero_Abono">
+                                            <input type="hidden" name="FK_Documento_CC" value="@abono.FK_Documento_CC">
+                                            <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Eliminar">
+                                                <i class="fa-solid fa-ban"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                         }
                     }
@@ -89,5 +94,72 @@
             </table>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+    <script>
+        document.querySelectorAll('.desactivar-form').forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Detener el envío normal del formulario
+
+                // Obtener los valores de Numero_Recibo y FK_Documento desde el formulario
+                var numeroAbono = this.querySelector('input[name="Numero_Abono"]').value;
+                var fkDocumento = this.querySelector('input[name="FK_Documento_CC"]').value;
+
+                // Mostrar mensaje de confirmación con SweetAlert2
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "No podrá revertir esto",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Crear objeto FormData con los datos del formulario
+                        var formData = new FormData();
+                        formData.append('Numero_Abono', numeroAbono);
+                        formData.append('FK_Documento', fkDocumento);
+
+                        // Enviar los datos al controlador utilizando fetch
+                        fetch(`/CXC/EliminarAbono?Numero_Abono=${numeroAbono}&FK_Documento_CC=${fkDocumento}`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    // Mostrar mensaje de éxito con SweetAlert2
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Abono eliminado correctamente',
+                                        showConfirmButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        // Recargar la página después de eliminar
+                                        location.reload();
+                                    });
+                                } else {
+                                    throw new Error('Error al eliminar el abono');
+                                }
+                            })
+                            .catch(error => {
+                                // Mostrar mensaje de error con SweetAlert2
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: error.message,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                });
+                            });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

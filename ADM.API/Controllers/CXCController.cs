@@ -116,7 +116,8 @@ namespace ADM.API.Controllers
                 new DBParameter("@FK_Documento_CC", abono.FK_Documento_CC),
                 new DBParameter("@Monto_Abonado", abono.Monto_Abonado.ToString()), // Asegúrate de que DBParameter maneje bien el tipo decimal
                 new DBParameter("@Tipo_Pago", abono.Tipo_Pago),
-                new DBParameter("@Banco", abono.Banco)
+                new DBParameter("@Banco", abono.Banco),
+                 new DBParameter("@Fecha_Abono", abono.Fecha_Abono.ToString("yyyy-MM-dd"))
             };
 
                 try
@@ -150,8 +151,14 @@ namespace ADM.API.Controllers
                         // Monto abonado es mayor que el saldo pendiente
                         return BadRequest(2);
                     }
+                    else if (result == 6)
+                    {
+                        // El Numero_Recibo ya existe para ese documento
+                        return BadRequest(6);
+                    }
                     else
                     {
+
                         // Error desconocido al insertar el abono en la base de datos
                         return StatusCode(500, "Error desconocido al insertar el abono en la base de datos.");
                     }
@@ -164,6 +171,28 @@ namespace ADM.API.Controllers
             }
 
             return BadRequest(ModelState);
+        }
+
+        [HttpPost]
+        [Route("Eliminar/{Numero_Abono}/{FK_Documento_CC}")]
+        public bool EliminarAbono(string Numero_Abono, string FK_Documento_CC)
+        {
+            if (string.IsNullOrEmpty(Numero_Abono) || string.IsNullOrEmpty(FK_Documento_CC))
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+        {
+            new DBParameter("@Numero_Abono", Numero_Abono),
+            new DBParameter("@FK_Documento_CC", FK_Documento_CC)
+        };
+
+                var result = DBData.ExecuteCC("sp_EliminarAbonoXC", parameters);
+
+                return result == 1;
+            }
         }
     }
 }
