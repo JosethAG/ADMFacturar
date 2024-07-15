@@ -5,7 +5,7 @@ namespace ADM.Architectur
 {
     public class DBData
     {
-        public static string connectionString = "Data Source=LOCALHOST\\SQLEXPRESS;Initial Catalog=ADM;Integrated Security=True;";
+        public static string connectionString = "Data Source=LOCALHOST\\SQLEXPRESS;Initial Catalog=ADM2;Integrated Security=True;";
 
         public static DataSet TableList(string SPName, List<DBParameter> parameters = null)
         {

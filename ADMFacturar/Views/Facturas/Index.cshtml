@@ -18,6 +18,7 @@
                     <label for="fecha_final" class="block text-sm font-medium leading-6 text-white">Fecha Final</label>
                     <input type="date" id="fecha_final" name="fecha_final" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
+
                 <div class="sm:col-span-1">
                     <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número Documento</label>
                     <input type="text" id="document_number" name="document_number" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
@@ -27,17 +28,13 @@
                     <label for="cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
                     <input type="text" id="cliente" name="cliente" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                 </div>
+
                 <div class="sm:col-span-1">
-                    <label for="vendedor" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
-                    <select id="vendedor" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 35px;">
-                        <option value="">Seleccione un Vendedor</option>
-                        @if (vendedores != null)
-                        {
-                            @foreach (var vendedor in vendedores)
-                            {
-                                <option value="@vendedor.Nombre">@vendedor.Nombre</option>
-                            }
-                        }
+                    <label for="tipo_documento" class="block text-sm font-medium leading-6 text-white">Tipo de Documento</label>
+                    <select id="tipo_documento" name="tipo_documento" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        <option value="">Seleccione un Tipo</option>
+                        <option value="Nota de Crédito">Nota de Crédito</option>
+                        <option value="Factura">Factura</option>
                     </select>
                 </div>
             </div>
@@ -49,7 +46,6 @@
             <h3 class="text-xl font-semibold text-white">Listado de Facturas</h3>
             <div>
                 <a href="/Facturas/AgregarFactura" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Nueva Factura</a>
-                <a href="#" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Ver Notas de Crédito</a>
             </div>
         </div>
         <div class="overflow-auto mt-4">
@@ -57,23 +53,23 @@
                 <thead class="bg-gray-900">
                     <tr>
                         <th class="py-3 px-4 text-center">Documento</th>
+                        <th class="py-3 px-4 text-center">Doc Referencia</th>
+                        <th class="py-3 px-4 text-center">Tipo Documento</th>
                         <th class="py-3 px-4 text-center">Fecha</th>
                         <th class="py-3 px-4 text-center">Cliente</th>
-                        <th class="py-3 px-4 text-center">Vendedor</th>
-                        <th class="py-3 px-4 text-center">Condición Pago</th>
                         <th class="py-3 px-4 text-center">Total</th>
-                        <th class="py-3 px-4 text-center">Estado</th>
                         <th class="py-3 px-4 text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="bodyTablaFacturas" class="text-center">
-                    <!-- Más filas -->
+                    <!-- Filas de la tabla -->
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 <script>
@@ -87,30 +83,30 @@
                 // Llenar la tabla con los datos recibidos
                 const tableBody = document.getElementById('bodyTablaFacturas');
                 tableBody.innerHTML = '';
-
                 data.forEach(item => {
                     const row = `
-                            <tr class="even:bg-gray-700 hover:bg-gray-600">
-                                <td class="py-3 px-4 border-b border-gray-700">${item.documento}</td>
-                                <td class="py-3 px-4 border-b border-gray-700">${item.fecha}</td>
-                                <td class="py-3 px-4 border-b border-gray-700">${item.cliente}</td>
-                                <td class="py-3 px-4 border-b border-gray-700">${item.vendedor}</td>
-                                <td class="py-3 px-4 border-b border-gray-700">${item.condicionPago}</td>
-                                <td class="py-3 px-4 border-b border-gray-700">₡${item.total}</td>
-                                <td class="py-3 px-4 border-b border-gray-700">${item.estado}</td>
-                                <td class="py-3 px-4 border-b border-gray-700 flex justify-center space-x-2">
-                                    <button class="crear-nota-credito bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded" title="Crear nota de Crédito" data-estado="${item.estado}" data-documento="${item.documento}">
-                                        <i class="fas fa-credit-card"></i>
-                                    </button>
-                                    <button class="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded" title="Detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-3 rounded" title="Imprimir">
-                                        <i class="fas fa-print"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
+                                 <tr class="even:bg-gray-700 hover:bg-gray-600">
+                                    <td class="py-3 px-4 text-center">${item.documento}</td>
+                                    <td class="py-3 px-4 text-center">${item.fac_Referencia}</td>
+                                    <td class="py-3 px-4 text-center">${item.tipoDoc}</td>
+                                    <td class="py-3 px-4 text-center">${item.fecha}</td>
+                                    <td class="py-3 px-4 text-center">${item.cliente}</td>
+                                    <td class="py-3 px-4 text-center">₡${item.total}</td>
+                                    <td class="py-3 px-4 text-center flex justify-center space-x-2">
+                                        ${item.tipoDoc !== 'Nota de Crédito' ? `
+                                        <button class="crear-nota-credito bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded" title="Crear nota de Crédito" data-estado="${item.estado}" data-documento="${item.documento}" data-referencia="${item.fac_Referencia}">
+                                            <i class="fas fa-credit-card"></i>
+                                        </button>
+                                        ` : ''}
+                                        <button class="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded" title="Detalles">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-3 rounded" title="Imprimir">
+                                            <i class="fas fa-print"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
                     tableBody.innerHTML += row;
                 });
 
@@ -119,7 +115,7 @@
                 document.getElementById('fecha_final').addEventListener('input', filtrarTabla);
                 document.getElementById('document_number').addEventListener('input', filtrarTabla);
                 document.getElementById('cliente').addEventListener('input', filtrarTabla);
-                document.getElementById('vendedor').addEventListener('change', filtrarTabla);
+                document.getElementById('tipo_documento').addEventListener('change', filtrarTabla);
             })
             .catch(error => console.error('Error al obtener los datos:', error));
     }
@@ -131,21 +127,22 @@
         const fechaFinal = document.getElementById('fecha_final').value;
         const documentNumber = document.getElementById('document_number').value.toLowerCase();
         const cliente = document.getElementById('cliente').value.toLowerCase();
-        const vendedor = document.getElementById('vendedor').value.toLowerCase();
+        const tipoDocumento = document.getElementById('tipo_documento').value.toLowerCase();
 
         // Obtener todas las filas de la tabla
         const filas = document.querySelectorAll('#bodyTablaFacturas tr');
 
         filas.forEach(fila => {
             const cells = fila.getElementsByTagName('td');
-            const fecha = cells[1].textContent.trim();
-            const matchFechaInicio = fechaInicio === '' || new Date(fecha) >= new Date(fechaInicio);
-            const matchFechaFinal = fechaFinal === '' || new Date(fecha) <= new Date(fechaFinal);
-            const matchDocumentNumber = documentNumber === '' || cells[0].textContent.toLowerCase().includes(documentNumber);
-            const matchCliente = cliente === '' || cells[2].textContent.toLowerCase().includes(cliente);
-            const matchVendedor = vendedor === '' || cells[3].textContent.toLowerCase().includes(vendedor);
+            const matchFechaInicio = fechaInicio === '' || new Date(cells[3].textContent.trim()) >= new Date(fechaInicio);
+            const matchFechaFinal = fechaFinal === '' || new Date(cells[3].textContent.trim()) <= new Date(fechaFinal);
+            const matchDocumentNumber = documentNumber === '' ||
+                cells[0].textContent.toLowerCase().includes(documentNumber) ||  // Busca en la columna "Documento"
+                cells[1].textContent.toLowerCase().includes(documentNumber); // Busca en la columna "Doc Referencia"
+            const matchCliente = cliente === '' || cells[4].textContent.toLowerCase().includes(cliente);
+            const matchTipoDocumento = tipoDocumento === '' || cells[2].textContent.toLowerCase().includes(tipoDocumento);
 
-            if (matchFechaInicio && matchFechaFinal && matchDocumentNumber && matchCliente && matchVendedor) {
+            if (matchFechaInicio && matchFechaFinal && matchDocumentNumber && matchCliente && matchTipoDocumento) {
                 fila.style.display = '';
             } else {
                 fila.style.display = 'none';
@@ -163,9 +160,28 @@
         if (event.target.closest('.crear-nota-credito')) {
             const button = event.target.closest('.crear-nota-credito');
             const estado = button.getAttribute('data-estado');
-            const consecutivo = button.getAttribute('data-documento');
+            const documento = button.getAttribute('data-documento');
+            const referencia = button.getAttribute('data-referencia');
+            const filas = document.querySelectorAll('#bodyTablaFacturas tr');
 
-            if (estado.toLowerCase() === 'anulada') {
+            // Verificar si ya existe una Nota de Crédito aplicada a este documento
+            let existeNotaCredito = false;
+            filas.forEach(fila => {
+                const cells = fila.getElementsByTagName('td');
+                if (cells[1].textContent.trim() === documento) {
+                    existeNotaCredito = true;
+                }
+            });
+
+            if (existeNotaCredito) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'No se puede crear',
+                    text: 'Ya existe una nota de crédito aplicada a este documento.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            } else if (estado.toLowerCase() === 'anulada') {
                 Swal.fire({
                     icon: 'error',
                     title: 'No se puede editar',
@@ -174,9 +190,8 @@
                     confirmButtonText: 'OK'
                 });
             } else {
-                window.location.href = `/Facturas/GenerarNC?consecutivo=${consecutivo}`;
+                window.location.href = `/Facturas/GenerarNC?consecutivo=${documento}`;
             }
         }
     });
-
 </script>
