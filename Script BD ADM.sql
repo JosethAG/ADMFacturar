@@ -3195,27 +3195,13 @@ GO
 
 
 
-/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    Script Date: 7/8/2024 7:23:16 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    ******/
-
-USE [ADM]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    Script Date: 7/9/2024 9:24:59 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 /****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    ******/
 
 CREATE PROCEDURE [dbo].[sp_InsertarAbonoXC]
     @Numero_Abono VARCHAR(50),
-    @PK_Documento_CC VARCHAR(50),
+    @FK_Documento_CC VARCHAR(50),
     @Monto_Abonado DECIMAL(18, 2),
     @Tipo_Pago VARCHAR(50) = NULL,
     @Banco VARCHAR(100) = NULL
@@ -3234,7 +3220,7 @@ BEGIN
            @Monto_Total = Total_XC,
            @Saldo_Pendiente = Saldo_Pendiente
     FROM dbo.TBL_DOCUMENTO_CC
-    WHERE PK_Documento_CC = @PK_Documento_CC;
+    WHERE PK_Documento_CC = @FK_Documento_CC;
 
     -- Validar si el valor a abonar es igual a 0
     IF @Monto_Abonado = 0
@@ -3281,7 +3267,7 @@ BEGIN
     )
     VALUES (
 	@Numero_Abono,
-        @PK_Documento_CC,
+        @FK_Documento_CC,
         @FK_Cliente,
         @Fecha_Documento,
         @Monto_Total,
@@ -3294,12 +3280,11 @@ BEGIN
     -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CC
     UPDATE dbo.TBL_DOCUMENTO_CC
     SET Saldo_Pendiente = @Saldo_Pendiente
-    WHERE PK_Documento_CC = @PK_Documento_CC;
+    WHERE PK_Documento_CC = @FK_Documento_CC;
 
     -- Retornar 1 si la operación es exitosa
     RETURN 1;
 END
-
 
 GO
 /****** Object:  StoredProcedure [dbo].[sp_ListarDocumentosCC]    Script Date: 7/8/2024 7:23:23 AM ******/
@@ -3487,6 +3472,100 @@ BEGIN
         PK_Documento_CC = @PK_Documento_CC
 END;
 GO
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarAbono]    Script Date: 7/8/2024 7:23:13 AM ******/
+Create PROCEDURE [dbo].[sp_EliminarAbono]
+    @Numero_Recibo VARCHAR(50),
+    @FK_Documento VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Monto_Abonado DECIMAL(18, 2);
+    DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+
+    -- Obtener el monto del abono a eliminar
+    SELECT @Monto_Abonado = Monto_Abonado
+    FROM dbo.TBL_ABONOS
+    WHERE Numero_Recibo = @Numero_Recibo
+      AND FK_Documento = @FK_Documento;
+
+    -- Verificar si el abono existe
+    IF @Monto_Abonado IS NULL
+    BEGIN
+        -- Retornar 2 si el abono no existe
+        RETURN 2;
+    END
+
+    -- Obtener el saldo pendiente actual del documento
+    SELECT @Saldo_Pendiente = Saldo_Pendiente
+    FROM dbo.TBL_DOCUMENTO_CP
+    WHERE PK_Documento = @FK_Documento;
+
+    -- Sumar el monto del abono al saldo pendiente
+    SET @Saldo_Pendiente = @Saldo_Pendiente + @Monto_Abonado;
+
+    -- Eliminar el abono
+    DELETE FROM dbo.TBL_ABONOS
+    WHERE Numero_Recibo = @Numero_Recibo
+      AND FK_Documento = @FK_Documento;
+
+    -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CP
+    UPDATE dbo.TBL_DOCUMENTO_CP
+    SET Saldo_Pendiente = @Saldo_Pendiente
+    WHERE PK_Documento = @FK_Documento;
+
+    -- Retornar 1 si la operación es exitosa
+    RETURN 1;
+END
+
+	GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarAbonoXC]    Script Date: 7/8/2024 7:23:13 AM ******/
+Create PROCEDURE [dbo].[sp_EliminarAbonoXC]
+    @Numero_Abono VARCHAR(50),
+    @FK_Documento_CC VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Monto_Abonado DECIMAL(18, 2);
+    DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+
+    -- Obtener el monto del abono a eliminar
+    SELECT @Monto_Abonado = Monto_Abonado
+    FROM dbo.TBL_ABONOSXC
+    WHERE Numero_Abono = @Numero_Abono
+      AND FK_Documento_CC = @FK_Documento_CC;
+
+    -- Verificar si el abono existe
+    IF @Monto_Abonado IS NULL
+    BEGIN
+        -- Retornar 2 si el abono no existe
+        RETURN 2;
+    END
+
+    -- Obtener el saldo pendiente actual del documento
+    SELECT @Saldo_Pendiente = Saldo_Pendiente
+    FROM dbo.TBL_DOCUMENTO_CC
+    WHERE PK_Documento_CC = @FK_Documento_CC;
+
+    -- Sumar el monto del abono al saldo pendiente
+    SET @Saldo_Pendiente = @Saldo_Pendiente + @Monto_Abonado;
+
+    -- Eliminar el abono
+    DELETE FROM dbo.TBL_ABONOSXC
+    WHERE Numero_Abono = @Numero_Abono
+      AND FK_Documento_CC = @FK_Documento_CC;
+
+    -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CC
+    UPDATE dbo.TBL_DOCUMENTO_Cc
+    SET Saldo_Pendiente = @Saldo_Pendiente
+    WHERE PK_Documento_CC = @FK_Documento_CC;
+
+    -- Retornar 1 si la operación es exitosa
+    RETURN 1;
+END
 
 	
 ----------------------------------------------------------------------------------------------------
