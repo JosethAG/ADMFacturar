@@ -25,14 +25,45 @@ namespace ADMFacturar.Controllers
             if (resp.IsSuccessStatusCode)
             {
                 var content = await resp.Content.ReadAsStringAsync();
-                var cxp = JsonConvert.DeserializeObject<IEnumerable<CXP>>(content);
-                ViewData["CXP"] = cxp ?? new List<CXP>();
-                
+                var cxps = JsonConvert.DeserializeObject<IEnumerable<CXP>>(content);
+
+                // Aquí es donde se realiza la unión con proveedores para obtener el nombre
+                var cxpsWithSupplierNames = cxps.Select(async cxp =>
+                {
+                    var proveedorResp = await _httpClient.GetAsync($"api/Proveedor/Obtener/{cxp.FK_Proveedor}");
+                    if (proveedorResp.IsSuccessStatusCode)
+                    {
+                        var proveedorContent = await proveedorResp.Content.ReadAsStringAsync();
+                        var proveedor = JsonConvert.DeserializeObject<Proveedor>(proveedorContent);
+                        cxp.NombreProveedor = proveedor.Nombre;
+                    }
+                    return cxp;
+                }).Select(t => t.Result).ToList();
+
+                ViewData["CXP"] = cxpsWithSupplierNames ?? new List<CXP>();
+
                 return View("Index");
             }
 
             return View();
         }
+
+        [HttpGet]
+        [Route("api/Proveedor/Obtener/{id}")]
+        public async Task<Proveedor> ObtenerProveedor(int id)
+        {
+            var resp = await _httpClient.GetAsync($"api/Proveedor/{id}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync();
+                var proveedor = JsonConvert.DeserializeObject<Proveedor>(content);
+                return proveedor;
+            }
+
+            return null;
+        }
+
 
         public async Task<IActionResult> Detalles(string PK)
         {
@@ -64,7 +95,7 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-    
+
         [HttpPost]
         public async Task<IActionResult> CrearAbono(AbonoCXP abono)
         {
@@ -80,8 +111,8 @@ namespace ADMFacturar.Controllers
 
                     if (response.IsSuccessStatusCode)
                     {
-                                TempData["SuccessMessage"] = responseContent;
-                                return RedirectToAction("Index");
+                        TempData["SuccessMessage"] = responseContent;
+                        return RedirectToAction("Index");
                     }
                     else
                     {
@@ -94,6 +125,33 @@ namespace ADMFacturar.Controllers
                 }
             }
             return View(abono);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarAbono(string Numero_Recibo, string FK_Documento)
+        {
+            if (ModelState.IsValid)
+            {
+                // Crear el contenido JSON con ambos parámetros
+                var jsonContent = JsonConvert.SerializeObject(new { Numero_Recibo, FK_Documento });
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                // Enviar la solicitud POST a la API
+                var resp = await _httpClient.PostAsync($"/api/CXP/Eliminar/{Numero_Recibo}/{FK_Documento}", content);
+                string responseContent = await resp.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Abono eliminado exitosamente.";
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(string.Empty, responseContent);
+                return View(); // Retorna a la vista actual en caso de error
+            }
+
+            return View(); // Retorna a la vista actual en caso de error en el modelo
         }
 
     }

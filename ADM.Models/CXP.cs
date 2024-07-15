@@ -4,6 +4,7 @@
     {
         public string PK_Documento { get; set; }
         public string FK_Proveedor { get; set; }
+        public string NombreProveedor { get; set; } // Propiedad para almacenar el nombre del proveedor
         public DateTime Fecha_Documento { get; set; }
         public DateTime Fecha_Vence { get; set; }
         public string? Observaciones { get; set; }
