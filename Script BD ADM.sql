@@ -3050,7 +3050,9 @@ BEGIN
     FROM 
         dbo.TBL_ABONOS
     WHERE 
-        FK_Documento = @FK_Documento;
+        FK_Documento = @FK_Documento
+    ORDER BY 
+        Fecha_Abono; -- Ordenar por la fecha de creación
 END
 GO
 
