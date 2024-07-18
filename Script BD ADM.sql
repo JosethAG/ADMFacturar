@@ -2602,7 +2602,7 @@ END;
 GO
 
 
-/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/13/2024 2:02:24 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/17/2024 11:19:07 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2658,7 +2658,7 @@ BEGIN
         @Total,
         0,
         'Completado',
-	'F',
+		'F',
         'a',
         'a',
         GETDATE(),
@@ -2707,6 +2707,7 @@ BEGIN
     );
    END
 END;
+
 
 GO
 /****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/8/2024 7:22:17 PM ******/
@@ -2827,14 +2828,16 @@ GO
 
 
 -- Procedimiento almacenado para obtener el encabezado de la factura
-CREATE PROCEDURE sp_ObtenerFacturaEncabezado
+CREATE PROCEDURE [dbo].[sp_ObtenerFacturaEncabezado]
     @PK_Factura NVARCHAR(50)
 AS
 BEGIN
-    SELECT PK_Factura, FK_Cliente, FK_Condicion_Pago, Transporte
+    SELECT PK_Factura, FK_Cliente, FK_Condicion_Pago, Transporte, Fac_Referencia AS facturaOriginal, Comentario as comentario, Motivo AS motivo
     FROM [TBL_FACTURA]
     WHERE PK_Factura = @PK_Factura
 END
+
+
 
 GO
 -- Procedimiento almacenado para obtener los productos de la factura
