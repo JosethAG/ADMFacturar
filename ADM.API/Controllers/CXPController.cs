@@ -111,13 +111,14 @@ namespace ADM.API.Controllers
             if (ModelState.IsValid)
             {
                 List<DBParameter> parameters = new List<DBParameter>
-        {
-            new DBParameter("@Numero_Recibo", abono.Numero_Recibo), // Asegúrate de que coincida con el nombre del parámetro en tu procedimiento almacenado
-            new DBParameter("@FK_Documento", abono.FK_Documento),
-            new DBParameter("@Monto_Abonado", abono.Monto_Abonado.ToString()), // Sin convertir a string
-            new DBParameter("@Tipo_Documento", abono.Tipo_Documento),
-            new DBParameter("@Banco", abono.Banco)
-        };
+            {
+                new DBParameter("@Numero_Recibo", abono.Numero_Recibo), // Asegúrate de que coincida con el nombre del parámetro en tu procedimiento almacenado
+                new DBParameter("@FK_Documento", abono.FK_Documento),
+                new DBParameter("@Monto_Abonado", abono.Monto_Abonado.ToString()), // Sin convertir a string
+                new DBParameter("@Tipo_Documento", abono.Tipo_Documento),
+                new DBParameter("@Banco", abono.Banco),
+                new DBParameter("@Fecha_Abono", abono.Fecha_Abono.ToString("yyyy-MM-dd"))
+            };
 
                 try
                 {
@@ -128,17 +129,32 @@ namespace ADM.API.Controllers
                     if (result == 1)
                     {
                         // Abono exitoso
-                        return Ok(new { message = "Abono realizado exitosamente." });
+                        return Ok(1);
                     }
-                    else if (result == 0)
+                    else if (result == 3)
                     {
                         // Saldo pendiente es menor o igual a cero
-                        return BadRequest("Error: Saldo pendiente es menor o igual a cero.");
+                        return BadRequest(3);
+                    }
+                    else if (result == 4)
+                    {
+                        // Monto abonado es un numero negativo
+                        return BadRequest(4);
+                    }
+                    else if (result == 5)
+                    {
+                        // Saldo pendiente es igual a 0
+                        return BadRequest(5);
                     }
                     else if (result == 2)
                     {
                         // Monto abonado es mayor que el saldo pendiente
-                        return BadRequest("Error: Monto abonado es mayor que el saldo pendiente.");
+                        return BadRequest(2);
+                    }
+                    else if (result == 6)
+                    {
+                        // El Numero_Recibo ya existe para ese documento
+                        return BadRequest(6);
                     }
                     else
                     {
@@ -154,6 +170,28 @@ namespace ADM.API.Controllers
             }
 
             return BadRequest(ModelState);
+        }
+
+        [HttpPost]
+        [Route("Eliminar/{Numero_Recibo}/{FK_Documento}")]
+        public bool EliminarAbono(string Numero_Recibo, string FK_Documento)
+        {
+            if (string.IsNullOrEmpty(Numero_Recibo) || string.IsNullOrEmpty(FK_Documento))
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+        {
+            new DBParameter("@Numero_Recibo", Numero_Recibo),
+            new DBParameter("@FK_Documento", FK_Documento)
+        };
+
+                var result = DBData.ExecuteCP("sp_EliminarAbono", parameters);
+
+                return result == 1;
+            }
         }
 
 

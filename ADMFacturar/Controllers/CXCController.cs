@@ -26,11 +26,39 @@ namespace ADMFacturar.Controllers
             {
                 var content = await resp.Content.ReadAsStringAsync();
                 var cxp = JsonConvert.DeserializeObject<IEnumerable<CXC>>(content);
+                // Aquí es donde se realiza la unión con proveedores para obtener el nombre
+                var cxpsWithSupplierNames = cxp.Select(async cxp =>
+                {
+                    var clienteResp = await _httpClient.GetAsync($"api/Cliente/Obtener/{cxp.FK_Cliente}");
+                    if (clienteResp.IsSuccessStatusCode)
+                    {
+                        var clienteContent = await clienteResp.Content.ReadAsStringAsync();
+                        var cliente = JsonConvert.DeserializeObject<Cliente>(clienteContent);
+                        cxp.NombreCliente = cliente.Nombre;
+                    }
+                    return cxp;
+                }).Select(t => t.Result).ToList();
                 ViewData["CXC"] = cxp ?? new List<CXC>();
                 return View("Index");
             }
 
             return View();
+        }
+
+        [HttpGet]
+        [Route("api/Cliente/Obtener/{id}")]
+        public async Task<Cliente> ObtenerCliente(int id)
+        {
+            var resp = await _httpClient.GetAsync($"api/Cliente/{id}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync();
+                var cliente = JsonConvert.DeserializeObject<Cliente>(content);
+                return cliente;
+            }
+
+            return null;
         }
 
         public async Task<IActionResult> Detalles(string PK)
@@ -63,11 +91,6 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        public IActionResult CrearAbono()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> CrearAbono(AbonoCXC abono)
         {
@@ -83,27 +106,12 @@ namespace ADMFacturar.Controllers
 
                     if (response.IsSuccessStatusCode)
                     {
-                        // Verificar el resultado del procedimiento almacenado
-                        var resultado = JsonConvert.DeserializeObject<int>(responseContent);
-                        switch (resultado)
-                        {
-                            case 0:
-                                ModelState.AddModelError(string.Empty, "Error: Saldo Pendiente es igual o menor a 0.");
-                                break;
-                            case 2:
-                                ModelState.AddModelError(string.Empty, "Error: Monto Abonado es mayor que el Saldo Pendiente.");
-                                break;
-                            case 1:
-                                TempData["SuccessMessage"] = "Abono creado correctamente.";
-                                return RedirectToAction("Index");
-                            default:
-                                ModelState.AddModelError(string.Empty, "Error al guardar los datos.");
-                                break;
-                        }
+                        TempData["SuccessMessage"] = responseContent;
+                        return RedirectToAction("Index");
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Error al guardar los datos: " + response.ReasonPhrase + " - " + responseContent);
+                        ModelState.AddModelError(string.Empty, responseContent);
                     }
                 }
                 catch (Exception ex)
@@ -112,6 +120,33 @@ namespace ADMFacturar.Controllers
                 }
             }
             return View(abono);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarAbono(string Numero_Abono, string FK_Documento_CC)
+        {
+            if (ModelState.IsValid)
+            {
+                // Crear el contenido JSON con ambos parámetros
+                var jsonContent = JsonConvert.SerializeObject(new { Numero_Abono, FK_Documento_CC });
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                // Enviar la solicitud POST a la API
+                var resp = await _httpClient.PostAsync($"/api/CXC/Eliminar/{Numero_Abono}/{FK_Documento_CC}", content);
+                string responseContent = await resp.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Abono eliminado exitosamente.";
+                    return RedirectToAction("Index");
+                }
+
+                ModelState.AddModelError(string.Empty, responseContent);
+                return View(); // Retorna a la vista actual en caso de error
+            }
+
+            return View(); // Retorna a la vista actual en caso de error en el modelo
         }
     }
 }
