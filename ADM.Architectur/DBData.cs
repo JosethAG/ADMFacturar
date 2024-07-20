@@ -7,6 +7,7 @@ namespace ADM.Architectur
     {
         public static string connectionString = "Data Source=LOCALHOST;Initial Catalog=ADM;Integrated Security=True;";
 
+
         public static DataSet TableList(string SPName, List<DBParameter> parameters = null)
         {
             SqlConnection conn = new SqlConnection(connectionString);

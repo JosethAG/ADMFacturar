@@ -233,6 +233,26 @@ namespace ADMFacturar.Controllers
         }
 
 
+        public async Task<IActionResult> DetallesNC(string? documento)
+        {
+
+            // Concatenamos el valor "01" al final de la URL de la API
+        
+
+            var resp = await _httpClient.GetAsync($"api/Facturas/Obtener/{documento}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var factura = JsonConvert.DeserializeObject<FacturaViewModel>(content);
+                return View("DetallesNC", factura); // Devuelve 'clientes' en lugar de 'resp'
+            }
+
+            return NotFound();
+
+        }
+
+
 
 
         public IActionResult Anular()
