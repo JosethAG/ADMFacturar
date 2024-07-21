@@ -370,7 +370,11 @@ namespace ADM.API.Controllers
                 Consecutivo = encabezadoRow["PK_Factura"].ToString(),
                 Cliente = encabezadoRow["FK_Cliente"].ToString(),
                 CondicionPago = encabezadoRow["FK_Condicion_Pago"].ToString(),
-                Transporte = encabezadoRow["Transporte"].ToString()
+                Transporte = encabezadoRow["Transporte"].ToString(),
+                facturaOriginal = encabezadoRow["facturaOriginal"].ToString(),
+                comentario = encabezadoRow["comentario"].ToString(),
+                motivo = encabezadoRow["motivo"].ToString(),
+
             };
 
             // Query for Productos

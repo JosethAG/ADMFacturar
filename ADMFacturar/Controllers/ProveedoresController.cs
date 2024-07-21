@@ -132,5 +132,23 @@ namespace ADM.APIProveedor.Controllers
 		}
 
 
+		/*Listado para obtener la información del proveedor a editar
+		Agregado el 19/7/24 por Joseth Araya */
+		public async Task<IActionResult> ObtenerProveedor(string PK)
+		{
+			var respArts = await _httpClient.GetAsync($"api/Proveedor/Obtener/{PK}");
+
+			if (respArts.IsSuccessStatusCode)
+			{
+				var proveedorJson = await respArts.Content.ReadAsStringAsync();
+				var proveedor = JsonConvert.DeserializeObject<Proveedor>(proveedorJson);
+				return Ok(proveedor);
+			}
+			else
+			{
+				return BadRequest("Error al obtener los proveedor");
+			}
+		}
+
 	}
 }
