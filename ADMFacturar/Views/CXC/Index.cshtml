@@ -93,6 +93,7 @@
                         <th class="py-3 px-4 text-center">Documento</th>
                         <th class="py-3 px-4 text-center">Cliente</th>
                         <th class="py-3 px-4 text-center">Fecha Emisión</th>
+                        <th class="py-3 px-4 text-center">Fecha Vence</th>
                         <th class="py-3 px-4 text-center">Total</th>
                         <th class="py-3 px-4 text-center">Saldo</th>
                         <th class="py-3 px-4 text-center">Acciones</th>
@@ -107,6 +108,7 @@
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.PK_Documento_CC)</td>
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.NombreCliente)</td>
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.Raw(cxc.Fecha_Documento.ToString("dd/MM/yyyy"))</td>
+                                <td class="py-3 px-4 border-b border-gray-700 fecha-vencimiento">@Html.Raw(cxc.Fecha_Vencimiento.ToString("yyyy-MM-dd"))</td>
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.Total_XC)</td>
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.Saldo_Pendiente)</td>
                                 <td>
@@ -209,6 +211,26 @@
             //              }
             //          });
             //      });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const fechaActual = new Date();
+                const celdasFechaVence = document.querySelectorAll('.fecha-vencimiento');
+
+                celdasFechaVence.forEach(celda => {
+                    const fechaVence = new Date(celda.textContent.trim());
+                    const diffTime = fechaVence - fechaActual;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays < 0) {
+                        celda.style.color = 'red';
+                    } else if (diffDays < 7) {
+                        celda.style.color = 'yellow';
+                    } else if (diffDays > 15) {
+                        celda.style.color = 'green';
+                    }
+                });
+            });
         </script>
 </body>
 </html>
