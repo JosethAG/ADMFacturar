@@ -18,28 +18,28 @@ namespace ADM.API.Controllers
     {
         //private IFacturasService? _FacturasService;
 
-        //      [HttpGet]
-        //      [Route("Listar")]
-        //      public IEnumerable<Facturas> ListaFacturass(string? Nombre)
-        //      {
-        //          DataTable tFacturas = null;
+        [HttpGet]
+        [Route("Listar")]
+        public IEnumerable<FacturaVM> ListarFacturas(string? Nombre)
+        {
+            DataTable tFacturas = null;
 
-        //          if (Nombre == null)
-        //          {
-        //              tFacturas = DBData.List("sp_ListarFacturas");
-        //          }
-        //          else
-        //          {
-        //              List<DBParameter> parameters = new List<DBParameter>
-        //                  {
-        //                      new DBParameter("@Nombre", Nombre)
-        //                  };
-        //              tFacturas = DBData.List("sp_ListarFacturasxNombre", parameters);
-        //          }
-        //          string jsonArticle = JsonConvert.SerializeObject(tFacturas);
-        //          var result = JsonProvider.DeserializeSimple<IEnumerable<Facturas>>(jsonArticle);
-        //          return result;
-        //      }
+            if (Nombre == null)
+            {
+                tFacturas = DBData.List("sp_ListarFacturas");
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                          {
+                              new DBParameter("@Nombre", Nombre)
+                          };
+                tFacturas = DBData.List("sp_ListarFacturas", parameters);
+            }
+            string jsonArticle = JsonConvert.SerializeObject(tFacturas);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<FacturaVM>>(jsonArticle);
+            return result;
+        }
 
         //      [HttpGet]
         //      [Route("Obtener/{PK}")]
@@ -261,6 +261,64 @@ namespace ADM.API.Controllers
             return !result;
         }
 
+        [HttpPost]
+        [Route("CrearNC")]
+        public bool CrearNC([FromBody] FacturaViewModel factura)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Received Factura: " + JsonConvert.SerializeObject(factura));
+
+            // Parameters for the Factura table
+            List<DBParameter> facturaParameters = new List<DBParameter>
+        {
+            new DBParameter("@PK_Factura", factura.Encabezado.Consecutivo),
+            new DBParameter("@Fac_Original", factura.Encabezado.facturaOriginal),
+            new DBParameter("@FK_Cliente", factura.Encabezado.Cliente),
+            new DBParameter("@Comentario", factura.Encabezado.comentario),
+            new DBParameter("@Motivo", factura.Encabezado.motivo),
+            new DBParameter("@Total", factura.Total.ToString()),
+
+
+        };
+
+            var result = DBData.Execute("sp_InsertarNC", facturaParameters);
+
+            // If inserting the factura is successful, insert the products
+            if (!result)
+            {
+                foreach (var producto in factura.Productos)
+                {
+                    List<DBParameter> productoParameters = new List<DBParameter>
+                {
+                    new DBParameter("@PK_FK_Factura", factura.Encabezado.Consecutivo),
+                    new DBParameter("@FK_Articulo", producto.Producto),
+                    new DBParameter("@Cantidad", producto.Cantidad.ToString()),
+                };
+
+                    var productoResult = DBData.Execute("sp_InsertarNCLinea", productoParameters);
+
+                    if (productoResult)
+                    {
+                        // Log and return false if any product insertion fails
+                        Console.WriteLine("Failed to insert product: " + JsonConvert.SerializeObject(producto));
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // Log and return false if inserting the factura fails
+                Console.WriteLine("Failed to insert factura");
+                return false;
+            }
+
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + !result);
+
+            return !result;
+        }
+
+
 
 
         [HttpGet]
@@ -286,5 +344,81 @@ namespace ADM.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("Obtener/{consecutivo}")]
+        public ActionResult<FacturaViewModel> ObtenerFactura(string consecutivo)
+        {
+            // Log received consecutivo for debugging
+            Console.WriteLine("Received Consecutivo: " + consecutivo);
+
+            // Query for Encabezado
+            List<DBParameter> encabezadoParameters = new List<DBParameter>
+        {
+            new DBParameter("@PK_Factura", consecutivo)
+        };
+
+            var encabezadoTable = DBData.List("sp_ObtenerFacturaEncabezado", encabezadoParameters);
+
+            if (encabezadoTable == null || encabezadoTable.Rows.Count == 0)
+            {
+                return NotFound("Factura no encontrada");
+            }
+
+            var encabezadoRow = encabezadoTable.Rows[0];
+            var encabezado = new Encabezado
+            {
+                Consecutivo = encabezadoRow["PK_Factura"].ToString(),
+                Cliente = encabezadoRow["FK_Cliente"].ToString(),
+                CondicionPago = encabezadoRow["FK_Condicion_Pago"].ToString(),
+                Transporte = encabezadoRow["Transporte"].ToString(),
+                facturaOriginal = encabezadoRow["facturaOriginal"].ToString(),
+                comentario = encabezadoRow["comentario"].ToString(),
+                motivo = encabezadoRow["motivo"].ToString(),
+
+            };
+
+            // Query for Productos
+            List<DBParameter> productoParameters = new List<DBParameter>
+        {
+            new DBParameter("@PK_FK_Factura", consecutivo)
+        };
+
+            var productosTable = DBData.List("sp_ObtenerFacturaProductos", productoParameters);
+
+            var productos = productosTable.AsEnumerable().Select(productoRow => new ProductoViewModel
+            {
+                Producto = productoRow["FK_Articulo"].ToString(),
+                Cantidad = int.Parse(productoRow["Cantidad"].ToString()),
+                precioUnitario = decimal.Parse(productoRow["Precio"].ToString())
+            }).ToList();
+
+            // Query for Subtotal, Descuento, and Total
+            List<DBParameter> totalParameters = new List<DBParameter>
+        {
+            new DBParameter("@PK_Factura", consecutivo)
+        };
+
+            var totalTable = DBData.List("sp_ObtenerFacturaTotales", totalParameters);
+
+            if (totalTable == null || totalTable.Rows.Count == 0)
+            {
+                return NotFound("Totales no encontrados para la factura");
+            }
+
+            var totalRow = totalTable.Rows[0];
+
+            var facturaViewModel = new FacturaViewModel
+            {
+                Encabezado = encabezado,
+                Subtotal = decimal.Parse(totalRow["Subtotal"].ToString()),
+                Descuento = decimal.Parse(totalRow["Descuento"].ToString()),
+                Total = decimal.Parse(totalRow["Total"].ToString()),
+                Productos = productos
+            };
+
+            return Ok(facturaViewModel);
+        }
     }
+
 }
+

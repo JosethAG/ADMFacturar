@@ -1,70 +1,164 @@
-﻿<link href="~/css/custom.css" rel="stylesheet" />
+﻿@model FacturaViewModel
 
-<div class="w-full">
-</div>
+@{
+    var transportes = ViewData["Transporte"] as List<Transporte>;
+    var condicionPago = Model.Encabezado.CondicionPago; // Obtén el valor de CondicionPago desde el modelo
+    var transporteSeleccionado = Model.Encabezado.Transporte;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturación Avanzada</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body class="bg-gray-900 text-white">
 
+    <div class="max-w-7xl mx-auto p-4">
 
-<form>
-    <div class="border-b border-gray-900/10 pb-12">
-        <h2 class="text-base font-semibold leading-7 text-white">Detalles Factura</h2>
-        <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-3">
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Numero Documento</label>
-                <div class="mt-2">
-                    <input type="text" value="123456" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled>
+        <!-- Formulario de Encabezado de Factura -->
+        <form class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-lg font-semibold leading-7 text-white mb-4">Factura</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <label for="Consecutivo" class="block text-sm font-medium leading-6 text-white">Consecutivo</label>
+                    <input type="text" id="Consecutivo" name="Consecutivo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.Consecutivo">
+                </div>
+                <div class="relative">
+                    <label for="Cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                    <div class="flex">
+                        <input type="text" id="Cliente" name="Cliente" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.Cliente">
+                        <button type="button" class="ml-2 mt-1 text-gray-400 hover:text-white" aria-label="Buscar cliente" onclick="openModalCliente()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label for="CondicionPago" class="block text-sm font-medium leading-6 text-white">Condición de Pago</label>
+                    <select id="CondicionPago" name="CondicionPago" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 37px;" disabled>
+                        <option value="1">Contado</option>
+                        <option value="2">Crédito 30 días</option>
+                        <option value="3">Crédito 60 días</option>
+                        <option value="4">Crédito 90 días</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="Transporte" class="block text-sm font-medium leading-6 text-white">Transporte</label>
+                    <select id="Transporte" name="Transporte" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 37px;" disabled>
+                        <option value="">Seleccione un transporte</option>
+                        @if (transportes != null)
+                        {
+                            @foreach (var transporte in transportes)
+                            {
+                                <option value="@transporte.PK_Medio_Transporte">@transporte.Descripcion</option>
+                            }
+                        }
+                    </select>
                 </div>
             </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Fecha Emisión</label>
-                <div class="mt-2">
-                    <input type="text"  disabled value="2024-04-01" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
+        </form>
+        <!-- Formulario y Tabla de Productos -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h3 class="text-xl font-semibold text-white mb-4">Productos</h3>
+            <!-- Tabla de Productos -->
+            <div class="overflow-auto">
+                <table class="min-w-full bg-gray-800 text-white">
+                    <thead class="bg-gray-900">
+                        <tr>
+                            <th class="py-3 px-4 text-center">Producto</th>
+                            <th class="py-3 px-4 text-center">Cantidad</th>
+                            <th class="py-3 px-4 text-center">Precio</th>
+                            <th class="py-3 px-4 text-center">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductos" class="text-center">
+                        @foreach (var producto in Model.Productos)
+                        {
+                            <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer producto-row" data-cantidad="@producto.Cantidad" data-precio="@producto.precioUnitario">
+                                <td class="py-3 px-4 border-b border-gray-700">@producto.Producto</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@producto.Cantidad</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@producto.precioUnitario</td>
+                                <td class="py-3 px-4 border-b border-gray-700 totalProducto"></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-right py-2 px-4">Subtotal</td>
+                            <td class="py-2 px-4" id="subtotal">₡@Model.Subtotal</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-right py-2 px-4">Descuento</td>
+                            <td class="py-2 px-4" id="descuento">₡@Model.Descuento</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-right py-2 px-4">Total</td>
+                            <td class="py-2 px-4" id="total">₡@Model.Total</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Cliente</label>
-                <div class="mt-2">
-                    <input type="text" disabled value="Cliente A" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Cedula</label>
-                <div class="mt-2">
-                    <input type="text" disabled value="123456789 (Física)" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
-                <div class="mt-2">
-                    <input type="text" disabled value="Vendedor A" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Condición Pago</label>
-                <div class="mt-2">
-                    <input type="text" disabled value="Contado" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Tipo Documento</label>
-                <div class="mt-2">
-                    <input type="text" disabled value="Pedido" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
-            <div class="sm:col-span-1">
-                <label for="document_number" class="block text-sm font-medium leading-6 text-white">Total</label>
-                <div class="mt-2">
-                    <input type="text" disabled value="25000"  id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
-            </div>
-
+        </div>
+        <!-- Botón de Salir -->
+        <div class="flex justify-end mt-4">
+            <button id="salir" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md">Salir</button>
         </div>
     </div>
-</form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Función para actualizar el total de cada producto
+            function actualizarTotales() {
+                const rows = document.querySelectorAll('#tablaProductos .producto-row');
+                let subtotal = 0;
+
+                rows.forEach(row => {
+                    const cantidad = parseFloat(row.getAttribute('data-cantidad'));
+                    const precio = parseFloat(row.getAttribute('data-precio'));
+                    const total = cantidad * precio;
+
+                    row.querySelector('.totalProducto').textContent = `₡${total.toFixed(2)}`;
+
+                    subtotal += total;
+                });
+
+                // Actualizar los valores en el pie de la tabla
+                document.getElementById('subtotal').textContent = `₡${subtotal.toFixed(2)}`;
+                document.getElementById('total').textContent = `₡${(subtotal - parseFloat(document.getElementById('descuento').textContent.replace('₡', ''))).toFixed(2)}`;
+            }
+
+            // Llamar a la función para inicializar los totales al cargar la página
+            actualizarTotales();
+
+            // Redirigir al índice al hacer clic en "Salir"
+            document.getElementById('salir').addEventListener('click', () => {
+                window.location.href = '/Facturas/Index'; // Ajusta esta URL según sea necesario
+            });
+
+            // Seleccionar el valor de CondicionPago en el combobox
+            const condicionPagoSelect = document.getElementById('CondicionPago');
+            if (condicionPagoSelect) {
+                condicionPagoSelect.value = '@condicionPago'; // Ajusta el valor del combobox según el valor del modelo
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Obtener el valor del transporte seleccionado del modelo
+            var transporteSeleccionado = '@Model.Encabezado.Transporte';
+
+            // Obtener el elemento select
+            var selectTransporte = document.getElementById('Transporte');
+
+            // Establecer el valor seleccionado
+            if (transporteSeleccionado) {
+                selectTransporte.value = transporteSeleccionado;
+            }
+        });
+    </script>
+
+</body>
+</html>

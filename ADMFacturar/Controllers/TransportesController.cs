@@ -134,5 +134,23 @@ namespace ADM.APICliente.Controllers
 			return Ok();
 		}
 
-	}
+
+        /*Listado para obtener la información del tranporte a editar
+		Agregado el 20/7/24 por Joseth Araya */
+        public async Task<IActionResult> ObtenerTransporte(string PK)
+        {
+            var respArts = await _httpClient.GetAsync($"api/Transporte/Obtener/{PK}");
+
+            if (respArts.IsSuccessStatusCode)
+            {
+                var transporteJson = await respArts.Content.ReadAsStringAsync();
+                var transporte = JsonConvert.DeserializeObject<Transporte>(transporteJson);
+                return Ok(transporte);
+            }
+            else
+            {
+                return BadRequest("Error al obtener los tranporte");
+            }
+        }
+    }
 }

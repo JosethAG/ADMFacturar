@@ -366,6 +366,10 @@ CREATE TABLE [dbo].[TBL_FACTURA](
 	[Total] [decimal](18, 3) NULL,
 	[Devolucion] [int] NULL,
 	[Estado] [varchar](50) NOT NULL,
+	[Fac_Referencia] [varchar](50) NULL,
+	[Comentario] [varchar](200) NULL,
+	[Motivo] [varchar](20) NULL,
+	[Tipo_Doc] [varchar](20) NULL,
 	[FK_Usuario_Creacion] [varchar](50) NOT NULL,
 	[FK_Usuario_Modificacion] [varchar](50) NOT NULL,
 	[Fecha_Creacion] [datetime] NOT NULL,
@@ -476,8 +480,10 @@ CREATE TABLE [dbo].[TBL_ABONOSXC](
 	[Monto_Abonado] [decimal](18, 2) NOT NULL,
 	[Tipo_Pago] [varchar](50) NULL,
 	[Banco] [varchar](100) NULL,
+	[Fecha_Abono] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
 (
+	[FK_Documento_CC] ASC,
 	[Numero_Abono] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
@@ -2595,7 +2601,8 @@ END;
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/8/2024 9:15:17 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFactura]    Script Date: 7/17/2024 11:19:07 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2633,6 +2640,7 @@ BEGIN
         Total,
         Devolucion,
         Estado,
+	Tipo_Doc,
         FK_Usuario_Creacion,
         FK_Usuario_Modificacion,
         Fecha_Creacion,
@@ -2649,7 +2657,8 @@ BEGIN
         @Descuento,
         @Total,
         0,
-        'Facturado',
+        'Completado',
+		'F',
         'a',
         'a',
         GETDATE(),
@@ -2694,10 +2703,12 @@ BEGIN
         'a',
         'a',
         GETDATE(),
-		GETDATE()
+	GETDATE()
     );
-	    END
+   END
 END;
+
+
 GO
 /****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/8/2024 7:22:17 PM ******/
 SET ANSI_NULLS ON
@@ -2773,9 +2784,246 @@ BEGIN
     WHERE [PK_Articulo] = @PK_Articulo;
 END;
 
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarFacturas]    Script Date: 7/11/2024 6:27:30 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarFacturas]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT  
+        [PK_Factura] as Documento,
+        CASE WHEN LEN(F.Fac_Referencia) > 0 THEN F.Fac_Referencia ELSE ' ' END as Fac_Referencia,
+        CONVERT(varchar, f.Fecha, 23) as Fecha,
+        C.Nombre AS Cliente,
+        CASE 
+            WHEN F.Tipo_Doc = 'F' THEN 'Factura'
+            WHEN F.Tipo_Doc = 'NC' THEN 'Nota de Crédito'
+            ELSE 'Desconocido'
+        END as TipoDoc,
+        [Total]
+    FROM 
+        [ADM].[dbo].[TBL_FACTURA] F
+    INNER JOIN 
+        TBL_CLIENTES C ON F.FK_Cliente = C.PK_Cliente
+    INNER JOIN 
+        TBL_VENDEDORES V ON F.FK_VENDEDOR = V.PK_Vendedor
+    INNER JOIN 
+        TBL_CONDICIONES_PAGO CP ON F.FK_Condicion_Pago = CP.PK_Condicion_Pago
+    INNER JOIN 
+        TBL_TRANSPORTES T ON F.Transporte = T.PK_Medio_Transporte
+    ORDER BY 
+        F.Fecha_Creacion DESC;
+
+END
+
+GO
 
 
 
+-- Procedimiento almacenado para obtener el encabezado de la factura
+CREATE PROCEDURE [dbo].[sp_ObtenerFacturaEncabezado]
+    @PK_Factura NVARCHAR(50)
+AS
+BEGIN
+    SELECT PK_Factura, FK_Cliente, FK_Condicion_Pago, Transporte, Fac_Referencia AS facturaOriginal, Comentario as comentario, Motivo AS motivo
+    FROM [TBL_FACTURA]
+    WHERE PK_Factura = @PK_Factura
+END
+
+
+
+GO
+-- Procedimiento almacenado para obtener los productos de la factura
+CREATE PROCEDURE sp_ObtenerFacturaProductos
+    @PK_FK_Factura NVARCHAR(50)
+AS
+BEGIN
+    SELECT FK_Articulo, Cantidad, Precio
+    FROM [TBL_FACTURA_LINEA]
+    WHERE PK_FK_Factura = @PK_FK_Factura
+END
+GO
+-- Procedimiento almacenado para obtener los totales de la factura
+CREATE PROCEDURE sp_ObtenerFacturaTotales
+    @PK_Factura NVARCHAR(50)
+AS
+BEGIN
+    SELECT Subtotal, Descuento, Total
+    FROM [TBL_FACTURA]
+    WHERE PK_Factura = @PK_Factura
+END
+
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarNC]    Script Date: 7/17/2024 11:16:07 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_InsertarNC]
+    @PK_Factura VARCHAR(50),
+	@Fac_Original VARCHAR(50),
+    @FK_Cliente VARCHAR(50),
+    @Comentario VARCHAR(200),
+    @Motivo VARCHAR(100),
+    @Total DECIMAL(18, 3) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+	   	  
+    DECLARE @FK_VENDEDOR VARCHAR(50); -- Declarar la variable para el vendedor
+    DECLARE @FK_Condicion_Pago VARCHAR(50); -- Declarar la variable para el CantidOriginal	
+    DECLARE @Transporte VARCHAR(50); -- Declarar la variable para el precio		
+
+
+    -- Obtener el vendedor asociado a la factura original
+    SELECT @FK_VENDEDOR = FK_Vendedor
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @Fac_Original;
+
+    SELECT @FK_Condicion_Pago = FK_Condicion_Pago
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @Fac_Original;
+
+	SELECT @Transporte = Transporte
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @Fac_Original;
+
+
+    -- Insertar en TBL_FACTURA
+    INSERT INTO dbo.TBL_FACTURA (
+        PK_Factura,
+        Fecha,
+        FK_Cliente,
+        FK_VENDEDOR,
+        FK_Condicion_Pago,
+        Transporte,
+        Subtotal,
+        Descuento,
+        Total,
+        Devolucion,
+        Estado,
+	Fac_Referencia,
+	Comentario,
+	Motivo,
+	Tipo_Doc,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    )
+    VALUES (
+        @PK_Factura,
+        GETDATE(),
+        @FK_Cliente,
+        @FK_VENDEDOR, -- Usar el valor del vendedor obtenido
+        @FK_Condicion_Pago,
+        @Transporte,
+        0,
+        0,
+        @Total,
+        0,
+        'Completado',
+		@Fac_Original,
+		@Comentario,
+		@Motivo,
+		'NC',
+        'a',
+        'a',
+        GETDATE(),
+        GETDATE()
+    );
+
+    -- Aumentar en uno la columna Consecutivo para el PK_Consecutivo 01
+    UPDATE dbo.TBL_CONSECUTIVO
+    SET Consecutivo = Consecutivo + 1
+    WHERE PK_Consecutivo = '02'; 
+
+END;
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarNCLinea]    Script Date: 7/13/2024 12:09:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_InsertarNCLinea]
+    @PK_FK_Factura VARCHAR(50),
+    @FK_Articulo VARCHAR(50),
+    @Cantidad INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Costo DECIMAL(18,2); -- Declarar la variable para el costo		
+    DECLARE @CantidOriginal INT; -- Declarar la variable para el CantidOriginal	
+    DECLARE @Precio DECIMAL(18,2); -- Declarar la variable para el precio		
+    DECLARE @Motivo VARCHAR(50); -- Declarar la variable para el motivo
+
+    -- Obtener el COSTO asociado al articulo
+    SELECT @Costo = Costo
+    FROM TBL_FACTURA_LINEA
+    WHERE FK_Articulo = @FK_Articulo;
+
+    SELECT @CantidOriginal = Cantidad
+    FROM TBL_FACTURA_LINEA
+    WHERE FK_Articulo = @FK_Articulo;
+
+    SELECT @Precio = Precio
+    FROM TBL_FACTURA_LINEA
+    WHERE FK_Articulo = @FK_Articulo;
+	
+    -- Obtener el motivo de la factura
+    SELECT @Motivo = Motivo
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @PK_FK_Factura;
+
+    INSERT INTO dbo.TBL_FACTURA_LINEA (
+        PK_FK_Factura,
+        FK_Articulo,
+        Cantidad,
+        Costo,
+        Precio,
+        A_Devolver,
+        FK_Usuario_Creacion,
+        FK_Usuario_Modificacion,
+        Fecha_Creacion,
+        Fecha_Modificacion
+    )
+    VALUES (
+        @PK_FK_Factura,
+        @FK_Articulo,
+        @CantidOriginal,
+        @Costo,
+        @Precio,
+        @Cantidad,
+        'a',
+        'a',
+        GETDATE(),
+        GETDATE()
+    );
+
+    -- Actualizar la existencia de inventario
+    IF @Motivo = 'Devolucion'
+    BEGIN
+        UPDATE dbo.TBL_ARTICULO
+        SET Cantidad = Cantidad + @Cantidad
+        WHERE PK_Articulo = @FK_Articulo;
+    END
+
+END;
+
+GO
+	
 -------------------------------------------------
 		/*Abonos-AbonoXC---Documento_CP-Documento_CC*/
 -------------------------------------------------
@@ -2801,7 +3049,9 @@ BEGIN
     FROM 
         dbo.TBL_ABONOS
     WHERE 
-        FK_Documento = @FK_Documento;
+        FK_Documento = @FK_Documento
+    ORDER BY 
+        Fecha_Abono; -- Ordenar por la fecha de creación
 END
 GO
 
@@ -2825,6 +3075,7 @@ BEGIN
         FK_Documento_CC,
         FK_Cliente,
         Fecha_Documento,
+		Fecha_Abono,
         Monto_Total,
         Saldo_Pendiente,
         Monto_Abonado,
@@ -2833,8 +3084,11 @@ BEGIN
     FROM 
         dbo.TBL_ABONOSXC
     WHERE 
-        FK_Documento_CC = @FK_Documento_CC;
+        FK_Documento_CC = @FK_Documento_CC
+	ORDER BY
+		Fecha_Abono;
 END
+
 
 
 GO
@@ -2946,30 +3200,17 @@ GO
 
 
 
-/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    Script Date: 7/8/2024 7:23:16 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    ******/
-
-USE [ADM]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    Script Date: 7/9/2024 9:24:59 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 /****** Object:  StoredProcedure [dbo].[sp_InsertarAbonoXC]    ******/
 
 CREATE PROCEDURE [dbo].[sp_InsertarAbonoXC]
     @Numero_Abono VARCHAR(50),
-    @PK_Documento_CC VARCHAR(50),
+    @FK_Documento_CC VARCHAR(50),
     @Monto_Abonado DECIMAL(18, 2),
     @Tipo_Pago VARCHAR(50) = NULL,
-    @Banco VARCHAR(100) = NULL
+    @Banco VARCHAR(100) = NULL,
+	@Fecha_Abono Datetime
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -2978,6 +3219,7 @@ BEGIN
     DECLARE @Fecha_Documento DATETIME;
     DECLARE @Monto_Total DECIMAL(18, 2);
     DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+	DECLARE @ExistingCount INT;
 
     -- Obtener datos del documento
     SELECT @FK_Cliente = FK_Cliente,
@@ -2985,7 +3227,7 @@ BEGIN
            @Monto_Total = Total_XC,
            @Saldo_Pendiente = Saldo_Pendiente
     FROM dbo.TBL_DOCUMENTO_CC
-    WHERE PK_Documento_CC = @PK_Documento_CC;
+    WHERE PK_Documento_CC = @FK_Documento_CC;
 
     -- Validar si el valor a abonar es igual a 0
     IF @Monto_Abonado = 0
@@ -3014,6 +3256,17 @@ BEGIN
         -- Retornar 5 si la validación falla
         RETURN 5;
     END
+	-- Verificar si ya existe el Numero_Recibo para el mismo FK_Documento
+    SELECT @ExistingCount = COUNT(*)
+    FROM dbo.TBL_ABONOSXC
+    WHERE FK_Documento_CC = @FK_Documento_CC
+      AND Numero_Abono = @Numero_Abono;
+
+    IF @ExistingCount > 0
+    BEGIN
+        -- Retornar 6 si ya existe el Numero_Recibo para este FK_Documento
+        RETURN 6;
+    END
 
     -- Calcular nuevo saldo pendiente
     SET @Saldo_Pendiente = @Saldo_Pendiente - @Monto_Abonado;
@@ -3028,29 +3281,30 @@ BEGIN
         Saldo_Pendiente,
         Monto_Abonado,
         Tipo_Pago,
-        Banco
+        Banco,
+		Fecha_Abono
     )
     VALUES (
 	@Numero_Abono,
-        @PK_Documento_CC,
+        @FK_Documento_CC,
         @FK_Cliente,
         @Fecha_Documento,
         @Monto_Total,
         @Saldo_Pendiente,
         @Monto_Abonado,
         @Tipo_Pago,
-        @Banco
+        @Banco,
+		@Fecha_Abono
     );
 
     -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CC
     UPDATE dbo.TBL_DOCUMENTO_CC
     SET Saldo_Pendiente = @Saldo_Pendiente
-    WHERE PK_Documento_CC = @PK_Documento_CC;
+    WHERE PK_Documento_CC = @FK_Documento_CC;
 
     -- Retornar 1 si la operación es exitosa
     RETURN 1;
 END
-
 
 GO
 /****** Object:  StoredProcedure [dbo].[sp_ListarDocumentosCC]    Script Date: 7/8/2024 7:23:23 AM ******/
@@ -3238,6 +3492,100 @@ BEGIN
         PK_Documento_CC = @PK_Documento_CC
 END;
 GO
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarAbono]    Script Date: 7/8/2024 7:23:13 AM ******/
+Create PROCEDURE [dbo].[sp_EliminarAbono]
+    @Numero_Recibo VARCHAR(50),
+    @FK_Documento VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Monto_Abonado DECIMAL(18, 2);
+    DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+
+    -- Obtener el monto del abono a eliminar
+    SELECT @Monto_Abonado = Monto_Abonado
+    FROM dbo.TBL_ABONOS
+    WHERE Numero_Recibo = @Numero_Recibo
+      AND FK_Documento = @FK_Documento;
+
+    -- Verificar si el abono existe
+    IF @Monto_Abonado IS NULL
+    BEGIN
+        -- Retornar 2 si el abono no existe
+        RETURN 2;
+    END
+
+    -- Obtener el saldo pendiente actual del documento
+    SELECT @Saldo_Pendiente = Saldo_Pendiente
+    FROM dbo.TBL_DOCUMENTO_CP
+    WHERE PK_Documento = @FK_Documento;
+
+    -- Sumar el monto del abono al saldo pendiente
+    SET @Saldo_Pendiente = @Saldo_Pendiente + @Monto_Abonado;
+
+    -- Eliminar el abono
+    DELETE FROM dbo.TBL_ABONOS
+    WHERE Numero_Recibo = @Numero_Recibo
+      AND FK_Documento = @FK_Documento;
+
+    -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CP
+    UPDATE dbo.TBL_DOCUMENTO_CP
+    SET Saldo_Pendiente = @Saldo_Pendiente
+    WHERE PK_Documento = @FK_Documento;
+
+    -- Retornar 1 si la operación es exitosa
+    RETURN 1;
+END
+
+	GO
+/****** Object:  StoredProcedure [dbo].[sp_EliminarAbonoXC]    Script Date: 7/8/2024 7:23:13 AM ******/
+Create PROCEDURE [dbo].[sp_EliminarAbonoXC]
+    @Numero_Abono VARCHAR(50),
+    @FK_Documento_CC VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Monto_Abonado DECIMAL(18, 2);
+    DECLARE @Saldo_Pendiente DECIMAL(18, 2);
+
+    -- Obtener el monto del abono a eliminar
+    SELECT @Monto_Abonado = Monto_Abonado
+    FROM dbo.TBL_ABONOSXC
+    WHERE Numero_Abono = @Numero_Abono
+      AND FK_Documento_CC = @FK_Documento_CC;
+
+    -- Verificar si el abono existe
+    IF @Monto_Abonado IS NULL
+    BEGIN
+        -- Retornar 2 si el abono no existe
+        RETURN 2;
+    END
+
+    -- Obtener el saldo pendiente actual del documento
+    SELECT @Saldo_Pendiente = Saldo_Pendiente
+    FROM dbo.TBL_DOCUMENTO_CC
+    WHERE PK_Documento_CC = @FK_Documento_CC;
+
+    -- Sumar el monto del abono al saldo pendiente
+    SET @Saldo_Pendiente = @Saldo_Pendiente + @Monto_Abonado;
+
+    -- Eliminar el abono
+    DELETE FROM dbo.TBL_ABONOSXC
+    WHERE Numero_Abono = @Numero_Abono
+      AND FK_Documento_CC = @FK_Documento_CC;
+
+    -- Actualizar el saldo pendiente en la tabla TBL_DOCUMENTO_CC
+    UPDATE dbo.TBL_DOCUMENTO_Cc
+    SET Saldo_Pendiente = @Saldo_Pendiente
+    WHERE PK_Documento_CC = @FK_Documento_CC;
+
+    -- Retornar 1 si la operación es exitosa
+    RETURN 1;
+END
 
 	
 ----------------------------------------------------------------------------------------------------

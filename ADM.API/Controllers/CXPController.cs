@@ -117,7 +117,7 @@ namespace ADM.API.Controllers
                 new DBParameter("@Monto_Abonado", abono.Monto_Abonado.ToString()), // Sin convertir a string
                 new DBParameter("@Tipo_Documento", abono.Tipo_Documento),
                 new DBParameter("@Banco", abono.Banco),
-                new DBParameter("@Fecha_Abono", DateTime.Now.ToString("yyyy-MM-dd"))
+                new DBParameter("@Fecha_Abono", abono.Fecha_Abono.ToString("yyyy-MM-dd"))
             };
 
                 try
@@ -170,6 +170,28 @@ namespace ADM.API.Controllers
             }
 
             return BadRequest(ModelState);
+        }
+
+        [HttpPost]
+        [Route("Eliminar/{Numero_Recibo}/{FK_Documento}")]
+        public bool EliminarAbono(string Numero_Recibo, string FK_Documento)
+        {
+            if (string.IsNullOrEmpty(Numero_Recibo) || string.IsNullOrEmpty(FK_Documento))
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+        {
+            new DBParameter("@Numero_Recibo", Numero_Recibo),
+            new DBParameter("@FK_Documento", FK_Documento)
+        };
+
+                var result = DBData.ExecuteCP("sp_EliminarAbono", parameters);
+
+                return result == 1;
+            }
         }
 
 

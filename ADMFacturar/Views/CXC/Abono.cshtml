@@ -36,6 +36,12 @@
                 </div>
             </div>
             <div>
+                <label for="Fecha_Abono" class="block text-sm font-medium text-gray-300">Fecha de Abono</label>
+                <div class="mt-2">
+                    <input asp-for="Fecha_Abono" type="date" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+            <div style="display: none;">
                 <label for="FK_Cliente" class="block text-sm font-medium text-gray-300">Cliente</label>
                 <div class="mt-2">
                     <input asp-for="FK_Cliente" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
@@ -50,7 +56,12 @@
             <div>
                 <label for="Tipo_Pago" class="block text-sm font-medium text-gray-300">Tipo Pago</label>
                 <div class="mt-2">
-                    <input asp-for="Tipo_Pago" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                    <select asp-for="Tipo_Pago" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                        <option value="Factura">Factura</option>
+                        <option value="Sinpe">Sinpe</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Cheque">Cheque</option>
+                    </select>
                 </div>
             </div>
             <div>
@@ -80,8 +91,9 @@
             var montoAbonado = document.querySelector('[name="Monto_Abonado"]').value;
             var tipoPago = document.querySelector('[name="Tipo_Pago"]').value;
             var banco = document.querySelector('[name="Banco"]').value;
+            var fechaAbono = document.querySelector('[name="Fecha_Abono"]').value;
 
-            if (!fk_Documento || !fk_Cliente || !montoAbonado || !tipoPago || !banco) {
+            if (!fk_Documento || !fk_Cliente || !montoAbonado || !tipoPago || !banco || !fechaAbono) {
                 // Mostrar mensaje de error con SweetAlert2 si no están completos los campos
                 Swal.fire({
                     icon: 'error',
@@ -111,7 +123,7 @@
                                 confirmButtonText: 'OK'
                             }).then((result) => {
                                 // Redirigir a la página de índice de proveedores después de guardar
-                                window.location.href = '/CXP/Index';
+                                window.location.href = '/CXC/Index';
                             });
                         } else {
                             // Si la respuesta no es exitosa, mostrar mensaje de error

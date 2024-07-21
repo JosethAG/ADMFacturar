@@ -132,5 +132,23 @@ namespace ADM.APICliente.Controllers
 			return Ok();
 		}
 
+
+		/*Listado para obtener la información del vendedor a editar
+		Agregado el 20/7/24 por Joseth Araya */
+		public async Task<IActionResult> ObtenerVendedor(string PK)
+		{
+			var respArts = await _httpClient.GetAsync($"api/Vendedor/Obtener/{PK}");
+
+			if (respArts.IsSuccessStatusCode)
+			{
+				var vendedorJson = await respArts.Content.ReadAsStringAsync();
+				var vendedor = JsonConvert.DeserializeObject<Vendedor>(vendedorJson);
+				return Ok(vendedor);
+			}
+			else
+			{
+				return BadRequest("Error al obtener los vendedor");
+			}
+		}
 	}
 }

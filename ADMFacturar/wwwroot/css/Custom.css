@@ -1044,6 +1044,71 @@
     background-color: #f7fafc;
 }
 
+/* Estilo para DataTables tablaCXP */
+#tablaCXP_wrapper {
+    padding: 20px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaCXP_length,
+#tablaCXP_filter,
+#tablaCXP_info,
+#tablaCXP_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tablaCXP_paginate {
+    float: right;
+}
+
+#tablaCXP_filter label {
+    font-weight: bold;
+}
+
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #3182ce;
+        color: #fff;
+        border-color: #3182ce;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.dataTables_info {
+    margin-top: 8px;
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #718096;
+}
+
+/* Estilo para filas de la tabla */
+#tablaCXP tbody tr:hover {
+    background-color: #f7fafc;
+}
 
 
 /* Estilo para DataTables tablaCXC */

@@ -4,6 +4,7 @@
     {
         public string PK_Documento_CC { get; set; }
         public string FK_Cliente { get; set; }
+        public string NombreCliente { get; set; }
         public DateTime Fecha_Documento { get; set; }
         public DateTime Fecha_Vencimiento { get; set; }
         public decimal Total_XC { get; set; }

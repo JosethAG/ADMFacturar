@@ -1,0 +1,124 @@
+﻿@model FacturaViewModel
+
+@{
+    var consecutivo = ViewData["Consecutivo"] as ConsecutivoViewModel;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturación Avanzada</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto p-4">
+        <!-- Formulario de Encabezado de Factura -->
+        <form class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-lg font-semibold leading-7 text-white mb-4">Nota de Crédito</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <label for="Consecutivo" class="block text-sm font-medium leading-6 text-white">Consecutivo</label>
+                    <input type="text" id="consecutivo" name="consecutivo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.Consecutivo">
+                </div>
+                <div class="relative">
+                    <label for="facturaOriginal" class="block text-sm font-medium leading-6 text-white">Factura Referencia</label>
+                    <div class="flex">
+                        <input type="text" id="facturaOriginal" name="facturaOriginal" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.facturaOriginal">
+                    </div>
+                </div>
+                <div class="relative">
+                    <label for="Cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                    <div class="flex">
+                        <input type="text" id="cliente" name="cliente" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.Cliente">
+                    </div>
+                </div>
+                <div>
+                    <label for="motivo" class="block text-sm font-medium leading-6 text-white">Motivo</label>
+                    <select id="motivo" name="motivo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 37px;" disabled>
+                        <option value="Devolucion" selected="@Model.Encabezado.motivo == "Devolucion">Devolución</option>
+                        <option value="Daño" selected="@Model.Encabezado.motivo == "Daño">Daño</option>
+                    </select>
+                </div>
+                <div class="relative col-span-2">
+                    <label for="Comentario" class="block text-sm font-medium leading-6 text-white">Comentario</label>
+                    <div class="flex">
+                        <input type="text" id="Comentario" name="Comentario" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.comentario">
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-white">Productos</h3>
+            </div>
+            <!-- Tabla de Productos -->
+            <div class="overflow-auto">
+                <table class="min-w-full bg-gray-800 text-white">
+                    <thead class="bg-gray-900">
+                        <tr>
+                            <th class="py-3 px-4 text-center">Producto</th>
+                            <th class="py-3 px-4 text-center">Precio</th>
+                            <th class="py-3 px-4 text-center">Cantidad a Devolver</th>
+                            <th class="py-3 px-4 text-center">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductos" class="text-center">
+                        @foreach (var producto in Model.Productos)
+                        {
+                            <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer">
+                                <td class="py-3 px-4 border-b border-gray-700">@producto.Producto</td>
+                                <td class="py-3 px-4 border-b border-gray-700 precioProducto">@producto.precioUnitario</td>
+                                <td class="py-3 px-4 border-b border-gray-700">
+                                    <input type="number" min="0" max="@producto.Cantidad" value="@producto.Cantidad" class="cantidadDevolver mt-1 block w-32 mx-auto rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 text-center" style="padding-left: 10px;" disabled>
+                                </td>
+                                <td class="py-3 px-4 border-b border-gray-700 totalProducto"></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-right py-2 px-4">Total</td>
+                            <td class="py-2 px-4" id="total">@Model.Total</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Botón de Salir -->
+            <div class="flex justify-end mt-4">
+                <button id="salir" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md">Salir</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Calcular el total inicial
+            calcularTotal();
+
+            // Función para calcular el total de la tabla
+            function calcularTotal() {
+                let total = 0;
+                const rows = document.querySelectorAll('#tablaProductos tr');
+                rows.forEach(row => {
+                    const precio = parseFloat(row.querySelector('.precioProducto').textContent);
+                    const cantidad = parseFloat(row.querySelector('.cantidadDevolver').value);
+                    const totalProducto = precio * cantidad;
+                    row.querySelector('.totalProducto').textContent = totalProducto.toFixed(2);
+                    total += totalProducto;
+                });
+                document.getElementById('total').textContent = total.toFixed(2);
+            }
+
+            // Redirigir al índice al hacer clic en "Salir"
+            document.getElementById('salir').addEventListener('click', () => {
+                window.location.href = '/Facturas/Index'; // Ajusta esta URL según sea necesario
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+﻿@model FacturaViewModel
+
+@{
+    var consecutivo = ViewData["Consecutivo"] as ConsecutivoViewModel;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturación Avanzada</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto p-4">
+        <!-- Formulario de Encabezado de Factura -->
+        <form class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-lg font-semibold leading-7 text-white mb-4">Nota de Crédito</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <label for="Consecutivo" class="block text-sm font-medium leading-6 text-white">Consecutivo</label>
+                    <input type="text" id="consecutivo" name="consecutivo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@((ViewData["Consecutivo"] as ConsecutivoViewModel)?.Consecutivo)">
+                </div>
+                <div class="relative">
+                    <label for="facturaOriginal" class="block text-sm font-medium leading-6 text-white">Factura Referencia</label>
+                    <div class="flex">
+                        <input type="text" id="facturaOriginal" name="facturaOriginal" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.Consecutivo">
+                    </div>
+                </div>
+                <div class="relative">
+                    <label for="Cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
+                    <div class="flex">
+                        <input type="text" id="cliente" name="cliente" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@Model.Encabezado.Cliente">
+                    </div>
+                </div>
+                <div>
+                    <label for="motivo" class="block text-sm font-medium leading-6 text-white">Motivo</label>
+                    <select id="motivo" name="motivo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 37px;">
+                        <option value="Devolucion">Devolución</option>
+                        <option value="Daño">Daño</option>
+                    </select>
+                </div>
+                <div class="relative col-span-2">
+                    <label for="Comentario" class="block text-sm font-medium leading-6 text-white">Comentario</label>
+                    <div class="flex">
+                        <input type="text" id="Comentario" name="Comentario" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-white">Productos</h3>
+                <button id="devolverTodo" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md">Devolver Todo</button>
+            </div>
+            <!-- Tabla de Productos -->
+            <div class="overflow-auto">
+                <table class="min-w-full bg-gray-800 text-white">
+                    <thead class="bg-gray-900">
+                        <tr>
+                            <th class="py-3 px-4 text-center">Producto</th>
+                            <th class="py-3 px-4 text-center">Precio</th>
+                            <th class="py-3 px-4 text-center">Cantidad</th>
+                            <th class="py-3 px-4 text-center">Cantidad a Devolver</th>
+                            <th class="py-3 px-4 text-center">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductos" class="text-center">
+                        @foreach (var producto in Model.Productos)
+                        {
+                            <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer">
+                                <td class="py-3 px-4 border-b border-gray-700">@producto.Producto</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@producto.precioUnitario</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@producto.Cantidad</td>
+                                <td class="py-3 px-4 border-b border-gray-700">
+                                    <input type="number" min="0" max="@producto.Cantidad" value="0" class="cantidadDevolver mt-1 block w-32 mx-auto rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 text-center" style="padding-left: 10px;">
+                                </td>
+                                <td class="py-3 px-4 border-b border-gray-700 totalProducto">0</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right py-2 px-4">Total</td>
+                            <td class="py-2 px-4" id="total">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Botón de Guardar Factura -->
+            <div class="flex justify-end mt-4">
+                <button id="guardarFactura" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onclick="guardarFactura()">Guardar</button>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('devolverTodo').addEventListener('click', function () {
+                const filas = document.querySelectorAll('#tablaProductos tr');
+                filas.forEach(fila => {
+                    const cantidad = fila.children[2].innerText;
+                    const inputCantidadDevolver = fila.querySelector('.cantidadDevolver');
+                    inputCantidadDevolver.value = cantidad;
+                    calcularTotalPorProducto(fila);
+                });
+                calcularTotalGeneral();
+            });
+
+            document.querySelectorAll('.cantidadDevolver').forEach(input => {
+                input.addEventListener('change', function () {
+                    const fila = this.closest('tr');
+                    calcularTotalPorProducto(fila);
+                    calcularTotalGeneral();
+                });
+            });
+
+            function calcularTotalPorProducto(fila) {
+                const cantidad = parseInt(fila.children[2].innerText);
+                const precioUnitario = parseFloat(fila.children[1].innerText);
+                const cantidadDevolver = parseInt(fila.querySelector('.cantidadDevolver').value);
+                const total = cantidadDevolver * precioUnitario;
+                fila.querySelector('.totalProducto').innerText = total.toFixed(2);
+            }
+
+            function calcularTotalGeneral() {
+                let totalGeneral = 0;
+                document.querySelectorAll('.totalProducto').forEach(total => {
+                    totalGeneral += parseFloat(total.innerText);
+                });
+                document.getElementById('total').innerText = totalGeneral.toFixed(2);
+            }
+
+            function guardarFactura() {
+                const consecutivo = document.getElementById('consecutivo').value || '';
+                const cliente = document.getElementById('cliente').value || '';
+                const facturaOriginal = document.getElementById('facturaOriginal').value || '';
+                const motivo = document.getElementById('motivo').value || '';
+                const comentario = document.getElementById('Comentario').value || '';
+   
+
+
+                const productos = Array.from(document.querySelectorAll('#tablaProductos tr')).map(fila => {
+                    const producto = fila.children[0].innerText;
+                    const cantidadDevolver = parseInt(fila.querySelector('.cantidadDevolver').value);
+
+                    return {
+                        producto: producto,
+                        cantidad: cantidadDevolver
+
+                    };
+                }).filter(prod => prod.cantidad > 0);
+
+                if (!cliente || !motivo || productos.length === 0) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Debe completar todos los campos y agregar al menos un producto a devolver',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                    return;
+                }
+
+                const encabezado = {
+                    consecutivo: consecutivo,
+                    cliente: cliente,
+                    facturaOriginal: facturaOriginal,
+                    motivo: motivo,
+                    comentario: comentario,
+                    total: total
+                };
+
+                const factura = {
+                    encabezado: encabezado,
+                    productos: productos,
+                    total: parseFloat(document.getElementById('total').textContent)
+                };
+
+                console.log('Factura a enviar:', factura); // Verificar aquí
+
+                fetch('/Facturas/GuardarNC', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify(factura)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: 'Nota de Crédito guardada con éxito',
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                // Redirigir a la página de índice de inventario después de guardar
+                                window.location.href = '/Facturas/Index';
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Error al guardar la Nota de Crédito',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Error al guardar la  Nota de Crédito',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    });
+            }
+        </script>
+    </div>
+</body>
+</html>
