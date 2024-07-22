@@ -80,7 +80,7 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Abono(string PK)
+        public async Task<IActionResult> Abono(string PK, string documento)
         {
             var resp = await _httpClient.GetAsync($"api/CXP/Obtener/{PK}");
 
@@ -89,6 +89,7 @@ namespace ADMFacturar.Controllers
                 var content = await resp.Content.ReadAsStringAsync();
                 var abono = JsonConvert.DeserializeObject<AbonoCXP>(content);
                 ViewData["Abono"] = abono ?? new AbonoCXP(); // Inicializar un nuevo objeto si no hay datos
+                ViewData["Documento"] = documento;
                 return View("Abono", abono);
             }
 

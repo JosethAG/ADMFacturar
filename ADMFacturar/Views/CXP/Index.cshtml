@@ -3,6 +3,7 @@
 
 @{
     var cxps = ViewData["CXP"] as List<CXP>;
+    var proveedores = ViewData["Proveedores"] as List<Proveedor>;
 }
 
 <!DOCTYPE html>
@@ -44,27 +45,23 @@
                         <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
-                @* <!-- Estado -->
+               
+                <!-- Proveedor -->
                 <div class="sm:col-span-1">
-                    <label for="estado" class="block text-sm font-medium leading-6 text-white">Estado</label>
+                    <label for="PK_FK_Proveedor" class="block text-sm font-medium text-white">Proveedor</label>
                     <div class="mt-2">
-                        <select id="estado" name="estado" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                            <option value="">Seleccione un estado</option>
-                            <option value="completado">Completado</option>
-                            <option value="pendiente">Pendiente</option>
+                        <select asp-for="FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                            <option value="">Seleccione un proveedor</option>
+                            @if (proveedores != null)
+                            {
+                                @foreach (var proveedor in proveedores)
+                                {
+                                    <option value="@proveedor.PK_Proveedor">@proveedor.Nombre</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>
-                <!-- Proveedor -->
-                <div class="sm:col-span-1">
-                    <label for="PK_FK_Proveedor" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
-                    <div class="mt-2">
-                        <select id="PK_FK_Proveedor" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                            <option value="">Seleccione un proveedor</option>
-                            @* Aquí puedes agregar opciones dinámicamente 
-                        </select>
-                    </div>
-                </div> *@
                 <!-- Número de Documento -->
                 <div class="sm:col-span-1">
                     <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número de Documento</label>
@@ -139,57 +136,69 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('filterForm').addEventListener('input', filterTable);
+        function filtrarTabla() {
+            const fechaInicio = document.getElementById('entry_date').value;
+            const fechaFinal = document.getElementById('expiry_date').value;
+            const proveedor = document.getElementById('PK_FK_Proveedor').value;
+            const numeroDocumento = document.getElementById('document_number').value.toLowerCase();
 
-        function filterTable() {
-            var fechaInicio = document.getElementById('entry_date').value;
-            var fechaFinal = document.getElementById('expiry_date').value;
-            var estado = document.getElementById('estado').value.toLowerCase();
-            var proveedor = document.getElementById('PK_FK_Proveedor').value.toLowerCase();
-            var numeroDocumento = document.getElementById('document_number').value.toLowerCase();
+            const filas = document.querySelectorAll('#bodyTablaCXP tr');
 
-            var table = document.getElementById('tablaCXP');
-            var rows = table.getElementsByTagName('tr');
+            filas.forEach(fila => {
+                const cells = fila.getElementsByTagName('td');
 
-            for (var i = 1; i < rows.length; i++) {
-                var row = rows[i];
-                var fecha = row.cells[2].textContent.trim();
-                var estadoRow = row.cells[5].textContent.toLowerCase();
-                var proveedorRow = row.cells[1].textContent.toLowerCase();
-                var numeroDocumentoRow = row.cells[0].textContent.toLowerCase();
+                const fechaDocumento = cells[2].textContent.trim();
+                const fechaVence = cells[3].textContent.trim();
+                const proveedorNombre = cells[1].textContent.trim();
+                const documento = cells[0].textContent.toLowerCase();
 
-                var mostrar = true;
+                // Filtramos basado en los valores del formulario
+                const matchFechaInicio = fechaInicio === '' || new Date(fechaDocumento) >= new Date(fechaInicio);
+                const matchFechaFinal = fechaFinal === '' || new Date(fechaVence) <= new Date(fechaFinal);
+                const matchProveedor = proveedor === '' || proveedorNombre === proveedor;
+                const matchNumeroDocumento = numeroDocumento === '' || documento.includes(numeroDocumento);
 
-                if (fechaInicio && fechaFinal) {
-                    var fechaInicioDate = new Date(fechaInicio);
-                    var fechaFinalDate = new Date(fechaFinal);
-                    var fechaRowDate = new Date(fecha);
-
-                    if (fechaRowDate < fechaInicioDate || fechaRowDate > fechaFinalDate) {
-                        mostrar = false;
-                    }
-                }
-
-                if (estado && estadoRow.indexOf(estado) === -1) {
-                    mostrar = false;
-                }
-
-                if (proveedor && proveedorRow.indexOf(proveedor) === -1) {
-                    mostrar = false;
-                }
-
-                if (numeroDocumento && numeroDocumentoRow.indexOf(numeroDocumento) === -1) {
-                    mostrar = false;
-                }
-
-                if (mostrar) {
-                    row.style.display = '';
+                if (matchFechaInicio && matchFechaFinal && matchProveedor && matchNumeroDocumento) {
+                    fila.style.display = '';
                 } else {
-                    row.style.display = 'none';
+                    fila.style.display = 'none';
                 }
-            }
+            });
         }
 
+        // Agregar eventos al formulario para filtrar en tiempo real
+        document.getElementById('filterForm').addEventListener('input', filtrarTabla);
+
+
+        function actualizarComboBoxProveedores() {
+            const proveedoresComboBox = document.getElementById('PK_FK_Proveedor');
+            const filas = document.querySelectorAll('#bodyTablaCXP tr');
+
+            // Crear un conjunto para evitar duplicados
+            const proveedores = new Set();
+
+            filas.forEach(fila => {
+                const cells = fila.getElementsByTagName('td');
+                const proveedorNombre = cells[1].textContent.trim();
+                if (proveedorNombre) {
+                    proveedores.add(proveedorNombre);
+                }
+            });
+
+            // Limpiar opciones existentes
+            proveedoresComboBox.innerHTML = '<option value="">Seleccione un proveedor</option>';
+
+            // Agregar opciones nuevas
+            proveedores.forEach(proveedor => {
+                const option = document.createElement('option');
+                option.value = proveedor; // Si el valor del combo box es diferente al nombre, ajusta aquí
+                option.textContent = proveedor;
+                proveedoresComboBox.appendChild(option);
+            });
+        }
+
+        // Llamar a la función para actualizar el combo box al cargar la página
+        document.addEventListener('DOMContentLoaded', actualizarComboBoxProveedores);
 
         // //Funcion para paginar en index
         //      $(document).ready(function () {
@@ -213,6 +222,7 @@
         //              }
         //          });
         //      });
+
 
         document.addEventListener("DOMContentLoaded", function () {
             const fechaActual = new Date();
