@@ -88,13 +88,17 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="3" class="text-right py-2 px-4">Subtotal</td>
-                            <td class="py-2 px-4" id="subtotal">₡@Model.Subtotal</td>
-                        </tr>
-                        <tr>
                             <td colspan="3" class="text-right py-2 px-4">Descuento</td>
                             <td class="py-2 px-4" id="descuento">₡@Model.Descuento</td>
                         </tr>
+                        <tr>
+                            <td colspan="3" class="text-right py-2 px-4">Subtotal</td>
+                            <td class="py-2 px-4" id="aaaa">₡@Model.Subtotal</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-right py-2 px-4">Impuesto</td>
+                            <td class="py-2 px-4" id="impuesto">₡@Model.Impuesto</td>
+                        </tr>                     
                         <tr>
                             <td colspan="3" class="text-right py-2 px-4">Total</td>
                             <td class="py-2 px-4" id="total">₡@Model.Total</td>
@@ -157,6 +161,12 @@
             if (transporteSeleccionado) {
                 selectTransporte.value = transporteSeleccionado;
             }
+        });
+
+
+        // Redirigir al índice al hacer clic en "Salir"
+        document.getElementById('salir').addEventListener('click', () => {
+            window.location.href = '/Facturas/Index'; // Ajusta esta URL según sea necesario
         });
     </script>
 
