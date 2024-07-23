@@ -2614,6 +2614,7 @@ CREATE PROCEDURE [dbo].[sp_InsertarFactura]
     @FK_Condicion_Pago VARCHAR(10),
     @Transporte BIGINT = NULL,
     @Subtotal DECIMAL(18, 3) = NULL,
+    @Impuesto DECIMAL(18, 3) = NULL,
     @Descuento DECIMAL(18, 3) = NULL,
     @Total DECIMAL(18, 3) = NULL
 AS
@@ -2637,6 +2638,7 @@ BEGIN
         Transporte,
         Subtotal,
         Descuento,
+	Impuesto,
         Total,
         Devolucion,
         Estado,
@@ -2655,10 +2657,11 @@ BEGIN
         @Transporte,
         @Subtotal,
         @Descuento,
+	@Impuesto,
         @Total,
         0,
         'Completado',
-		'F',
+	'F',
         'a',
         'a',
         GETDATE(),
@@ -2670,7 +2673,7 @@ BEGIN
     SET Consecutivo = Consecutivo + 1
     WHERE PK_Consecutivo = '01';
 
-	       DECLARE @Dias INT;
+	DECLARE @Dias INT;
         SELECT @Dias = MAX(Dias)
         FROM TBL_FACTURA IM
         INNER JOIN TBL_CONDICIONES_PAGO CP ON IM.FK_Condicion_Pago = CP.PK_Condicion_Pago
@@ -2851,11 +2854,11 @@ BEGIN
 END
 GO
 -- Procedimiento almacenado para obtener los totales de la factura
-CREATE PROCEDURE sp_ObtenerFacturaTotales
+CREATE PROCEDURE [dbo].[sp_ObtenerFacturaTotales]
     @PK_Factura NVARCHAR(50)
 AS
 BEGIN
-    SELECT Subtotal, Descuento, Total
+    SELECT Subtotal, Descuento, Total, Impuesto
     FROM [TBL_FACTURA]
     WHERE PK_Factura = @PK_Factura
 END
@@ -2871,7 +2874,7 @@ GO
 
 CREATE PROCEDURE [dbo].[sp_InsertarNC]
     @PK_Factura VARCHAR(50),
-	@Fac_Original VARCHAR(50),
+    @Fac_Original VARCHAR(50),
     @FK_Cliente VARCHAR(50),
     @Comentario VARCHAR(200),
     @Motivo VARCHAR(100),
@@ -2879,11 +2882,12 @@ CREATE PROCEDURE [dbo].[sp_InsertarNC]
 AS
 BEGIN
     SET NOCOUNT ON;
-	   	  
-    DECLARE @FK_VENDEDOR VARCHAR(50); -- Declarar la variable para el vendedor
-    DECLARE @FK_Condicion_Pago VARCHAR(50); -- Declarar la variable para el CantidOriginal	
-    DECLARE @Transporte VARCHAR(50); -- Declarar la variable para el precio		
 
+    DECLARE @FK_VENDEDOR VARCHAR(50); -- Declarar la variable para el vendedor
+    DECLARE @FK_Condicion_Pago VARCHAR(50); -- Declarar la variable para el CantidOriginal    
+    DECLARE @Transporte VARCHAR(50); -- Declarar la variable para el precio
+    DECLARE @Impuesto DECIMAL(18, 3); -- Declarar la variable para el impuesto
+    DECLARE @TotalConImpuesto DECIMAL(18, 3); -- Declarar la variable para el total con impuesto
 
     -- Obtener el vendedor asociado a la factura original
     SELECT @FK_VENDEDOR = FK_Vendedor
@@ -2894,10 +2898,20 @@ BEGIN
     FROM TBL_FACTURA
     WHERE PK_Factura = @Fac_Original;
 
-	SELECT @Transporte = Transporte
+    SELECT @Transporte = Transporte
     FROM TBL_FACTURA
     WHERE PK_Factura = @Fac_Original;
 
+    -- Obtener el motivo de la factura
+    SELECT @Motivo = Motivo
+    FROM TBL_FACTURA
+    WHERE PK_Factura = @Fac_Original;
+
+    -- Calcular el impuesto de ventas
+    SET @Impuesto = @Total * 0.13;
+
+    -- Calcular el total con impuesto
+    SET @TotalConImpuesto = @Total + @Impuesto;
 
     -- Insertar en TBL_FACTURA
     INSERT INTO dbo.TBL_FACTURA (
@@ -2912,14 +2926,15 @@ BEGIN
         Total,
         Devolucion,
         Estado,
-	Fac_Referencia,
-	Comentario,
-	Motivo,
-	Tipo_Doc,
+        Fac_Referencia,
+        Comentario,
+        Motivo,
+        Tipo_Doc,
         FK_Usuario_Creacion,
         FK_Usuario_Modificacion,
         Fecha_Creacion,
-        Fecha_Modificacion
+        Fecha_Modificacion,
+        Impuesto
     )
     VALUES (
         @PK_Factura,
@@ -2930,17 +2945,18 @@ BEGIN
         @Transporte,
         0,
         0,
-        @Total,
+        @TotalConImpuesto,
         0,
         'Completado',
-		@Fac_Original,
-		@Comentario,
-		@Motivo,
-		'NC',
+        @Fac_Original,
+        @Comentario,
+        @Motivo,
+        'NC',
         'a',
         'a',
         GETDATE(),
-        GETDATE()
+        GETDATE(),
+        @Impuesto
     );
 
     -- Aumentar en uno la columna Consecutivo para el PK_Consecutivo 01
@@ -2949,6 +2965,7 @@ BEGIN
     WHERE PK_Consecutivo = '02'; 
 
 END;
+
 
 GO
 /****** Object:  StoredProcedure [dbo].[sp_InsertarNCLinea]    Script Date: 7/13/2024 12:09:02 PM ******/
@@ -3013,7 +3030,7 @@ BEGIN
     );
 
     -- Actualizar la existencia de inventario
-    IF @Motivo = 'Devolucion'
+    --IF @Motivo = 'Devolucion'
     BEGIN
         UPDATE dbo.TBL_ARTICULO
         SET Cantidad = Cantidad + @Cantidad
@@ -3021,7 +3038,6 @@ BEGIN
     END
 
 END;
-
 GO
 	
 -------------------------------------------------
