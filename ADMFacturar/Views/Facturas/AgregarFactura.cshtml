@@ -105,7 +105,7 @@
                     @*      <td class="py-2 px-4"><input type="number" value="${precio}" class="bg-gray-700 border-0 text-center w-full text-white" oninput="calcularTotalProducto(this)"></td> *@
                     <tfoot>
                         <tr>
-                            <td colspan="2" class="text-right py-2 px-4">Descuento (%)</td>
+                            <td colspan="4" class="text-right py-2 px-4">Descuento (%)</td>
                             <td class="py-2 px-4">
                                 @*  <div class="flex justify-center"> *@
                                 <input type="number" id="descuentoPorcentaje" name="descuentoPorcentaje" class="mt-1 block w-16 rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 text-center" maxlength="4">
@@ -114,17 +114,27 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="text-right py-2 px-4">Subtotal</td>
-                            <td class="py-2 px-4"><span id="subtotal">0</span></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="text-right py-2 px-4">Descuento</td>
+                            <td colspan="4" class="text-right py-2 px-4">Descuento</td>
                             <td class="py-2 px-4"><span id="descuento">0</span></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="text-right py-2 px-4">Total</td>
+                            <td colspan="4" class="text-right py-2 px-4">Subtotal</td>
+                            <td class="py-2 px-4"><span id="subtotal">0</span></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-right py-2 px-4" style="display: none;">Subtotal</td>
+                            <td class="py-2 px-4" style="display: none;"><span id="subtotalInicial">0</span></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="4" class="text-right py-2 px-4">Impuesto</td>
+                            <td class="py-2 px-4"><span id="impuesto">0</span></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-right py-2 px-4">Total</td>
                             <td class="py-2 px-4"><span id="total">0</span></td>
                             <td></td>
                         </tr>
@@ -197,12 +207,9 @@
     </div>
     <!-- Fin Modal Buscar Cliente -->
 
-
     <script>
-        // Definir la variable productos como un array global
         let productos = [];
 
-        // Funciones para la modal de artículos
         function openModal() {
             fetch('/Inventario/ListarArticulos')
                 .then(response => response.json())
@@ -212,11 +219,11 @@
                         articulo.pK_Articulo.toLowerCase().includes(buscar) || articulo.descripcion.toLowerCase().includes(buscar)
                     );
 
-                    var tableBody = document.querySelector('#tablaArticulosModal tbody');
+                    const tableBody = document.querySelector('#tablaArticulosModal tbody');
                     tableBody.innerHTML = '';
 
                     filteredData.forEach(articulo => {
-                        var row = `
+                        const row = `
                                 <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer" onclick="seleccionarArticulo('${articulo.pK_Articulo}', '${articulo.descripcion}')">
                                     <td class="py-3 px-4 border-b border-gray-700">${articulo.pK_Articulo}</td>
                                     <td class="py-3 px-4 border-b border-gray-700">${articulo.descripcion}</td>
@@ -241,11 +248,8 @@
             closeModal();
         }
 
-        document.getElementById('buscarArticulo').addEventListener('input', function () {
-            openModal();
-        });
+        document.getElementById('buscarArticulo').addEventListener('input', openModal);
 
-        // Funciones para la modal de clientes
         function openModalCliente() {
             fetch('/Clientes/ListarClientes')
                 .then(response => response.json())
@@ -255,14 +259,14 @@
                         cliente.pK_Cliente.toLowerCase().includes(buscar) || cliente.nombre.toLowerCase().includes(buscar)
                     );
 
-                    var tableBody = document.querySelector('#tablaClientesModal tbody');
+                    const tableBody = document.querySelector('#tablaClientesModal tbody');
                     tableBody.innerHTML = '';
 
                     filteredData.forEach(cliente => {
-                        var row = `
+                        const row = `
                                 <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer" onclick="seleccionarCliente('${cliente.pK_Cliente}', '${cliente.nombre}', '${cliente.fK_CondicionPago}', '${cliente.fK_Transporte}')">
                                     <td class="py-3 px-4 border-b border-gray-700">${cliente.pK_Cliente}</td>
-                                    <td class="py-3 px-4 border-b border-gray-700">${cliente.nombre}</td>                 
+                                    <td class="py-3 px-4 border-b border-gray-700">${cliente.nombre}</td>
                                 </tr>
                             `;
                         tableBody.innerHTML += row;
@@ -279,20 +283,16 @@
             document.getElementById('modalCliente').classList.add('hidden');
         }
 
-        function seleccionarCliente(codigo, nombre, condicion,transporte) {
+        function seleccionarCliente(codigo, nombre, condicion, transporte) {
             document.getElementById('Cliente').value = codigo;
             document.getElementById('CondicionPago').value = condicion;
             document.getElementById('Transporte').value = transporte;
             closeModalCliente();
         }
 
-        document.getElementById('buscarCliente').addEventListener('input', function () {
-            openModalCliente();
-        });
+        document.getElementById('buscarCliente').addEventListener('input', openModalCliente);
 
-        // Manejo del formulario de productos
-        const formProducto = document.getElementById('formProducto');
-        formProducto.addEventListener('submit', function (event) {
+        document.getElementById('formProducto').addEventListener('submit', function (event) {
             event.preventDefault();
             const producto = document.getElementById('producto').value.trim();
 
@@ -305,7 +305,6 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log('Producto Data:', data); // Log the received data
                         if (data.cantidad > 0) {
                             const cantidad = parseInt(document.getElementById('cantidad').value.trim(), 10);
                             if (cantidad > 0 && cantidad <= data.cantidad) {
@@ -374,22 +373,25 @@
                 subtotal += totalProducto;
             });
 
-            const subtotalElement = document.getElementById('subtotal');
-            subtotalElement.textContent = subtotal.toFixed(2);
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+            document.getElementById('subtotalInicial').textContent = subtotal.toFixed(2);
 
             actualizarDescuentoTotal(); // Actualizar descuento y total cuando se actualiza la tabla de productos
         }
 
         function actualizarDescuentoTotal() {
-            const subtotal = parseFloat(document.getElementById('subtotal').textContent);
-            const descuentoPorcentajeElement = document.getElementById('descuentoPorcentaje');
-            const descuentoElement = document.getElementById('descuento');
-            const totalElement = document.getElementById('total');
+            const subtotal = parseFloat(document.getElementById('subtotal').textContent) || 0;
+            const subtotalInicial = parseFloat(document.getElementById('subtotalInicial').textContent) || 0;
+            const descuentoPorcentaje = parseFloat(document.getElementById('descuentoPorcentaje').value) || 0;
+            const descuento = (subtotalInicial * descuentoPorcentaje) / 100;
+            const subtotalConDescuento = subtotalInicial - descuento;
+            const impuesto = subtotalConDescuento * 0.13;
+            const total = subtotalConDescuento + impuesto;
 
-            const descuentoPorcentaje = parseFloat(descuentoPorcentajeElement.value) || 0;
-            const descuento = (subtotal * descuentoPorcentaje) / 100;
-            descuentoElement.textContent = descuento.toFixed(2);
-            totalElement.textContent = (subtotal - descuento).toFixed(2);
+            document.getElementById('descuento').textContent = descuento.toFixed(2);
+            document.getElementById('impuesto').textContent = impuesto.toFixed(2);
+            document.getElementById('total').textContent = total.toFixed(2);
+            document.getElementById('subtotal').textContent = subtotalConDescuento.toFixed(2);
         }
 
         window.actualizarPrecio = function (index, nuevoPrecio) {
@@ -402,9 +404,7 @@
             actualizarTablaProductos();
         };
 
-        document.getElementById('descuentoPorcentaje').addEventListener('input', function () {
-            actualizarDescuentoTotal();
-        });
+        document.getElementById('descuentoPorcentaje').addEventListener('input', actualizarDescuentoTotal);
 
         function guardarFactura() {
             const consecutivo = document.getElementById('Consecutivo').value || '';
@@ -439,10 +439,11 @@
                 })),
                 subtotal: parseFloat(document.getElementById('subtotal').textContent),
                 descuento: parseFloat(document.getElementById('descuento').textContent),
+                impuesto: parseFloat(document.getElementById('impuesto').textContent),
                 total: parseFloat(document.getElementById('total').textContent)
             };
 
-            console.log('Factura a enviar:', factura); // Verificar aquí
+            console.log('Factura a enviar:', factura);
 
             fetch('/Facturas/GuardarFactura', {
                 method: 'POST',
@@ -461,7 +462,7 @@
                             icon: 'success',
                             confirmButtonText: 'Aceptar'
                         }).then(() => {
-                            location.reload(); // Recargar la página para limpiar los campos
+                            location.reload();
                         });
                     } else {
                         Swal.fire({
