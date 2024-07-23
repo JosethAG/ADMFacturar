@@ -77,18 +77,18 @@ namespace ADMFacturar.Controllers
         }
 
         public async Task<IActionResult> Abono(string PK)
-        {
-            var resp = await _httpClient.GetAsync($"api/CXC/Obtener/{PK}");
+    {
+    var resp = await _httpClient.GetAsync($"api/CXC/Obtener/{PK}");
 
-            if (resp.IsSuccessStatusCode)
-            {
-                var content = await resp.Content.ReadAsStringAsync();
-                ViewData["CXC"] = JsonConvert.DeserializeObject<CXC>(content);
-                return PartialView("Abono");
-            }
+    if (resp.IsSuccessStatusCode)
+    {
+        var content = await resp.Content.ReadAsStringAsync();
+        ViewData["CXC"] = JsonConvert.DeserializeObject<CXC>(content);
+        return PartialView("Abono");
+    }
 
-            return View();
-        }
+    return View();
+      } 
 
         [HttpPost]
         public async Task<IActionResult> CrearAbono(AbonoCXC abono)

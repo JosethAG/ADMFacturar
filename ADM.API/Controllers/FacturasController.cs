@@ -220,6 +220,7 @@ namespace ADM.API.Controllers
             new DBParameter("@Transporte", factura.Encabezado.Transporte.ToString()),
             new DBParameter("@Subtotal", factura.Subtotal.ToString()),
             new DBParameter("@Descuento", factura.Descuento.ToString()),
+            new DBParameter("@Impuesto", factura.Impuesto.ToString()),
             new DBParameter("@Total", factura.Total.ToString()),
         };
 
@@ -413,6 +414,7 @@ namespace ADM.API.Controllers
                 Subtotal = decimal.Parse(totalRow["Subtotal"].ToString()),
                 Descuento = decimal.Parse(totalRow["Descuento"].ToString()),
                 Total = decimal.Parse(totalRow["Total"].ToString()),
+                Impuesto = decimal.Parse(totalRow["Impuesto"].ToString()),
                 Productos = productos
             };
 

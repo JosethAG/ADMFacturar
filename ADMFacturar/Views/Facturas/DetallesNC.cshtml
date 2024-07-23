@@ -84,7 +84,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="3" class="text-right py-2 px-4">Total</td>
-                            <td class="py-2 px-4" id="total">@Model.Total</td>
+                            <td class="py-2 px-4" id="totall">@Model.Total</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -112,12 +112,11 @@
                     total += totalProducto;
                 });
                 document.getElementById('total').textContent = total.toFixed(2);
-            }
-
-            // Redirigir al índice al hacer clic en "Salir"
-            document.getElementById('salir').addEventListener('click', () => {
-                window.location.href = '/Facturas/Index'; // Ajusta esta URL según sea necesario
-            });
+            }          
+        });
+        // Redirigir al índice al hacer clic en "Salir"
+        document.getElementById('salir').addEventListener('click', () => {
+            window.location.href = '/Facturas/Index'; // Ajusta esta URL según sea necesario
         });
     </script>
 </body>
