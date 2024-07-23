@@ -1,8 +1,8 @@
-﻿@using ADM.Models
+@using ADM.Models
 @model AbonoCXC
 
 @{
-    var abonos = ViewData["AbonosCXC"] as List<AbonoCXC>;
+   
     var cxc = ViewData["CXC"] as CXC;
 }
 
@@ -33,19 +33,19 @@
             <div>
                 <label for="FK_Documento" class="block text-sm font-medium text-gray-300">Documento</label>
                 <div class="mt-2">
-                    <input asp-for="FK_Documento_CC" value="@cxc.PK_Documento_CC" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
+                    <input asp-for="FK_Documento_CC" type="text" value="@cxc.PK_Documento_CC" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
                 </div>
             </div>
             <div>
                 <label for="Fecha_Abono" class="block text-sm font-medium text-gray-300">Fecha de Abono</label>
                 <div class="mt-2">
-                    <input asp-for="Fecha_Abono" type="date" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                    <input asp-for="Fecha_Abono" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
             <div style="display: none;">
                 <label for="FK_Cliente" class="block text-sm font-medium text-gray-300">Cliente</label>
                 <div class="mt-2">
-                    <input asp-for="FK_Cliente" value="@cxc.FK_Cliente" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
+                    <input asp-for="FK_Cliente" type="text" value="@cxc.FK_Cliente" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
                 </div>
             </div>
             <div>
@@ -87,63 +87,93 @@
             event.preventDefault(); // Detener el envío normal del formulario
 
             // Validar campos requeridos
-            var fk_Documento = document.querySelector('[name="FK_Documento_CC"]').value;
-            var fk_Cliente = document.querySelector('[name="FK_Cliente"]').value;
             var montoAbonado = document.querySelector('[name="Monto_Abonado"]').value;
             var tipoPago = document.querySelector('[name="Tipo_Pago"]').value;
             var banco = document.querySelector('[name="Banco"]').value;
             var fechaAbono = document.querySelector('[name="Fecha_Abono"]').value;
+            var numeroAbono = document.querySelector('[name="Numero_Abono"]').value;
 
-            if (!fk_Documento || !fk_Cliente || !montoAbonado || !tipoPago || !banco || !fechaAbono) {
+            // Validación adicional para campos requeridos
+            if (montoAbonado.trim() === '' || fechaAbono.trim() === '' || banco.trim() === '' || numeroAbono.trim() === '') {
                 // Mostrar mensaje de error con SweetAlert2 si no están completos los campos
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Por favor complete todos los campos requeridos.',
+                    text: 'Por favor complete los campos obligatorios.',
                     confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 });
-            } else {
-                // Crear objeto FormData con los datos del formulario
-                var formData = new FormData(document.getElementById('formcreate'));
-
-                // Enviar los datos al controlador utilizando fetch
-                fetch('/CXC/CrearAbono', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            // Mostrar mensaje de éxito con SweetAlert2
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Guardado Correctamente',
-                                showConfirmButton: true,
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                // Redirigir a la página de índice de proveedores después de guardar
-                                window.location.href = '/CXC/Index';
-                            });
-                        } else {
-                            // Si la respuesta no es exitosa, mostrar mensaje de error
-                            throw new Error('Error al guardar los datos');
-                        }
-                    })
-                    .catch(error => {
-                        // Mostrar mensaje de error con SweetAlert2 si hay un error en la solicitud
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: error.message,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'OK'
-                        });
-                    });
+                return; // Detener la ejecución si faltan campos obligatorios
             }
+
+            // Validar monto abonado
+            if (isNaN(montoAbonado) || parseFloat(montoAbonado) <= 0) {
+                // Mostrar mensaje de error con SweetAlert2 si el monto abonado es 0 o negativo
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El monto abonado debe ser mayor que cero.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                return; // Detener la ejecución si el monto abonado es 0 o negativo
+            }
+
+            // Obtener el saldo pendiente
+            var saldoPendiente = parseFloat('@cxc.Saldo_Pendiente');
+
+            // Validar si el monto abonado es mayor al saldo pendiente
+            if (parseFloat(montoAbonado) > saldoPendiente) {
+                // Mostrar mensaje de error con SweetAlert2 si el monto abonado es mayor al saldo pendiente
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El monto abonado no puede ser mayor al saldo pendiente.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                return; // Detener la ejecución si el monto abonado es mayor al saldo pendiente
+            }
+
+         
+
+            // Crear objeto FormData con los datos del formulario
+            var formData = new FormData(document.getElementById('formcreate'));
+
+            // Enviar los datos al controlador utilizando fetch
+            fetch('/CXC/CrearAbono', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Abono exitoso, mostrar mensaje de éxito
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Guardado Correctamente',
+                            showConfirmButton: false,
+                            timer: 1500 // Duración en milisegundos (1.5 segundos)
+                        }).then(() => {
+                            // Redirigir a la página de índice de proveedores después de guardar
+                            window.location.href = '/CXC/Index';
+                        });
+                    } else {
+                        // Mostrar mensaje genérico de error
+                        throw new Error('Error al guardar los datos');
+                    }
+                })
+                .catch(error => {
+                    // Mostrar mensaje de error con SweetAlert2 si hay un error en la solicitud
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                });
         });
+        
     </script>
 </body>
 </html>
