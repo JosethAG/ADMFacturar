@@ -84,6 +84,7 @@ namespace ADMFacturar.Controllers
             {
                 var content = await resp.Content.ReadAsStringAsync();
                 var abono = JsonConvert.DeserializeObject<AbonoCXC>(content);
+                ViewData["CXC"] = JsonConvert.DeserializeObject<CXC>(content);
                 ViewData["AbonoCXC"] = abono ?? new AbonoCXC(); // Inicializar un nuevo objeto si no hay datos
                 return View("Abono", abono);
             }

@@ -3,6 +3,7 @@
 
 @{
     var abonos = ViewData["AbonosCXC"] as List<AbonoCXC>;
+    var cxc = ViewData["CXC"] as CXC;
 }
 
 <!DOCTYPE html>
@@ -32,7 +33,7 @@
             <div>
                 <label for="FK_Documento" class="block text-sm font-medium text-gray-300">Documento</label>
                 <div class="mt-2">
-                    <input asp-for="FK_Documento_CC" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500">
+                    <input asp-for="FK_Documento_CC" value="@cxc.PK_Documento_CC" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
                 </div>
             </div>
             <div>
@@ -44,7 +45,7 @@
             <div style="display: none;">
                 <label for="FK_Cliente" class="block text-sm font-medium text-gray-300">Cliente</label>
                 <div class="mt-2">
-                    <input asp-for="FK_Cliente" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
+                    <input asp-for="FK_Cliente" value="@cxc.FK_Cliente" type="text" class="block w-full rounded-md bg-gray-900 border-gray-700 text-gray-300 py-2 px-3 shadow-sm focus:ring-2 focus:ring-indigo-500" readonly>
                 </div>
             </div>
             <div>
