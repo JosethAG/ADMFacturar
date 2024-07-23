@@ -3,6 +3,7 @@
 
 @{
     var cxcs = ViewData["CXC"] as List<CXC>;
+    var clientes = ViewData["Clientes"] as List<Cliente>;
 }
 
 <!DOCTYPE html>
@@ -43,27 +44,24 @@
                         <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
-               @*  <!-- Estado -->
+             
+                <!-- Proveedor -->
+                <!-- Proveedor -->
                 <div class="sm:col-span-1">
-                    <label for="estado" class="block text-sm font-medium leading-6 text-white">Estado</label>
+                    <label for="FK_Cliente" class="block text-sm font-medium text-white">Cliente</label>
                     <div class="mt-2">
-                        <select id="estado" name="estado" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                            <option value="">Seleccione un estado</option>
-                            <option value="completado">Completado</option>
-                            <option value="pendiente">Pendiente</option>
+                        <select id="FK_Cliente" name="FK_Cliente" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                            <option value="">Seleccione un cliente</option>
+                            @if (clientes != null)
+                            {
+                                @foreach (var cliente in clientes)
+                                {
+                                    <option value="@cliente.PK_Cliente">@cliente.Nombre</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>
-                <!-- Proveedor -->
-                <div class="sm:col-span-1">
-                    <label for="FK_Cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
-                    <div class="mt-2">
-                        <select id="FK_Cliente" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                            <option value="">Seleccione un Cliente</option>
-                            @* Aquí puedes agregar opciones dinámicamente 
-                        </select>
-                    </div>
-                </div> *@
                 <!-- Número de Documento -->
                 <div class="sm:col-span-1">
                     <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número de Documento</label>
@@ -73,6 +71,7 @@
                 </div>
             </div>
         </div>
+        </>
     </form>
 
     <br>
@@ -93,6 +92,7 @@
                         <th class="py-3 px-4 text-center">Documento</th>
                         <th class="py-3 px-4 text-center">Cliente</th>
                         <th class="py-3 px-4 text-center">Fecha Emisión</th>
+                        <th class="py-3 px-4 text-center">Fecha Vence</th>
                         <th class="py-3 px-4 text-center">Total</th>
                         <th class="py-3 px-4 text-center">Saldo</th>
                         <th class="py-3 px-4 text-center">Acciones</th>
@@ -107,6 +107,7 @@
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.PK_Documento_CC)</td>
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.NombreCliente)</td>
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.Raw(cxc.Fecha_Documento.ToString("dd/MM/yyyy"))</td>
+                                <td class="py-3 px-4 border-b border-gray-700 fecha-vencimiento">@Html.Raw(cxc.Fecha_Vencimiento.ToString("yyyy-MM-dd"))</td>
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.Total_XC)</td>
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.Saldo_Pendiente)</td>
                                 <td>
@@ -135,57 +136,69 @@
         <!--                  Final Tabla                        -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            document.getElementById('filterForm').addEventListener('input', filterTable);
+            function filtrarTabla() {
+                const fechaInicio = document.getElementById('entry_date').value;
+                const fechaFinal = document.getElementById('expiry_date').value;
+                const cliente = document.getElementById('FK_Cliente').value;
+                const numeroDocumento = document.getElementById('document_number').value.toLowerCase();
 
-            function filterTable() {
-                var fechaInicio = document.getElementById('entry_date').value;
-                var fechaFinal = document.getElementById('expiry_date').value;
-                var estado = document.getElementById('estado').value.toLowerCase();
-                var cliente = document.getElementById('FK_Cliente').value.toLowerCase();
-                var numeroDocumento = document.getElementById('document_number').value.toLowerCase();
+                const filas = document.querySelectorAll('#bodyTablaCXC tr');
 
-                var table = document.getElementById('tablaCXC');
-                var rows = table.getElementsByTagName('tr');
+                filas.forEach(fila => {
+                    const cells = fila.getElementsByTagName('td');
 
-                for (var i = 1; i < rows.length; i++) {
-                    var row = rows[i];
-                    var fecha = row.cells[2].textContent.trim();
-                    var estadoRow = row.cells[5].textContent.toLowerCase();
-                    var proveedorRow = row.cells[1].textContent.toLowerCase();
-                    var numeroDocumentoRow = row.cells[0].textContent.toLowerCase();
+                    const fechaDocumento = cells[2].textContent.trim();
+                    const fechaVence = cells[3].textContent.trim();
+                    const clienteNombre = cells[1].textContent.trim();
+                    const documento = cells[0].textContent.toLowerCase();
 
-                    var mostrar = true;
+                    // Filtramos basado en los valores del formulario
+                    const matchFechaInicio = fechaInicio === '' || new Date(fechaDocumento) >= new Date(fechaInicio);
+                    const matchFechaFinal = fechaFinal === '' || new Date(fechaVence) <= new Date(fechaFinal);
+                    const matchCliente = cliente === '' || clienteNombre === cliente;
+                    const matchNumeroDocumento = numeroDocumento === '' || documento.includes(numeroDocumento);
 
-                    if (fechaInicio && fechaFinal) {
-                        var fechaInicioDate = new Date(fechaInicio);
-                        var fechaFinalDate = new Date(fechaFinal);
-                        var fechaRowDate = new Date(fecha);
-
-                        if (fechaRowDate < fechaInicioDate || fechaRowDate > fechaFinalDate) {
-                            mostrar = false;
-                        }
-                    }
-
-                    if (estado && estadoRow.indexOf(estado) === -1) {
-                        mostrar = false;
-                    }
-
-                    if (cliente && proveedorRow.indexOf(cliente) === -1) {
-                        mostrar = false;
-                    }
-
-                    if (numeroDocumento && numeroDocumentoRow.indexOf(numeroDocumento) === -1) {
-                        mostrar = false;
-                    }
-
-                    if (mostrar) {
-                        row.style.display = '';
+                    if (matchFechaInicio && matchFechaFinal && matchCliente && matchNumeroDocumento) {
+                        fila.style.display = '';
                     } else {
-                        row.style.display = 'none';
+                        fila.style.display = 'none';
                     }
-                }
+                });
             }
 
+            // Agregar eventos al formulario para filtrar en tiempo real
+            document.getElementById('filterForm').addEventListener('input', filtrarTabla);
+
+
+            function actualizarComboBoxClientes() {
+                const clientesComboBox = document.getElementById('FK_Cliente');
+                const filas = document.querySelectorAll('#bodyTablaCXC tr');
+
+                // Crear un conjunto para evitar duplicados
+                const clientes = new Set();
+
+                filas.forEach(fila => {
+                    const cells = fila.getElementsByTagName('td');
+                    const clienteNombre = cells[1].textContent.trim();
+                    if (clienteNombre) {
+                        clientes.add(clienteNombre);
+                    }
+                });
+
+                // Limpiar opciones existentes
+                clientesComboBox.innerHTML = '<option value="">Seleccione un cliente</option>';
+
+                // Agregar opciones nuevas
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente; // Asegúrate de que el valor coincida con el valor en la tabla
+                    option.textContent = cliente;
+                    clientesComboBox.appendChild(option);
+                });
+            }
+
+            // Llamar a la función para actualizar el combo box al cargar la página
+            document.addEventListener('DOMContentLoaded', actualizarComboBoxClientes);
 
             // //Funcion para paginar en index
             //      $(document).ready(function () {
@@ -209,6 +222,26 @@
             //              }
             //          });
             //      });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const fechaActual = new Date();
+                const celdasFechaVence = document.querySelectorAll('.fecha-vencimiento');
+
+                celdasFechaVence.forEach(celda => {
+                    const fechaVence = new Date(celda.textContent.trim());
+                    const diffTime = fechaVence - fechaActual;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays < 0) {
+                        celda.style.color = 'red';
+                    } else if (diffDays < 7) {
+                        celda.style.color = 'yellow';
+                    } else if (diffDays > 15) {
+                        celda.style.color = 'green';
+                    }
+                });
+            });
         </script>
 </body>
 </html>
