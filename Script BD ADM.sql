@@ -362,6 +362,7 @@ CREATE TABLE [dbo].[TBL_FACTURA](
 	[FK_Condicion_Pago] [varchar](10) NOT NULL,			
 	[Transporte] [bigint] NULL,
 	[Subtotal] [decimal](18, 3) NULL,
+	[Impuesto] [decimal](18, 3) NULL,
 	[Descuento] [decimal](18, 3) NULL,	
 	[Total] [decimal](18, 3) NULL,
 	[Devolucion] [int] NULL,
