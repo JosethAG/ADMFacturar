@@ -87,9 +87,8 @@ namespace ADMFacturar.Controllers
             if (resp.IsSuccessStatusCode)
             {
                 var content = await resp.Content.ReadAsStringAsync();
-                var abono = JsonConvert.DeserializeObject<AbonoCXP>(content);
-                ViewData["Abono"] = abono ?? new AbonoCXP(); // Inicializar un nuevo objeto si no hay datos
-                return View("Abono", abono);
+                ViewData["CXP"] = JsonConvert.DeserializeObject<CXP>(content);
+                return PartialView("Abono");
             }
 
             return View();
@@ -124,7 +123,7 @@ namespace ADMFacturar.Controllers
                     ModelState.AddModelError(string.Empty, "Error en el servidor: " + ex.Message);
                 }
             }
-            return View(abono);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

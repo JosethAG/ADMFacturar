@@ -3,6 +3,7 @@
 
 @{
     var cxcs = ViewData["CXC"] as List<CXC>;
+    var clientes = ViewData["Clientes"] as List<Cliente>;
 }
 
 <!DOCTYPE html>
@@ -43,27 +44,24 @@
                         <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
-               @*  <!-- Estado -->
+             
+                <!-- Proveedor -->
+                <!-- Proveedor -->
                 <div class="sm:col-span-1">
-                    <label for="estado" class="block text-sm font-medium leading-6 text-white">Estado</label>
+                    <label for="FK_Cliente" class="block text-sm font-medium text-white">Cliente</label>
                     <div class="mt-2">
-                        <select id="estado" name="estado" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                            <option value="">Seleccione un estado</option>
-                            <option value="completado">Completado</option>
-                            <option value="pendiente">Pendiente</option>
+                        <select id="FK_Cliente" name="FK_Cliente" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                            <option value="">Seleccione un cliente</option>
+                            @if (clientes != null)
+                            {
+                                @foreach (var cliente in clientes)
+                                {
+                                    <option value="@cliente.PK_Cliente">@cliente.Nombre</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>
-                <!-- Proveedor -->
-                <div class="sm:col-span-1">
-                    <label for="FK_Cliente" class="block text-sm font-medium leading-6 text-white">Cliente</label>
-                    <div class="mt-2">
-                        <select id="FK_Cliente" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
-                            <option value="">Seleccione un Cliente</option>
-                            @* Aquí puedes agregar opciones dinámicamente 
-                        </select>
-                    </div>
-                </div> *@
                 <!-- Número de Documento -->
                 <div class="sm:col-span-1">
                     <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número de Documento</label>
@@ -73,6 +71,7 @@
                 </div>
             </div>
         </div>
+        </>
     </form>
 
     <br>
@@ -113,7 +112,7 @@
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxc.Saldo_Pendiente)</td>
                                 <td>
                                     <div class="py-3 px-4 border-b border-gray-700 flex justify-center space-x-2">
-                                        <a asp-action="Abono" asp-route-PK="@cxc.PK_Documento_CC" class="btn btnCrear" title="Crear Abono">
+                                        <a onclick="cargarAbono('@cxc.PK_Documento_CC')" class="btn btnCrear" title="Crear Abono">
                                             <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" /></svg>
                                         </a>
                                         <a asp-action="Detalles" asp-route-PK="@cxc.PK_Documento_CC" class="btn VerDetalles" title="Detalles">
@@ -135,59 +134,99 @@
         </div>
 
         <!--                  Final Tabla                        -->
+        <!--Reducción de codigo realizando vista parcial
+        Ajuste 22/7/24 por Joseth Araya -->
+        <div id="modalCrearAbono" class="modal">
+            <div class="modal-content">
+                <div id="AbonoContainer">
+                    <div id="CrearAbono"></div>
+                </div>
+            </div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            document.getElementById('filterForm').addEventListener('input', filterTable);
+            function filtrarTabla() {
+                const fechaInicio = document.getElementById('entry_date').value;
+                const fechaFinal = document.getElementById('expiry_date').value;
+                const cliente = document.getElementById('FK_Cliente').value;
+                const numeroDocumento = document.getElementById('document_number').value.toLowerCase();
 
-            function filterTable() {
-                var fechaInicio = document.getElementById('entry_date').value;
-                var fechaFinal = document.getElementById('expiry_date').value;
-                var estado = document.getElementById('estado').value.toLowerCase();
-                var cliente = document.getElementById('FK_Cliente').value.toLowerCase();
-                var numeroDocumento = document.getElementById('document_number').value.toLowerCase();
+                const filas = document.querySelectorAll('#bodyTablaCXC tr');
 
-                var table = document.getElementById('tablaCXC');
-                var rows = table.getElementsByTagName('tr');
+                filas.forEach(fila => {
+                    const cells = fila.getElementsByTagName('td');
 
-                for (var i = 1; i < rows.length; i++) {
-                    var row = rows[i];
-                    var fecha = row.cells[2].textContent.trim();
-                    var estadoRow = row.cells[5].textContent.toLowerCase();
-                    var proveedorRow = row.cells[1].textContent.toLowerCase();
-                    var numeroDocumentoRow = row.cells[0].textContent.toLowerCase();
+                    const fechaDocumento = cells[2].textContent.trim();
+                    const fechaVence = cells[3].textContent.trim();
+                    const clienteNombre = cells[1].textContent.trim();
+                    const documento = cells[0].textContent.toLowerCase();
 
-                    var mostrar = true;
+                    // Filtramos basado en los valores del formulario
+                    const matchFechaInicio = fechaInicio === '' || new Date(fechaDocumento) >= new Date(fechaInicio);
+                    const matchFechaFinal = fechaFinal === '' || new Date(fechaVence) <= new Date(fechaFinal);
+                    const matchCliente = cliente === '' || clienteNombre === cliente;
+                    const matchNumeroDocumento = numeroDocumento === '' || documento.includes(numeroDocumento);
 
-                    if (fechaInicio && fechaFinal) {
-                        var fechaInicioDate = new Date(fechaInicio);
-                        var fechaFinalDate = new Date(fechaFinal);
-                        var fechaRowDate = new Date(fecha);
-
-                        if (fechaRowDate < fechaInicioDate || fechaRowDate > fechaFinalDate) {
-                            mostrar = false;
-                        }
-                    }
-
-                    if (estado && estadoRow.indexOf(estado) === -1) {
-                        mostrar = false;
-                    }
-
-                    if (cliente && proveedorRow.indexOf(cliente) === -1) {
-                        mostrar = false;
-                    }
-
-                    if (numeroDocumento && numeroDocumentoRow.indexOf(numeroDocumento) === -1) {
-                        mostrar = false;
-                    }
-
-                    if (mostrar) {
-                        row.style.display = '';
+                    if (matchFechaInicio && matchFechaFinal && matchCliente && matchNumeroDocumento) {
+                        fila.style.display = '';
                     } else {
-                        row.style.display = 'none';
+                        fila.style.display = 'none';
                     }
-                }
+                });
             }
 
+            // Agregar eventos al formulario para filtrar en tiempo real
+            document.getElementById('filterForm').addEventListener('input', filtrarTabla);
+
+
+            function actualizarComboBoxClientes() {
+                const clientesComboBox = document.getElementById('FK_Cliente');
+                const filas = document.querySelectorAll('#bodyTablaCXC tr');
+
+                // Crear un conjunto para evitar duplicados
+                const clientes = new Set();
+
+                filas.forEach(fila => {
+                    const cells = fila.getElementsByTagName('td');
+                    const clienteNombre = cells[1].textContent.trim();
+                    if (clienteNombre) {
+                        clientes.add(clienteNombre);
+                    }
+                });
+
+                // Limpiar opciones existentes
+                clientesComboBox.innerHTML = '<option value="">Seleccione un cliente</option>';
+
+                // Agregar opciones nuevas
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente; // Asegúrate de que el valor coincida con el valor en la tabla
+                    option.textContent = cliente;
+                    clientesComboBox.appendChild(option);
+                });
+            }
+
+            // Llamar a la función para actualizar el combo box al cargar la página
+            document.addEventListener('DOMContentLoaded', actualizarComboBoxClientes);
+
+
+            /*Metodo para cargar la vista parcial
+                Ajuste 22 / 7 / 24 por Joseth Araya*/
+            function cargarAbono(pk) {
+                $.ajax({
+                    url: '@Url.Action("Abono", "CXC")',
+                    type: 'GET',
+                    data: { PK: pk },
+                    success: function (data) {
+                        $('#CrearAbono').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al cargar la vista parcial Abono:', error);
+                    }
+                });
+                abrirModal('modalCrearAbono');
+            }
 
             // //Funcion para paginar en index
             //      $(document).ready(function () {
