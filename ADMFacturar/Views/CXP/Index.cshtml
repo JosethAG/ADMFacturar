@@ -111,9 +111,11 @@
                                 <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cxp.Saldo_Pendiente)</td>
                                 <td>
                                     <div class="py-3 px-4 border-b border-gray-700 flex justify-center space-x-2">
-                                        <a asp-action="Abono" asp-route-PK="@cxp.PK_Documento" class="btn btnCrear" title="Crear Abono">
+                                        <a onclick="cargarAbono('@cxp.PK_Documento')" class="btn btnCrear" title="Crear Abono">
                                             <svg class="svg-inline--fa fa-times fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" /></svg>
                                         </a>
+
+
                                         <a asp-action="Detalles" asp-route-PK="@cxp.PK_Documento" class="btn VerDetalles" title="Detalles">
                                             <svg class="svg-inline--fa fa-eye fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-70.7 0-128-57.31-128-128s57.31-128 128-128 128 57.31 128 128-57.3 128-128 128zm0-216a88 88 0 1 0 88 88 88 88 0 0 0-88-88z"></path></svg>
                                         </a>
@@ -133,6 +135,16 @@
         </div>
     </div>
     <!--                  Final de Tabla                        -->
+    <!--Reducción de codigo realizando vista parcial
+        Ajuste 22/7/24 por Joseth Araya -->
+    <div id="modalCrearAbono" class="modal">
+        <div class="modal-content">
+            <div id="AbonoContainer">
+                <div id="CrearAbono"></div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -199,6 +211,86 @@
 
         // Llamar a la función para actualizar el combo box al cargar la página
         document.addEventListener('DOMContentLoaded', actualizarComboBoxProveedores);
+
+        /*Metodo para cargar la vista parcial
+                Ajuste 22 / 7 / 24 por Joseth Araya*/
+        function cargarAbono(pk) {
+            $.ajax({
+                url: '@Url.Action("Abono", "CXP")',
+                type: 'GET',
+                data: { PK: pk },
+                success: function (data) {
+                    $('#CrearAbono').html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al cargar la vista parcial Abono:', error);
+                }
+            });
+
+            abrirModal('modalCrearAbono');
+        }
+
+        document.getElementById('btnCrear').addEventListener('click', function (event) {
+            event.preventDefault(); // Detener el envío normal del formulario
+
+            // Validar campos requeridos
+            var fk_Documento = document.querySelector('[name="FK_Documento"]').value;
+            var fk_Proveedor = document.querySelector('[name="FK_Proveedor"]').value;
+            var montoAbonado = document.querySelector('[name="Monto_Abonado"]').value;
+            var tipoDocumento = document.querySelector('[name="Tipo_Documento"]').value;
+            var banco = document.querySelector('[name="Banco"]').value;
+            var fechaAbono = document.querySelector('[name="Fecha_Abono"]').value;
+
+            if (!fk_Documento || !fk_Proveedor || !montoAbonado || !tipoDocumento || !banco || !fechaAbono) {
+                // Mostrar mensaje de error con SweetAlert2 si no están completos los campos
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor complete todos los campos requeridos.',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                // Crear objeto FormData con los datos del formulario
+                var formData = new FormData(document.getElementById('formcreate'));
+
+                // Enviar los datos al controlador utilizando fetch
+                fetch('/CXP/CrearAbono', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Mostrar mensaje de éxito con SweetAlert2
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Guardado Correctamente',
+                                showConfirmButton: true,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                // Redirigir a la página de índice de proveedores después de guardar
+                                window.location.href = '/CXP/Index';
+                            });
+                        } else {
+                            // Si la respuesta no es exitosa, mostrar mensaje de error
+                            throw new Error('Error al guardar los datos');
+                        }
+                    })
+                    .catch(error => {
+                        // Mostrar mensaje de error con SweetAlert2 si hay un error en la solicitud
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.message,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    });
+            }
+        });
 
         // //Funcion para paginar en index
         //      $(document).ready(function () {
