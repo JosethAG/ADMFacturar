@@ -77,19 +77,18 @@ namespace ADMFacturar.Controllers
         }
 
         public async Task<IActionResult> Abono(string PK)
-        {
-            var resp = await _httpClient.GetAsync($"api/CXC/Obtener/{PK}");
+    {
+    var resp = await _httpClient.GetAsync($"api/CXC/Obtener/{PK}");
 
-            if (resp.IsSuccessStatusCode)
-            {
-                var content = await resp.Content.ReadAsStringAsync();
-                var abono = JsonConvert.DeserializeObject<AbonoCXC>(content);
-                ViewData["AbonoCXC"] = abono ?? new AbonoCXC(); // Inicializar un nuevo objeto si no hay datos
-                return View("Abono", abono);
-            }
+    if (resp.IsSuccessStatusCode)
+    {
+        var content = await resp.Content.ReadAsStringAsync();
+        ViewData["CXC"] = JsonConvert.DeserializeObject<CXC>(content);
+        return PartialView("Abono");
+    }
 
-            return View();
-        }
+    return View();
+      } 
 
         [HttpPost]
         public async Task<IActionResult> CrearAbono(AbonoCXC abono)
@@ -119,7 +118,7 @@ namespace ADMFacturar.Controllers
                     ModelState.AddModelError(string.Empty, "Error en el servidor: " + ex.Message);
                 }
             }
-            return View(abono);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

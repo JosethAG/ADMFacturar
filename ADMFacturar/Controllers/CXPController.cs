@@ -80,21 +80,19 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Abono(string PK, string documento)
-        {
-            var resp = await _httpClient.GetAsync($"api/CXP/Obtener/{PK}");
+        public async Task<IActionResult> Abono(string PK)
+{
+    var resp = await _httpClient.GetAsync($"api/CXP/Obtener/{PK}");
 
-            if (resp.IsSuccessStatusCode)
-            {
-                var content = await resp.Content.ReadAsStringAsync();
-                var abono = JsonConvert.DeserializeObject<AbonoCXP>(content);
-                ViewData["Abono"] = abono ?? new AbonoCXP(); // Inicializar un nuevo objeto si no hay datos
-                ViewData["Documento"] = documento;
-                return View("Abono", abono);
-            }
+    if (resp.IsSuccessStatusCode)
+    {
+        var content = await resp.Content.ReadAsStringAsync();
+        ViewData["CXP"] = JsonConvert.DeserializeObject<CXP>(content);
+        return PartialView("Abono");
+    }
 
-            return View();
-        }
+    return View();
+}
 
 
         [HttpPost]
@@ -125,7 +123,7 @@ namespace ADMFacturar.Controllers
                     ModelState.AddModelError(string.Empty, "Error en el servidor: " + ex.Message);
                 }
             }
-            return View(abono);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
