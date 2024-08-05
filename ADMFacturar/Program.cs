@@ -1,6 +1,11 @@
+using ADM.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Añadir configuración SMTP
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
 
 // Add services to the container.
 builder.Services.AddHttpClient();
