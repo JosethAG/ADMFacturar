@@ -518,6 +518,17 @@ CREATE TABLE dbo.TBL_ABONOS (
         REFERENCES dbo.TBL_DOCUMENTO_CP(PK_Documento)
 );
 
+/****** Table [dbo].[TBL_ENVCORREOS]  ******/
+
+CREATE TABLE TBL_ENVCORREOS (
+    PK_Registro INT IDENTITY(1,1) PRIMARY KEY,
+    Destinatario NVARCHAR(255) NOT NULL,
+    Asunto NVARCHAR(255) NOT NULL,
+    Contenido NVARCHAR(MAX) NOT NULL,
+    Fecha_Creacion DATETIME DEFAULT GETDATE(),
+    Fecha_Modificacion DATETIME DEFAULT GETDATE()
+
+);
 
 	
 ----------------------------------------------------------------------------------------------------
@@ -3603,6 +3614,54 @@ BEGIN
     -- Retornar 1 si la operación es exitosa
     RETURN 1;
 END
+
+GO
+-------------------------------------------------
+		/*Marketing*/
+-------------------------------------------------
+
+
+CREATE PROCEDURE sp_InsertarEnvCorreo
+    @P_Destinatario NVARCHAR(255),
+    @P_Asunto NVARCHAR(255),
+    @P_Contenido NVARCHAR(MAX)
+
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO TBL_ENVCORREOS (Destinatario, Asunto, Contenido)
+    VALUES (@P_Destinatario, @P_Asunto, @P_Contenido);
+
+    SELECT SCOPE_IDENTITY() AS NewPK_Registro;
+END;
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarCorreos]    Script Date: 8/4/2024 9:40:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarCorreos]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT  
+		Destinatario,
+		Asunto,
+		Contenido,
+        CONVERT(varchar, Fecha_Creacion, 23) as Fecha
+
+    FROM 
+        dbo.TBL_ENVCORREOS 
+      ORDER BY Fecha_Creacion DESC;
+
+END
+
+GO
 
 	
 ----------------------------------------------------------------------------------------------------
