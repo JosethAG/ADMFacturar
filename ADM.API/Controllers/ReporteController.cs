@@ -18,8 +18,11 @@ namespace ADM.API.Controllers
 	public class ReporteController : Controller
 	{
 		private IArticuloService? _ArticuloService;
+        private ICXPService? _CXPService;
 
-		[HttpGet]
+        //REPORTE ARTICULOS / INVENTARIO
+
+        [HttpGet]
 		[Route("ReporteArticulos")]
 		public IEnumerable<ArticuloViewModel> ListarArticulosVM()
 		{
@@ -29,6 +32,34 @@ namespace ADM.API.Controllers
 			return result;
 		}
 
+        //REPORTE CXP
 
-	}
+        [HttpGet]
+        [Route("ReporteCXP")]
+        public IEnumerable<CXP> ListaCXPs(string? Nombre)
+        {
+            DataTable tCXP = null;
+
+            if (Nombre == null)
+            {
+                tCXP = DBData.List("sp_ListarDocumentosCP");
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@Nombre", Nombre)
+                    };
+                tCXP = DBData.List("sp_ListarDocumentosCPxProveedor", parameters);
+            }
+            string jsonArticle = JsonConvert.SerializeObject(tCXP);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<CXP>>(jsonArticle);
+            return result;
+        }
+
+
+        //
+
+
+    }
 }
