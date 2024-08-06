@@ -54,8 +54,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Final Timeline Item -->
-            <!-- Repeat Timeline Items as needed -->
+            <!-- Final Timeline Item -->    
         </div>
     </div>
 </div>
@@ -92,15 +91,21 @@
     </div>
 </div>
 
-<!-- Agregar SweetAlert en el head si no está incluido -->
+<!-- Inclusion de SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- JavaScript modificado para manejar SweetAlert y limpiar campos -->
+<!-- JavaScript para manejar SweetAlert y limpiar campos -->
 <script>
     document.getElementById('emailForm').addEventListener('submit', function (event) {
         event.preventDefault();
 
         const formData = new FormData(this);
+
+        const emailData = {
+            Destinatario: formData.get('to'),
+            Asunto: formData.get('subject'),
+            Contenido: formData.get('body')
+        };
 
         // Mostrar alerta de carga
         Swal.fire({
@@ -125,6 +130,7 @@
                     }).then(() => {
                         cerrarModal('modalCrearCorreo');
                         limpiarCamposFormulario('emailForm');
+                        guardarRegistroEnBaseDeDatos(emailData); // Llamada para guardar el registro en la base de datos con datos correctos
                     });
                 } else {
                     Swal.fire({
@@ -142,6 +148,24 @@
                 });
             });
     });
+
+    function guardarRegistroEnBaseDeDatos(emailData) {
+        fetch('/Marketing/GuardarRegistro', { // Ruta al método del controlador para guardar el registro
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // Especificar el tipo de contenido como JSON
+            },
+            body: JSON.stringify(emailData) // Convertir el objeto a JSON
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Registro guardado exitosamente');
+            })
+            .catch(error => {
+                console.log('Error al guardar el registro: ' + error.message);
+            });
+    }
+
 
     function abrirModal(modalId) {
         const modal = document.getElementById(modalId);
@@ -164,4 +188,3 @@
         form.reset();
     }
 </script>
-

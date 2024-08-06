@@ -1,82 +1,59 @@
-﻿using ADM.Architectur;
-using ADM.Architecture;
-using ADM.Interface;
-using ADM.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using System.Data.SqlClient;
 using System.Data;
-using System.Net.Mail;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using ADM.API;
+using ADM.Models;
+using ADM.Service;
+using Microsoft.AspNetCore.Mvc;
+using ADM.Interface;
+using ADM.Architectur;
+using ADM.Architecture;
+using Newtonsoft.Json;
 
 namespace ADM.API.Controllers
 {
-//    [ApiController]
-//    [Route("api/[controller]")]
-//    public class EmailController : ControllerBase
-//    {
-//        [HttpPost("SendEmailWithAttachment")]
-//        public async Task<IActionResult> SendEmailWithAttachment([FromForm] EmailRequest request)
-//        {
-//            if (request.Attachments == null || request.Attachments.Length == 0)
-//            {
-//                return BadRequest("No files uploaded.");
-//            }
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MarketingController : Controller
+    {
+        private IMarketingService? _MarketingService;
 
-//            var attachments = new List<Attachment>();
+        [HttpGet]
+        [Route("Listar")]
+        public IEnumerable<Correo> ListaCorreos()
+        {
+            DataTable tCorreo = null;
+            tCorreo = DBData.List("sp_ListarCorreos");
+            string jsonArticle = JsonConvert.SerializeObject(tCorreo);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<Correo>>(jsonArticle);
+            return result;
+        }
 
-//            foreach (var file in request.Attachments)
-//            {
-//                var filePath = Path.Combine(Path.GetTempPath(), file.FileName);
 
-//                using (var stream = new FileStream(filePath, FileMode.Create))
-//                {
-//                    await file.CopyToAsync(stream);
-//                }
 
-//                attachments.Add(new Attachment(filePath));
-//            }
+        [HttpPost]
+        [Route("Crear")]
+        public bool CrearCorreo(Correo Correo)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Received Correo: " + JsonConvert.SerializeObject(Correo));
 
-//            await SendEmailAsync(request.To, request.Subject, request.Body, attachments);
+            List<DBParameter> parameters = new List<DBParameter>
+            {
+                new DBParameter("@P_Destinatario", Correo.Destinatario),
+                new DBParameter("@P_Asunto", Correo.Asunto),
+                new DBParameter("@P_Contenido", Correo.Contenido)
 
-//            return Ok("Email sent successfully.");
-//        }
+            };
 
-//        private async Task SendEmailAsync(string to, string subject, string body, List<Attachment> attachments)
-//        {
-//            var from = "testenviocorreo01@gmail.com";
-//            var smtpServer = "smtp.gmail.com";
-//            var smtpPort = 587;
-//            var smtpUser = "testenviocorreo01@gmail.com";
-//            var smtpPass = "TestEnvio@";
+            var result = DBData.Execute("sp_InsertarEnvCorreo", parameters);
 
-//            using (var message = new MailMessage())
-//            {
-//                message.From = new MailAddress(from);
-//                message.To.Add(to);
-//                message.Subject = subject;
-//                message.Body = body;
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + result);
 
-//                foreach (var attachment in attachments)
-//                {
-//                    message.Attachments.Add(attachment);
-//                }
+            return result;
+        }
 
-//                using (var client = new SmtpClient(smtpServer, smtpPort))
-//                {
-//                    client.Credentials = new System.Net.NetworkCredential(smtpUser, smtpPass);
-//                    client.EnableSsl = true;
-//                    await client.SendMailAsync(message);
-//                }
-//            }
-//        }
-//    }
 
-//    public class EmailRequest
-//    {
-//        public string To { get; set; }
-//        public string Subject { get; set; }
-//        public string Body { get; set; }
-//        public IFormFile[] Attachments { get; set; }
-//    }
+    }
+
 }
