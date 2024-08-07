@@ -26,9 +26,27 @@ namespace ADMFacturar.Controllers
             _httpClient.BaseAddress = new Uri("https://localhost:7270/api");
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var resp = await _httpClient.GetAsync("api/Marketing/Listar");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var Correos = JsonConvert.DeserializeObject<IEnumerable<Correo>>(content);
+                return View(Correos);
+            }
+
+            else
+            {
+                var Correos = new List<Correo>();
+                return View(Correos);
+            }
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            return null;
         }
 
         public IActionResult GCIndex()
