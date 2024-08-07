@@ -26,10 +26,6 @@ namespace ADMFacturar.Controllers
         {
             return View();
         }
-        public IActionResult REstadosCuentas()
-        {
-            return View();
-        }
         public IActionResult RCardex()
         {
             return View();
@@ -90,6 +86,26 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        
+        public async Task<IActionResult> REstadosCuentas()
+        {
+            // Llamada al endpoint de la API para obtener los estados de cuentas
+            var response = await _httpClient.GetAsync("api/Reporte/ReporteEstadosCuentas");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ReporteEstadosCuentasViewModel>(content);
+
+                // Pasar los datos a la vista
+                ViewData["Facturas"] = result.Facturas;
+                ViewData["TotalPendiente"] = result.TotalPendiente;
+                return View();
+            }
+
+            // Manejo de errores si la llamada a la API falla
+            ViewData["Facturas"] = new List<FacturaModel>();
+            ViewData["TotalPendiente"] = 0;
+            return View();
+        }
     }
 }
