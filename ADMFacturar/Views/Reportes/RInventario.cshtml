@@ -399,18 +399,19 @@
 		
 
 		// Función para calcular el total del costo
-		// Función para calcular el total del costo
+		document.addEventListener('DOMContentLoaded', function () {
+			calcularTotalCosto();
+		});
+
 		function calcularTotalCosto() {
 			var totalCosto = 0;
 
 			// Obtener todas las filas de la tabla
-			var filas = document.querySelectorAll('#bodyTablaArticulos tr'); // Asegúrate de ajustar el id de la tabla
+			var filas = document.querySelectorAll('#bodyTablaArticulos tr');
 
 			filas.forEach(fila => {
-				// Obtener la cantidad de la columna correspondiente
-				var cantidadCelda = fila.querySelector('td:nth-child(3)'); // Cambia el índice si es necesario
-				// Obtener el costo de la columna correspondiente
-				var costoCelda = fila.querySelector('td:nth-child(4)'); // Cambia el índice si es necesario
+				var cantidadCelda = fila.querySelector('td:nth-child(3)');
+				var costoCelda = fila.querySelector('td:nth-child(4)');
 
 				if (cantidadCelda && costoCelda) {
 					var cantidad = parseFloat(cantidadCelda.textContent.replace(',', ''));
@@ -422,8 +423,11 @@
 				}
 			});
 
-			// Mostrar el total en la celda del pie de la tabla
-			document.getElementById('totalCosto').textContent = totalCosto.toFixed(2);
+			// Almacenar el total en localStorage
+			localStorage.setItem('totalCosto', totalCosto.toFixed(2));
+
+			// Actualizar el total en la tabla
+			document.getElementById('totalCosto').textContent = '₡' + totalCosto.toFixed(2);
 		}
 
 		// Llamar a la función cuando la página se carga

@@ -58,9 +58,38 @@ namespace ADMFacturar.Controllers
         {
             return View();
         }
-        public IActionResult RCxP()
+
+
+        public async Task<IActionResult> RCxP()
         {
+            var resp = await _httpClient.GetAsync("api/Reporte/ReporteCXP");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync();
+                var cxps = JsonConvert.DeserializeObject<IEnumerable<CXP>>(content);
+
+                // Aquí es donde se realiza la unión con proveedores para obtener el nombre
+                var cxpsWithSupplierNames = cxps.Select(async cxp =>
+                {
+                    var proveedorResp = await _httpClient.GetAsync($"api/Proveedor/Obtener/{cxp.FK_Proveedor}");
+                    if (proveedorResp.IsSuccessStatusCode)
+                    {
+                        var proveedorContent = await proveedorResp.Content.ReadAsStringAsync();
+                        var proveedor = JsonConvert.DeserializeObject<Proveedor>(proveedorContent);
+                        cxp.NombreProveedor = proveedor.Nombre;
+                    }
+                    return cxp;
+                }).Select(t => t.Result).ToList();
+
+                ViewData["CXP"] = cxpsWithSupplierNames ?? new List<CXP>();
+
+                return View("RCxP");
+            }
+
             return View();
         }
+
+        
     }
 }
