@@ -57,9 +57,40 @@ namespace ADM.API.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("ReporteEstadosCuentas")]
+        public IActionResult ObtenerEstadosCuentas()
+        {
+            // Ejecutar el procedimiento almacenado para obtener los datos de facturas
+            DataTable dtFacturas = DBData.List("sp_ObtenerDatosFacturas");
 
-        //
+            // Convertir el DataTable a JSON
+            string jsonFacturas = JsonConvert.SerializeObject(dtFacturas);
 
+            // Deserializar el JSON a una lista de FacturaViewModel
+            var facturas = JsonConvert.DeserializeObject<IEnumerable<FacturaModel>>(jsonFacturas);
 
+            // Obtener el total pendiente
+            decimal totalPendiente = 0;
+            if (dtFacturas.Rows.Count > 0)
+            {
+                var totalPendienteRow = dtFacturas.AsEnumerable()
+                    .Where(row => row.Field<string>("Nombre_Cliente") == "Total")
+                    .FirstOrDefault();
+                if (totalPendienteRow != null)
+                {
+                    totalPendiente = totalPendienteRow.Field<decimal>("Total_Pendiente");
+                }
+            }
+
+            // Crear el objeto para el resultado final
+            var result = new ReporteEstadosCuentasViewModel
+            {
+                Facturas = facturas,
+                TotalPendiente = totalPendiente
+            };
+
+            return Ok(result);
+        }
     }
 }

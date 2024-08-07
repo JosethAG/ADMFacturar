@@ -3663,6 +3663,54 @@ END
 
 GO
 
+
+-------------------------------------------------
+		/*REPORTES*/
+-------------------------------------------------
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerDatosFaCTURAS]   ******/
+CREATE PROCEDURE [dbo].[sp_ObtenerDatosFacturas]
+AS
+BEGIN
+    -- Selección de los datos requeridos
+    SELECT 
+        f.PK_Factura,
+        c.Nombre AS Nombre_Cliente,
+        f.Fecha,
+        d.Fecha_Vencimiento,
+        f.Estado,
+        f.Total,
+        d.Saldo_Pendiente
+    FROM 
+        dbo.TBL_FACTURA f
+    INNER JOIN 
+        dbo.TBL_CLIENTES c ON f.FK_Cliente = c.PK_Cliente
+    INNER JOIN 
+        dbo.TBL_DOCUMENTO_CC d ON f.FK_Cliente = d.FK_Cliente
+    WHERE 
+        d.PK_Documento_CC = (
+            SELECT TOP 1 PK_Documento_CC
+            FROM dbo.TBL_DOCUMENTO_CC
+            WHERE FK_Cliente = f.FK_Cliente
+            ORDER BY Fecha_Vencimiento DESC
+        );
+
+    -- Calcular el total pendiente de todas las facturas
+    SELECT 
+        SUM(d.Saldo_Pendiente) AS Total_Pendiente
+    FROM 
+        dbo.TBL_FACTURA f
+    INNER JOIN 
+        dbo.TBL_DOCUMENTO_CC d ON f.FK_Cliente = d.FK_Cliente
+    WHERE 
+        d.PK_Documento_CC = (
+            SELECT TOP 1 PK_Documento_CC
+            FROM dbo.TBL_DOCUMENTO_CC
+            WHERE FK_Cliente = f.FK_Cliente
+            ORDER BY Fecha_Vencimiento DESC
+        );
+END
+
+GO
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
