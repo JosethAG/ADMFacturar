@@ -1,80 +1,450 @@
-﻿<!DOCTYPE html>
+﻿@using ADM.Models
+@using Newtonsoft.Json
+@model Articulo
+
+@{
+	var articulos = ViewData["Articulos"] as List<Articulo>;
+	var articuloModel = new Articulo();  // Inicialización de un nuevo objeto Articulo
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Ventas</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="~/css/custom.css" rel="stylesheet" />
-
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ingreso de Articulos</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+	<link href="~/css/custom.css" rel="stylesheet" />
+	<!-- SweetAlert2 CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+	<!-- Tabla Paginar  -->
+	<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
-    <form>
-        <div class="border-b border-gray-900/10 pb-12">
-            <h2 class="text-base font-semibold leading-7 text-white">Filtros de Búsqueda</h2>
-            <!--                  Inicio Datos                        -->
-            <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">             
 
-                <div class="sm:col-span-2">
-                    <label for="email" class="block text-sm font-medium leading-6 text-white">Articulo</label>
-                    <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                    </div>
-                </div>
+	<div class="w-full">
+	</div>
 
-                <!--                  Final Datos                        -->
-            </div>
-        </div>
-    </form>
-    <!-- Tabla de ventas -->
-    <div class="w-full">
-        <div class="flex justify-between items-center px-6 py-4 border-b">
-            <p class="text-xl pb-3 flex items-center text-white">
-                <i class="fas fa-list mr-3"></i> Listado Existencia Costo
-            </p>
-            <div>
-                <button class="bg-green-500 text-white px-4 py-2 mr-4 rounded hover:bg-green-600">Exportar a Excel</button>
-                <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Exportar a PDF</button>
-            </div>
-        </div>
-        <div class="bg-white overflow-auto">
-            <table class="min-w-full bg-white border border-gray-300">
-                <thead class="bg-gray-900 text-white">
-                    <tr>
-                        <th class="py-2 px-4">Articulo</th>
-                        <th class="py-2 px-4">Descripción</th>
-                        <th class="py-2 px-4">Existencias</th>
-                        <th class="py-2 px-4">Costo</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
-                        <td class="py-2 px-4">PANT-001</td>
-                        <td class="py-2 px-4">Pantalon corto</td>
-                        <td class="py-2 px-4">40</td>
-                        <td class="py-2 px-4">₡5400</td>
-                    </tr>
-                    <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
-                        <td class="py-2 px-4">SH-028</td>
-                        <td class="py-2 px-4">Short</td>
-                        <td class="py-2 px-4">29</td>
-                        <td class="py-2 px-4">₡8150</td>
-                    </tr>
-                    <tr class="even:bg-gray-50 dark:even:bg-gray-900/50 lg:justify-center">
-                        <td class="py-2 px-4">BLU-120</td>
-                        <td class="py-2 px-4">Blusa</td>
-                        <td class="py-2 px-4">16</td>
-                        <td class="py-2 px-4">₡6500</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4" class="py-2 px-4 font-semibold text-right">Total Costo: ₡235.000</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
+	<!--                  Formulario                        -->
+	<form>
+		<div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+			<h2 class="text-lg font-bold mb-4">Filtro de Articulos</h2>
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+				<div class="sm:col-span-1">
+					<label for="nombre_articulo" class="block text-sm font-medium">Nombre de Articulo</label>
+					<div class="mt-1">
+						<input type="text" id="nombre_articulo" name="nombre_articulo" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<!--Final de From-->
+	<div class="w-full mt-8">
+		<div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+			<h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Reporte de Inventario</h3>
+			<div>
+				<button id="exportButton" class="bg-green-500 text-white px-4 py-2 mr-4 rounded hover:bg-green-600">Exportar a Excel</button>
+			</div>
+
+		</div>
+
+		<!--                  Tabla                        -->
+		<div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+			<table id="tablaArticulos" class="min-w-full leading-normal">
+				<thead>
+					<tr class="bg-gray-800 text-white">
+						<th class="py-3 text-center">Código de Artículo</th>
+						<th class="py-3 text-center">Descripción de Artículo</th>
+						<th class="py-3 text-center">Existencias</th>
+						<th class="py-3 text-center">Costo</th>
+					</tr>
+				</thead>
+				<tbody id="bodyTablaArticulos" class="text-gray-700">
+					@if (articulos != null)
+					{
+						@foreach (var articulo in articulos)
+						{
+							<tr class="even:bg-gray-700 hover:bg-gray-600">
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.PK_Articulo)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.Descripcion)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.Cantidad)</td>
+								<td class="py-3 text-center">@Html.DisplayFor(modelItem => articulo.Costo)</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="14">No hay datos disponibles.</td>
+						</tr>
+					}
+				</tbody>
+				<tfoot>
+					<tr class="bg-gray-800 text-white">
+						<td colspan="3" class="py-3 text-right font-bold">Total Costo:</td>
+						<td id="totalCosto" class="py-3 text-center font-bold"></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+
+	<!--                  Modal de Crear Template                        -->
+	<!--Reducción de codigo realizando vista parcial
+		Ajuste 7/9/24 por Joseth Araya -->
+	<div id="modalCrearArticulo" class="modal">
+		<div class="modal-content">
+			@Html.Partial("ArticulosPars/_CrearArticulo")
+		</div>
+	</div>
+	<!--                  Final Modal de Crear Tempalte                        -->
+	<!--                  Modal de Actualizar Template                        -->
+	<!--Reducción de codigo realizando vista parcial
+		Ajuste 7/9/24 por Joseth Araya -->
+	<div id="modalActualizarArticulo" class="modal">
+		<div class="modal-content">
+			@Html.Partial("ArticulosPars/_ActualizarArticulo");
+		</div>
+	</div>
+	<!--                  Final Modal de Actualizar Tempalte                        -->
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+	<script>
+
+		/*funcion encargada de obtener y colocar los datos en la modal
+		incorporación 7/10/24 por Joseth Araya */
+		function ActuVarArticulo(PK) {
+			console.log("Respuesta   " + PK);
+			fetch(`/Articulos/ObtenerArt?PK=${PK}`, {
+				method: 'GET'
+			})
+				.then(response => {
+					if (response.ok) {
+						return response.json();
+					} else {
+						throw new Error('Error al obtener el artículo');
+					}
+				})
+				.then(data => {
+					console.log('Datos del artículo:', data);
+
+					//Asignación de datos al modal
+					document.getElementById('PKART').value = data.pK_Articulo;
+					console.log('Datos del PK:', data.pK_Articulo); //Pruebas de datos
+					document.getElementById('Descp').value = data.descripcion;
+					console.log('Datos del Descripcion:', data.descripcion); //Pruebas de datos
+					console.log('Datos del Cod:', data.codigo_Barras); //Pruebas de datos
+					document.getElementById('CodBarras').value = data.codigo_Barras;
+					document.getElementById('FKProveedor').value = data.fK_Proveedor.toString(); // Convertir a string si es necesario
+					document.getElementById('Cant').value = data.cantidad;
+					document.getElementById('cost').value = data.costo.toFixed(2); // Asegurar dos decimales
+					document.getElementById('Price').value = data.precio.toFixed(2); // Asegurar dos decimales
+					document.getElementById('State').value = data.estado.toString().toLowerCase(); // Convertir a string si es necesario
+
+					// Abrir el modal de actualización
+					openModal('modalActualizarArticulo');
+				})
+				.catch(error => {
+					// Mostrar mensaje de error con SweetAlert2 u otra forma
+					console.error('Error:', error);
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: 'Error al obtener los datos del artículo',
+						confirmButtonColor: '#3085d6',
+						cancelButtonColor: '#d33',
+						confirmButtonText: 'OK'
+					});
+				});
+		}
+
+		/*funcion encargada de abrir el modal
+		incorporación 6/10/24 por Joseth Araya */
+		function openModal(idModal) {
+			var modal = document.getElementById(idModal);
+			modal.style.display = "block";
+		}
+
+		// Función para mostrar modal de confirmación de desactivación
+		function mostrarConfirmacion(event) {
+			event.preventDefault();
+			document.getElementById('confirmacionModal').classList.remove('hidden');
+			window.confirmarDesactivacion = function () {
+				event.target.closest('form').submit();
+			};
+			window.cancelarDesactivacion = function () {
+				document.getElementById('confirmacionModal').classList.add('hidden');
+			};
+
+			return false;
+		}
+
+		// Función para filtrar la tabla de artículos por nombre
+		function filtrarTabla() {
+			// Obtener el valor de búsqueda del campo de nombre
+			const nombreArticulo = document.getElementById('nombre_articulo').value.toLowerCase();
+
+			// Obtener todas las filas de la tabla
+			const filas = document.querySelectorAll('#bodyTablaArticulos tr');
+
+			filas.forEach(fila => {
+				const cells = fila.getElementsByTagName('td');
+				const matchNombre = cells[1].textContent.toLowerCase().includes(nombreArticulo);
+
+				if (matchNombre) {
+					fila.style.display = '';
+				} else {
+					fila.style.display = 'none';
+				}
+			});
+		}
+
+		// Enlazar evento de input para el campo de nombre de artículo
+		document.getElementById('nombre_articulo').addEventListener('input', filtrarTabla);
+
+		document.getElementById('btnGuardar').addEventListener('click', function (event) {
+			event.preventDefault(); // Detener el envío normal del formulario
+
+			// Validar campos requeridos
+			var codigoArticulo = document.querySelector('[name="PK_Articulo"]').value;
+			var descripcion = document.querySelector('[name="Descripcion"]').value;
+			var codigoBarras = document.querySelector('[name="Codigo_Barras"]').value;
+			var proveedor = document.querySelector('[name="FK_Proveedor"]').value;
+			var cantidad = document.querySelector('[name="Cantidad"]').value;
+			var costo = document.querySelector('[name="Costo"]').value;
+			var precio = document.querySelector('[name="Precio"]').value;
+			var estado = document.querySelector('[name="Estado"]').value;
+
+			if (!codigoArticulo || !descripcion || !codigoBarras || !proveedor || !cantidad || !costo || !precio || !estado) {
+				// Mostrar mensaje de error con SweetAlert2 si no están completos los campos
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Por favor complete todos los campos requeridos.',
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'OK'
+				});
+			} else {
+				// Crear objeto FormData con los datos del formulario
+				var formData = new FormData(document.getElementById('formcreate'));
+
+				// Enviar los datos al controlador utilizando fetch
+				fetch('/Articulos/CrearArticulo', {
+					method: 'POST',
+					body: formData
+				})
+					.then(response => {
+						if (response.ok) {
+							// Mostrar mensaje de éxito con SweetAlert2
+							Swal.fire({
+								icon: 'success',
+								title: 'Guardado Correctamente',
+								showConfirmButton: true,
+								confirmButtonColor: '#3085d6',
+								confirmButtonText: 'OK'
+							}).then((result) => {
+								// Redirigir a la página de índice de artículos después de guardar
+								window.location.href = '/Articulos/Index';
+							});
+						} else {
+							throw new Error('Error al guardar los datos');
+						}
+					})
+					.catch(error => {
+						// Mostrar mensaje de error con SweetAlert2
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: error.message,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonText: 'OK'
+						});
+					});
+			}
+		});
+
+		/*Inicio de validaci[on de boton actualizar
+			Actualización 10/7/24 por Joseth Araya
+			Se modificaron los getElementId para obtener los datos correctos*/
+		document.getElementById('btnActualizar').addEventListener('click', function (event) {
+			event.preventDefault(); // Detener el envío normal del formulario
+
+			// Validar campos requeridos
+			var codigoArticulo = document.getElementById('PKART').value;
+			var descripcion = document.getElementById('Descp').value;
+			var codigoBarras = document.getElementById('CodBarras').value;
+			var proveedor = document.getElementById('FKProveedor').value;
+			var cantidad = document.getElementById('Cant').value;
+			var costo = document.getElementById('cost').value;
+			var precio = document.getElementById('Price').value;
+			var estado = document.getElementById('State').value;
+
+			if (!codigoArticulo || !descripcion || !codigoBarras || !proveedor || !cantidad || !costo || !precio || !estado) {
+				// Mostrar mensaje de error con SweetAlert2 si no están completos los campos
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Por favor complete todos los campos requeridos.',
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'OK'
+				});
+			} else {
+				// Crear objeto FormData con los datos del formulario
+				var formData = new FormData(document.getElementById('formupdate'));
+
+				// Enviar los datos al controlador utilizando fetch
+				fetch('/Articulos/ActualizarArticulo', {
+					method: 'POST',
+					body: formData
+				})
+					.then(response => {
+						if (response.ok) {
+							// Mostrar mensaje de éxito con SweetAlert2
+							Swal.fire({
+								icon: 'success',
+								title: 'Actualizado Correctamente',
+								showConfirmButton: true,
+								confirmButtonColor: '#3085d6',
+								confirmButtonText: 'OK'
+							}).then((result) => {
+								// Redirigir a la página de índice de artículos después de guardar
+								window.location.href = '/Articulos/Index';
+							});
+						} else {
+							throw new Error('Error al guardar los datos');
+						}
+					})
+					.catch(error => {
+						// Mostrar mensaje de error con SweetAlert2
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: error.message,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonText: 'OK'
+						});
+					});
+			}
+		});
+
+
+
+
+		// <!-- Inicio Validación botón desactivar -->
+		document.querySelectorAll('.desactivar-form').forEach(function (form) {
+			form.addEventListener('submit', function (event) {
+				event.preventDefault(); // Detener el envío normal del formulario
+
+				// Obtener la PK del Articulo desde el formulario
+				var pkArticulo = this.querySelector('input[name="PK_Articulo"]').value;
+
+				// Mostrar mensaje de confirmación con SweetAlert2
+				Swal.fire({
+					title: '¿Está seguro?',
+					text: "¿Desea desactivar este articulo?",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Sí, desactivar',
+					cancelButtonText: 'Cancelar'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						// Enviar la solicitud para desactivar el articulo
+						fetch(`/Articulos/DesactivarArticulo?PK=${pkArticulo}`, {
+							method: 'POST'
+						})
+							.then(response => {
+								if (response.ok) {
+									// Mostrar mensaje de éxito con SweetAlert2
+									Swal.fire({
+										icon: 'success',
+										title: 'Articulo desactivado correctamente',
+										showConfirmButton: true,
+										confirmButtonColor: '#3085d6',
+										confirmButtonText: 'OK'
+									}).then((result) => {
+										// Recargar la página después de desactivar
+										location.reload();
+									});
+								} else {
+									throw new Error('Error al desactivar el Cliente');
+								}
+							})
+							.catch(error => {
+								// Mostrar mensaje de error con SweetAlert2
+								Swal.fire({
+									icon: 'error',
+									title: 'Error',
+									text: error.message,
+									confirmButtonColor: '#3085d6',
+									cancelButtonColor: '#d33',
+									confirmButtonText: 'OK'
+								});
+							});
+					}
+				});
+			});
+		});
+		// <!-- Fin Validación botón desactivar -->
+
+		
+
+		// Función para calcular el total del costo
+		document.addEventListener('DOMContentLoaded', function () {
+			calcularTotalCosto();
+		});
+
+		function calcularTotalCosto() {
+			var totalCosto = 0;
+
+			// Obtener todas las filas de la tabla
+			var filas = document.querySelectorAll('#bodyTablaArticulos tr');
+
+			filas.forEach(fila => {
+				var cantidadCelda = fila.querySelector('td:nth-child(3)');
+				var costoCelda = fila.querySelector('td:nth-child(4)');
+
+				if (cantidadCelda && costoCelda) {
+					var cantidad = parseFloat(cantidadCelda.textContent.replace(',', ''));
+					var costo = parseFloat(costoCelda.textContent.replace('$', '').replace(',', ''));
+
+					if (!isNaN(cantidad) && !isNaN(costo)) {
+						totalCosto += cantidad * costo;
+					}
+				}
+			});
+
+			// Almacenar el total en localStorage
+			localStorage.setItem('totalCosto', totalCosto.toFixed(2));
+
+			// Actualizar el total en la tabla
+			document.getElementById('totalCosto').textContent = '₡' + totalCosto.toFixed(2);
+		}
+
+		// Llamar a la función cuando la página se carga
+		document.addEventListener('DOMContentLoaded', calcularTotalCosto);
+
+		//Funcion para exportar a excel:
+		document.getElementById('exportButton').addEventListener('click', function () {
+			// Obtén la tabla completa
+			var table = document.getElementById('tablaArticulos');
+
+			// Convierte la tabla a una hoja de cálculo
+			var wb = XLSX.utils.table_to_book(table);
+
+			// Crea un archivo Excel y descarga
+			XLSX.writeFile(wb, 'reporteInventario.xlsx');
+		});
+
+	</script>
 </body>
 </html>

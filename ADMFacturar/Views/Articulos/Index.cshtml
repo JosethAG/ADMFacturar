@@ -95,8 +95,8 @@
 								<td>
 									<div class="flex justify-center space-x-2">
 										@* <a onclick="actualizarArticulo(@Html.Raw(articulo))" class="text-blue-600 hover:text-blue-900" title="Editar">
-											<i class="fas fa-edit"></i> nuevo
-										</a> *@
+								<i class="fas fa-edit"></i> nuevo
+								</a> *@
 
 										<!-- Modificación para envio de todos los parámetros -->
 										<a onclick="ActuVarArticulo('@articulo.PK_Articulo')" class="text-blue-600 hover:text-blue-900" title="Editar">
@@ -138,7 +138,7 @@
 	<!--Reducción de codigo realizando vista parcial
 		Ajuste 7/9/24 por Joseth Araya -->
 	<div id="modalActualizarArticulo" class="modal">
-		<div class ="modal-content">
+		<div class="modal-content">
 			@Html.Partial("ArticulosPars/_ActualizarArticulo");
 		</div>
 	</div>
@@ -302,7 +302,7 @@
 		});
 
 		/*Inicio de validaci[on de boton actualizar
-			Actualización 10/7/24 por Joseth Araya 
+			Actualización 10/7/24 por Joseth Araya
 			Se modificaron los getElementId para obtener los datos correctos*/
 		document.getElementById('btnActualizar').addEventListener('click', function (event) {
 			event.preventDefault(); // Detener el envío normal del formulario

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<Correo>
+@{
 }
 
 <!-- Selección de tarea -->
@@ -43,17 +44,21 @@
     <div class="main-content mt-4">
         <div class="timeline">
             <!-- Timeline Item -->
-            <div class="timeline-item bg-gray-800 p-4 rounded-lg shadow-md mb-4">
-                <div class="flex justify-between items-center">
-                    <div class="date-box mr-4">
-                        <div class="date text-gray-400">09/28/2017</div>
-                    </div>
-                    <div class="title-status flex-1">
-                        <div class="title text-xl text-white">Título: ¡Renueva tu armario con las últimas tendencias!</div>
-                        <div class="text-gray-400">Dirigido a: info@yourstore.com, sales@yourstore.com, support@yourstore.com</div>
+            @foreach (var correo in Model)
+            {
+                <div class="timeline-item bg-gray-800 p-4 rounded-lg shadow-md mb-4">
+                    <div class="flex justify-between items-center">
+                        <div class="date-box mr-4">
+                            <div class="date text-gray-400">@correo.Fecha.ToString()</div>
+                        </div>
+                        <div class="title-status flex-1">
+                            <div class="title text-xl text-white">Título: @correo.Asunto</div>
+                            <div class="text-gray-400">Dirigido a: @correo.Destinatario</div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
+            
             <!-- Final Timeline Item -->    
         </div>
     </div>
@@ -160,6 +165,7 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Registro guardado exitosamente');
+                location.reload();
             })
             .catch(error => {
                 console.log('Error al guardar el registro: ' + error.message);

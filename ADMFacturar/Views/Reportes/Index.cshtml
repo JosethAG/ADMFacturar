@@ -34,7 +34,7 @@
             <div class="bg-white rounded-lg shadow-md p-6 text-center">
                 <i class="fas fa-warehouse text-5xl text-blue-500 mb-4"></i>
                 <h3 class="text-lg font-semibold">Total Costo Inventario</h3>
-                <p class="text-gray-600">₡3000</p>
+                <p id="totalCostoIndex" class="text-gray-600">₡0</p>
             </div>
             <!-- Total Descuentos -->
             <div class="bg-white rounded-lg shadow-md p-6 text-center">
@@ -143,6 +143,19 @@
         </div> *@
 
     </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Recuperar el total del costo almacenado en localStorage
+            var totalCosto = localStorage.getItem('totalCosto');
+
+            // Actualizar el total en la vista index si existe en localStorage
+            if (totalCosto) {
+                document.getElementById('totalCostoIndex').textContent = '₡' + parseFloat(totalCosto).toFixed(2);
+            }
+        });
+    </script>
 
 </body>
 </html>
