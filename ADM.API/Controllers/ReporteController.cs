@@ -19,10 +19,31 @@ namespace ADM.API.Controllers
 	{
 		private IArticuloService? _ArticuloService;
         private ICXPService? _CXPService;
+		private IReportesService? _ReportesService;
+		//REPORTES DESDE DASHBOARDS / VISTA INDEX
+		[HttpGet]
+		[Route("ListarDashboards")]
+		public IEnumerable<Reportes> ListaReporte(string? reporte)
+		{
+			DataTable tReporte = null;
 
-        //REPORTE ARTICULOS / INVENTARIO
+			if (reporte == null)
+			{
+				tReporte = DBData.List("sp_ListarReportes");
+			}
+			else
+			{
+				tReporte = DBData.List("sp_ListarReportes");
+			}
+			string jsonArticle = JsonConvert.SerializeObject(tReporte);
+			var result = JsonProvider.DeserializeSimple<IEnumerable<Reportes>>(jsonArticle);
+			return result;
+		}
 
-        [HttpGet]
+
+		//REPORTE ARTICULOS / INVENTARIO
+
+		[HttpGet]
 		[Route("ReporteArticulos")]
 		public IEnumerable<ArticuloViewModel> ListarArticulosVM()
 		{
