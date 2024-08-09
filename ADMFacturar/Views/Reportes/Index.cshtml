@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using ADM.Models
+@model Reportes
+
+@{
+    var Reportes = ViewData["Reportes"] as List<Reportes>;
+}
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -11,55 +18,54 @@
 
     <div class="container mx-auto py-8">
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-
-            <!-- Total de Venta -->
-            <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                <i class="fas fa-chart-line text-5xl text-blue-500 mb-4"></i>
-                <h3 class="text-lg font-semibold">Total de Venta</h3>
-                <p class="text-gray-600">₡5000</p>
-            </div>
-                  <!-- Total de Cobro -->
-            <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                <i class="fas fa-coins text-5xl text-blue-500 mb-4"></i>
-                <h3 class="text-lg font-semibold">Total de Cobro</h3>
-                <p class="text-gray-600">₡50,000</p>
-            </div>
-            <!-- Total de Ganancia -->
-            <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                <i class="fas fa-money-bill text-5xl text-blue-500 mb-4"></i>
-                <h3 class="text-lg font-semibold">Total de Ganancia</h3>
-                <p class="text-gray-600">₡1500</p>
-            </div>
-            <!-- Total Costo Inventario -->
-            <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                <i class="fas fa-warehouse text-5xl text-blue-500 mb-4"></i>
-                <h3 class="text-lg font-semibold">Total Costo Inventario</h3>
-                <p class="text-gray-600">₡3000</p>
-            </div>
-            <!-- Total Descuentos -->
-            <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                <i class="fas fa-percent text-5xl text-blue-500 mb-4"></i>
-                <h3 class="text-lg font-semibold">Total de Descuentos</h3>
-                <p class="text-gray-600">₡500</p>
-            </div>
-            <!-- Total Notas de Crédito -->
-            <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                <i class="far fa-credit-card text-5xl text-blue-500 mb-4"></i>
-                <h3 class="text-lg font-semibold">Total Notas de Crédito</h3>
-                <p class="text-gray-600">₡200</p>
-            </div>
-            <!-- Total Notas de Crédito por Monto -->
-            <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                <i class="far fa-money-bill-alt text-5xl text-blue-500 mb-4"></i>
-                <h3 class="text-lg font-semibold">Total Notas de Crédito por Monto</h3>
-                <p class="text-gray-600">₡300</p>
-            </div>
-            <!-- Total de Compras -->
-            <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                <i class="fas fa-shopping-bag text-5xl text-blue-500 mb-4"></i>
-                <h3 class="text-lg font-semibold">Total de Compras</h3>
-                <p class="text-gray-600">₡2000</p>
-            </div>
+            @if (Reportes != null)
+            {
+                @foreach (var Reporte in Reportes)
+                {
+                    <!-- Total de Venta -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="fas fa-chart-line text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold">Total de Venta</h3>
+                        <p class="text-gray-600">₡@Html.DisplayFor(modelItem => Reporte.TotalVenta)</p>
+                    </div>
+                    <!-- Total de Cobro -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="fas fa-coins text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold">Total de Cobro</h3>
+                        <p class="text-gray-600">₡@Html.DisplayFor(modelItem => Reporte.TotalCobro)</p>
+                    </div>
+                    <!-- Total de Ganancia -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="fas fa-money-bill text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold">Total de Ganancia</h3>
+                        <p class="text-gray-600">₡@Html.DisplayFor(modelItem => Reporte.TotalGanancia)</p>
+                    </div>
+                    <!-- Total Costo Inventario -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="fas fa-warehouse text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold">Total Costo Inventario</h3>
+                        <p class="text-gray-600">₡@Html.DisplayFor(modelItem => Reporte.TotalCosto)</p>
+                    </div>
+                    <!-- Total Descuentos -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="fas fa-percent text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold">Total de Descuentos</h3>
+                        <p class="text-gray-600">₡@Html.DisplayFor(modelItem => Reporte.TotalDescuentos)</p>
+                    </div>
+                    <!-- Total Notas de Crédito -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="far fa-credit-card text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold">Total Notas de Crédito</h3>
+                        <p class="text-gray-600">₡@Html.DisplayFor(modelItem => Reporte.TotalNotaCredito)</p>
+                    </div>
+                    <!-- Total de Compras -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="fas fa-shopping-bag text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold">Total de Compras</h3>
+                        <p class="text-gray-600">₡@Html.DisplayFor(modelItem => Reporte.TotalCompras)</p>
+                    </div>
+                }
+            }       
         </div>
 
         <!-- Botones de acceso a reportes -->
@@ -143,6 +149,19 @@
         </div> *@
 
     </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Recuperar el total del costo almacenado en localStorage
+            var totalCosto = localStorage.getItem('totalCosto');
+
+            // Actualizar el total en la vista index si existe en localStorage
+            if (totalCosto) {
+                document.getElementById('totalCostoIndex').textContent = '₡' + parseFloat(totalCosto).toFixed(2);
+            }
+        });
+    </script>
 
 </body>
 </html>
