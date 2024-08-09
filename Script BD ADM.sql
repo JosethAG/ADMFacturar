@@ -5,6 +5,20 @@ use ADM;
 ----------------------------------------------------------------------------------------------------
 								     	/*CREACION DE TABLAS*/
 ----------------------------------------------------------------------------------------------------
+/****** Object:  Table [dbo].[TBL_Reportes]    ******/
+GO
+
+CREATE TABLE [dbo].[TBL_Reportes] (
+    idReporte INT IDENTITY(1,1) PRIMARY KEY,
+    TotalVenta DECIMAL(18, 2) NULL,
+    TotalCobro DECIMAL(18, 2) NULL,
+    TotalGanancia DECIMAL(18, 2) NULL,
+    TotalCosto DECIMAL(18, 2) NULL,
+    TotalDescuentos DECIMAL(18, 2) NULL,
+    TotalNotaCredito DECIMAL(18, 2) NULL,
+    TotalCompras DECIMAL(18, 2) NULL
+);
+GO
 
 /****** Object:  Table [dbo].[TBL_PROVINCIA]    ******/
 SET ANSI_NULLS ON
@@ -534,6 +548,287 @@ CREATE TABLE TBL_ENVCORREOS (
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
+-------------------------------------------------
+					/*Reportes*/
+-------------------------------------------------
+--SP INSERTAR REPORTE
+USE ADM;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_GenerarReporte]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Limpiar la tabla TBL_Reportes
+    TRUNCATE TABLE dbo.TBL_Reportes;
+
+    DECLARE @TotalVenta DECIMAL(18, 2);
+    DECLARE @TotalCobro DECIMAL(18, 2);
+    DECLARE @TotalGanancia DECIMAL(18, 2);
+    DECLARE @TotalCosto DECIMAL(18, 2);
+    DECLARE @TotalDescuentos DECIMAL(18, 2);
+    DECLARE @TotalNotaCredito DECIMAL(18, 2);
+    DECLARE @TotalCompras DECIMAL(18, 2);
+
+    -- Total Venta
+    SELECT @TotalVenta = ISNULL(SUM(Total), 0)
+    FROM dbo.TBL_FACTURA
+    WHERE Tipo_Doc = 'F';
+
+    -- Total Cobro
+    SELECT @TotalCobro = ISNULL(SUM(Saldo_Pendiente), 0)
+    FROM dbo.TBL_DOCUMENTO_CC;
+
+    -- Total Ganancia
+    SELECT @TotalGanancia = ISNULL(SUM((Cantidad * Precio) - (Cantidad * Costo)), 0)
+    FROM dbo.TBL_FACTURA_LINEA;
+
+    -- Total Costo Articulos
+    SELECT @TotalCosto = ISNULL(SUM(Costo * Cantidad), 0)
+    FROM dbo.TBL_ARTICULO;
+
+    -- Total Descuentos
+    SELECT @TotalDescuentos = ISNULL(SUM(Descuento), 0)
+    FROM dbo.TBL_FACTURA;
+
+    -- Total Nota Credito
+    SELECT @TotalNotaCredito = ISNULL(SUM(Total), 0)
+    FROM dbo.TBL_FACTURA
+    WHERE Tipo_Doc = 'NC';
+
+    -- Total Compras
+    SELECT @TotalCompras = ISNULL(SUM(ISNULL(Subtotal, 0)), 0)
+    FROM dbo.TBL_INGRESO_MERCADERIA;
+
+    -- Insertar resultados en TBL_Reportes
+    INSERT INTO dbo.TBL_Reportes (TotalVenta, TotalCobro, TotalGanancia, TotalCosto, TotalDescuentos, TotalNotaCredito, TotalCompras)
+    VALUES (
+        ISNULL(@TotalVenta, 0), 
+        ISNULL(@TotalCobro, 0), 
+        ISNULL(@TotalGanancia, 0), 
+        ISNULL(@TotalCosto, 0), 
+        ISNULL(@TotalDescuentos, 0), 
+        ISNULL(@TotalNotaCredito, 0), 
+        ISNULL(@TotalCompras, 0)
+    );
+END
+GO
+
+--SP LISTAR REPORTES
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarReportes]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Ejecutar el procedimiento almacenado sp_GenerarReporte
+    EXEC dbo.sp_GenerarReporte;
+
+    -- Listar la información actualizada de la tabla TBL_Reportes
+    SELECT 
+        idReporte,
+        TotalVenta,
+        TotalCobro,
+        TotalGanancia,
+        TotalCosto,
+        TotalDescuentos,
+        TotalNotaCredito,
+        TotalCompras
+    FROM 
+        dbo.TBL_Reportes
+    ORDER BY 
+        idReporte;
+END;
+GO
+
+--SPS VARIADOS O PARA POSIBLE USO FUTURO:
+--SP GENERAL
+USE ADM;
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_Reportes]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Total Venta
+    DECLARE @TotalVenta DECIMAL(18, 2);
+    SELECT @TotalVenta = SUM(Total)
+    FROM dbo.TBL_FACTURA
+    WHERE Tipo_Doc = 'F';
+
+    -- Total Cobro
+    DECLARE @TotalCobro DECIMAL(18, 2);
+    SELECT @TotalCobro = SUM(Saldo_Pendiente)
+    FROM dbo.TBL_DOCUMENTO_CC;
+
+    -- Total Ganancia
+    DECLARE @TotalGanancia DECIMAL(18, 2);
+    SELECT @TotalGanancia = SUM((Cantidad * Precio) - (Cantidad * Costo))
+    FROM dbo.TBL_FACTURA_LINEA;
+
+    -- Total Costo Articulos
+    DECLARE @TotalCosto DECIMAL(18, 2);
+    SELECT @TotalCosto = SUM(Costo * Cantidad)
+    FROM dbo.TBL_ARTICULO;
+
+    -- Total Descuentos
+    DECLARE @TotalDescuentos DECIMAL(18, 2);
+    SELECT @TotalDescuentos = SUM(Descuento)
+    FROM dbo.TBL_FACTURA;
+
+    -- Total Nota Credito
+    DECLARE @TotalNotaCredito DECIMAL(18, 2);
+    SELECT @TotalNotaCredito = SUM(Total)
+    FROM dbo.TBL_FACTURA
+    WHERE Tipo_Doc = 'NC';
+
+    -- Total Compras
+    DECLARE @TotalCompras DECIMAL(18, 2);
+    SELECT @TotalCompras = SUM(ISNULL(Subtotal, 0))
+    FROM dbo.TBL_INGRESO_MERCADERIA;
+
+    -- Retornar los resultados
+    SELECT 
+        @TotalVenta AS TotalVenta,
+        @TotalCobro AS TotalCobro,
+        @TotalGanancia AS TotalGanancia,
+        @TotalCosto AS TotalCosto,
+        @TotalDescuentos AS TotalDescuentos,
+        @TotalNotaCredito AS TotalNotaCredito,
+        @TotalCompras AS TotalCompras;
+END
+GO
+
+--TOTAL VENTA
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_TotalVenta]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT SUM(Total) AS TotalVenta
+    FROM dbo.TBL_FACTURA
+    WHERE Tipo_Doc = 'F';
+END
+GO
+
+--TOTAL COBRO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_TotalCobro]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT SUM(Saldo_Pendiente) AS TotalCobro
+    FROM dbo.TBL_DOCUMENTO_CC;
+END
+GO
+
+--TOTAL GANANCIA
+CREATE PROCEDURE [dbo].[sp_TotalGanancia]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TotalGanancia DECIMAL(18, 3);
+
+    SELECT @TotalGanancia = SUM((Cantidad * Precio) - (Cantidad * Costo))
+    FROM dbo.TBL_FACTURA_LINEA;
+
+    IF @TotalGanancia IS NULL
+    BEGIN
+        SET @TotalGanancia = 0;
+    END
+
+    SELECT @TotalGanancia AS TotalGanancia;
+END
+GO
+
+--TOTAL COSTO ARTICULOS
+CREATE PROCEDURE [dbo].[sp_TotalCosto]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TotalCosto DECIMAL(18, 2);
+
+    SELECT @TotalCosto = SUM(Costo * Cantidad)
+    FROM dbo.TBL_ARTICULO;
+
+    IF @TotalCosto IS NULL
+    BEGIN
+        SET @TotalCosto = 0;
+    END
+
+    SELECT @TotalCosto AS TotalCosto;
+END
+GO
+
+--TOTAL DESCUENTOS
+
+CREATE PROCEDURE [dbo].[sp_TotalDescuentos]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TotalDescuentos DECIMAL(18, 3);
+
+    SELECT @TotalDescuentos = SUM(Descuento)
+    FROM dbo.TBL_FACTURA;
+
+    IF @TotalDescuentos IS NULL
+    BEGIN
+        SET @TotalDescuentos = 0;
+    END
+
+    SELECT @TotalDescuentos AS TotalDescuentos;
+END
+GO
+
+--TOTAL NOTA DE CREDITO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_TotalNotaCredito]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT SUM(Total) AS TotalNotaCredito
+    FROM dbo.TBL_FACTURA
+    WHERE Tipo_Doc = 'NC';
+END
+GO
+
+--TOTAL COMPRAS
+CREATE OR ALTER PROCEDURE [dbo].[sp_TotalCompras]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TotalCompras DECIMAL(18, 2);
+
+    SELECT @TotalCompras = SUM(ISNULL(Subtotal, 0))
+    FROM dbo.TBL_INGRESO_MERCADERIA;
+
+    SELECT @TotalCompras AS TotalCompras;
+END
+GO
 
 -------------------------------------------------
 					/*Usuario*/
@@ -3662,6 +3957,150 @@ BEGIN
 END
 
 GO
+
+
+-------------------------------------------------
+		/*REPORTES*/
+-------------------------------------------------
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerDatosFacturas]    Script Date: 8/9/2024 1:09:23 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ObtenerDatosFacturas]
+AS
+BEGIN
+    -- Selección de los datos requeridos
+    SELECT 
+        f.PK_Factura,
+        c.Nombre AS Nombre_Cliente,
+        f.Fecha,
+        d.Fecha_Vencimiento,
+        CASE 
+            WHEN d.Saldo_Pendiente = 0 THEN 'Completado'
+            ELSE d.Estado
+        END AS Estado,
+        f.Total,
+        d.Saldo_Pendiente
+    FROM 
+        dbo.TBL_FACTURA f
+    INNER JOIN 
+        dbo.TBL_CLIENTES c ON f.FK_Cliente = c.PK_Cliente
+    INNER JOIN 
+        dbo.TBL_DOCUMENTO_CC d ON f.FK_Cliente = d.FK_Cliente
+    WHERE 
+        d.PK_Documento_CC = (
+            SELECT TOP 1 PK_Documento_CC
+            FROM dbo.TBL_DOCUMENTO_CC
+            WHERE FK_Cliente = f.FK_Cliente
+            ORDER BY Fecha_Vencimiento DESC
+        );
+
+    -- Calcular el total pendiente de todas las facturas
+    SELECT 
+        SUM(d.Saldo_Pendiente) AS Total_Pendiente
+    FROM 
+        dbo.TBL_FACTURA f
+    INNER JOIN 
+        dbo.TBL_DOCUMENTO_CC d ON f.FK_Cliente = d.FK_Cliente
+    WHERE 
+        d.PK_Documento_CC = (
+            SELECT TOP 1 PK_Documento_CC
+            FROM dbo.TBL_DOCUMENTO_CC
+            WHERE FK_Cliente = f.FK_Cliente
+            ORDER BY Fecha_Vencimiento DESC
+        );
+END
+
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_reporteventas]    Script Date: 8/9/2024 1:09:33 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_reporteventas]
+AS
+BEGIN
+    -- Seleccionar los datos de facturas junto con los nombres de clientes y vendedores,
+    -- excluyendo las facturas con notas de crédito
+    SELECT 
+        f.PK_Factura AS FacturaID,
+        f.Fecha AS FacturaFecha,
+        c.Nombre AS ClienteNombre,
+        v.Nombre AS VendedorNombre,
+        f.Descuento AS FacturaDescuento,
+        f.Total AS FacturaTotal
+    FROM 
+        dbo.TBL_FACTURA f
+    INNER JOIN 
+        dbo.TBL_CLIENTES c ON f.FK_Cliente = c.PK_Cliente
+    LEFT JOIN 
+        dbo.TBL_VENDEDORES v ON f.FK_VENDEDOR = v.PK_Vendedor
+    WHERE 
+        f.Tipo_Doc <> 'NC' -- Excluye las facturas que son notas de crédito
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ReporteVendedores]    Script Date: 8/9/2024 1:09:40 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ReporteVendedores]
+AS
+BEGIN
+    -- Declarar la variable para la comisión
+    DECLARE @Comision DECIMAL(18, 3);
+
+    -- Seleccionar los datos requeridos
+    SELECT
+        f.PK_Factura,
+        f.Fecha,
+        c.Nombre AS Nombre_Cliente,
+        v.Nombre AS Nombre_Vendedor,
+        f.Descuento,
+        f.Total,
+        (f.Total * 0.10) AS Comision
+    FROM
+        dbo.TBL_FACTURA f
+    INNER JOIN
+        dbo.TBL_CLIENTES c ON f.FK_Cliente = c.PK_Cliente
+    LEFT JOIN
+        dbo.TBL_VENDEDORES v ON f.FK_VENDEDOR = v.PK_Vendedor;
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarDocumentosCCReporte]    Script Date: 8/9/2024 1:10:04 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ListarDocumentosCCReporte]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        dcc.PK_Documento_CC,
+        c.Nombre AS Nombre_Cliente,
+        v.Nombre AS Nombre_Vendedor,
+        dcc.Fecha_Documento,
+        dcc.Fecha_Vencimiento,
+        dcc.Total_XC,
+        dcc.Saldo_Pendiente
+    FROM 
+        dbo.TBL_DOCUMENTO_CC dcc
+    LEFT JOIN 
+        dbo.TBL_CLIENTES c ON dcc.FK_Cliente = c.PK_Cliente
+    LEFT JOIN 
+        dbo.TBL_VENDEDORES v ON c.FK_Vendedor = v.PK_Vendedor
+    ORDER BY 
+        dcc.PK_Documento_CC;
+END;
 
 	
 ----------------------------------------------------------------------------------------------------

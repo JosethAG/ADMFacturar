@@ -18,11 +18,25 @@ namespace ADMFacturar.Controllers
 			_httpClient = httpClientFactory.CreateClient();
 			_httpClient.BaseAddress = new Uri("https://localhost:7270/api");
 		}
-		public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult RVentas()
+		public async Task<IActionResult> Index()
+		{
+			{
+				var resp = await _httpClient.GetAsync("api/Reporte/ListarDashboards");
+
+				if (resp.IsSuccessStatusCode)
+				{
+					var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+					var Reportes = JsonConvert.DeserializeObject<IEnumerable<Reportes>>(content);
+					ViewData["Reportes"] = Reportes ?? new List<Reportes>();
+					return View("Index");
+				}
+
+				return View();
+			}
+		}
+
+
+		public IActionResult RVentas()
         {
             return View();
         }

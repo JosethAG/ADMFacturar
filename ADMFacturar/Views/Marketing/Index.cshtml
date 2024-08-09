@@ -65,36 +65,69 @@
 </div>
 
 <!-- Modales -->
+
 <div id="modalCrearCorreo" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
     <div class="bg-gray-800 text-white rounded-lg p-6 w-full max-w-md shadow-xl">
         <div>
             <h3 class="text-xl font-bold mb-4 text-center">Crear Nuevo Correo</h3>
             <hr class="mb-4">
         </div>
-        <form id="emailForm" class="flex flex-col space-y-8 text-white" enctype="multipart/form-data">
+        <form id="emailForm" class="flex flex-col space-y-4 text-white" enctype="multipart/form-data">
+            <div class="flex flex-col lg:flex-row justify-start items-center lg:space-x-2">
+                <div class="max-w-xs p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer">
+                    <div class="flex items-center" onclick="document.getElementById('fileInput').click();">
+                        <!-- Icono de clip ajustado -->
+                        <svg class="w-6 h-6 mb-2 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 4a1 1 0 011 1v6.586l4.707-4.707a1 1 0 111.414 1.414l-5.5 5.5a1 1 0 01-1.414 0L5.293 10.293a1 1 0 111.414-1.414L10 10.586V6a1 1 0 011-1zm8.707 7.293a1 1 0 00-1.414 0L12 15.586 8.707 12.293a1 1 0 00-1.414 1.414L10.586 17a1 1 0 001.414 0l7.707-7.707a1 1 0 000-1.414zM12 18a1 1 0 01-1-1v-2a1 1 0 011-1 1 1 0 011 1v2a1 1 0 01-1 1zm0-3a1 1 0 01-1-1v-2a1 1 0 011-1 1 1 0 011 1v2a1 1 0 01-1 1z" />
+                        </svg>
+                        <p class="text-sm font-medium text-white">Adjuntar</p>
+                    </div>
+                    <input type="file" name="attachments" id="fileInput" class="hidden" multiple />
+                </div>
+
+                <div class="max-w-xs p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer">
+                    <div class="flex items-center" onclick="abrirModal('modalGruposCorreo')">
+                        <svg class="w-6 h-6 mb-2 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                            <path d="M96 0C60.7 0 32 28.7 32 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H96zM208 288h64c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16H144c-8.8 0-16-7.2-16-16c0-44.2 35.8-80 80-80zm-32-96a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM512 80c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V80zM496 192c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm16 144c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V336z" />
+                        </svg>
+                        <p class="text-sm font-medium text-white">Grupos</p>
+                    </div>
+                </div>
+                <div class="max-w-xs p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer">
+                    <div class="flex items-center" onclick="abrirModal('modalPlantillas')">
+                        <svg class="w-6 h-6 mb-2 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 576 512">
+                            <path d="M264.5 5.2c14.9-6.9 32.1-6.9 47 0l218.6 101c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 149.8C37.4 145.8 32 137.3 32 128s5.4-17.9 13.9-21.8L264.5 5.2zM476.9 209.6l53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 277.8C37.4 273.8 32 265.3 32 256s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0l152-70.2zm-152 198.2l152-70.2 53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 405.8C37.4 401.8 32 393.3 32 384s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0z" />
+                        </svg>
+                        <p class="text-sm font-medium text-white">Plantillas</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-item">
-                <label class="block text-sm font-medium leading-6 text-white">Para: </label>
-                <input type="email" name="to" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                <label class="block text-sm font-medium leading-6 text-white">Para:</label>
+                <input type="email" name="to" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                
+                />
             </div>
             <div class="form-item">
-                <label class="block text-sm font-medium leading-6 text-white">Asunto: </label>
+                <label class="block text-sm font-medium leading-6 text-white">Asunto:</label>
                 <input type="text" name="subject" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
             </div>
             <div class="form-item">
-                <label class="block text-sm font-medium leading-6 text-white">Contenido: </label>
-                <textarea name="body" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="height: 140px;" required></textarea>
+              @*   <label class="block text-sm font-medium leading-6 text-white">Contenido:</label> *@
+                <textarea name="body" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" rows="4" required style="height: 217px;"></textarea>
             </div>
-            <div class="form-item">
-                <label class="block text-sm font-medium leading-6 text-white">Adjuntar Archivos: </label>
-                <input type="file" name="attachments" class="w-full text-gray-300" multiple />
-            </div>
-            <div class="flex justify-end space-x-2">
-                <button type="button" class="rounded-md bg-red-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-indigo-500" onclick="cerrarModal('modalCrearCorreo')">Cerrar</button>
-                <button type="submit" class="rounded-md bg-green-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-green-500 focus:ring-2 focus:ring-indigo-500">Enviar</button>
+
+            <div class="flex justify-center space-x-4">
+                <button type="button" class="w-full py-2 px-4 bg-gray-600 hover:bg-gray-500 text-white rounded-lg" onclick="cerrarModal('modalCrearCorreo')">Cancelar</button>
+                <button type="submit" class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-lg">Enviar</button>
             </div>
         </form>
     </div>
 </div>
+
+
+
 
 <!-- Inclusion de SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
