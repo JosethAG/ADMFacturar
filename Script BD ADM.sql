@@ -3962,7 +3962,11 @@ GO
 -------------------------------------------------
 		/*REPORTES*/
 -------------------------------------------------
-/****** Object:  StoredProcedure [dbo].[sp_ObtenerDatosFaCTURAS]   ******/
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerDatosFacturas]    Script Date: 8/9/2024 1:09:23 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE PROCEDURE [dbo].[sp_ObtenerDatosFacturas]
 AS
 BEGIN
@@ -3972,7 +3976,10 @@ BEGIN
         c.Nombre AS Nombre_Cliente,
         f.Fecha,
         d.Fecha_Vencimiento,
-        f.Estado,
+        CASE 
+            WHEN d.Saldo_Pendiente = 0 THEN 'Completado'
+            ELSE d.Estado
+        END AS Estado,
         f.Total,
         d.Saldo_Pendiente
     FROM 
@@ -4006,6 +4013,95 @@ BEGIN
 END
 
 GO
+
+
+/****** Object:  StoredProcedure [dbo].[sp_reporteventas]    Script Date: 8/9/2024 1:09:33 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_reporteventas]
+AS
+BEGIN
+    -- Seleccionar los datos de facturas junto con los nombres de clientes y vendedores,
+    -- excluyendo las facturas con notas de crédito
+    SELECT 
+        f.PK_Factura AS FacturaID,
+        f.Fecha AS FacturaFecha,
+        c.Nombre AS ClienteNombre,
+        v.Nombre AS VendedorNombre,
+        f.Descuento AS FacturaDescuento,
+        f.Total AS FacturaTotal
+    FROM 
+        dbo.TBL_FACTURA f
+    INNER JOIN 
+        dbo.TBL_CLIENTES c ON f.FK_Cliente = c.PK_Cliente
+    LEFT JOIN 
+        dbo.TBL_VENDEDORES v ON f.FK_VENDEDOR = v.PK_Vendedor
+    WHERE 
+        f.Tipo_Doc <> 'NC' -- Excluye las facturas que son notas de crédito
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ReporteVendedores]    Script Date: 8/9/2024 1:09:40 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ReporteVendedores]
+AS
+BEGIN
+    -- Declarar la variable para la comisión
+    DECLARE @Comision DECIMAL(18, 3);
+
+    -- Seleccionar los datos requeridos
+    SELECT
+        f.PK_Factura,
+        f.Fecha,
+        c.Nombre AS Nombre_Cliente,
+        v.Nombre AS Nombre_Vendedor,
+        f.Descuento,
+        f.Total,
+        (f.Total * 0.10) AS Comision
+    FROM
+        dbo.TBL_FACTURA f
+    INNER JOIN
+        dbo.TBL_CLIENTES c ON f.FK_Cliente = c.PK_Cliente
+    LEFT JOIN
+        dbo.TBL_VENDEDORES v ON f.FK_VENDEDOR = v.PK_Vendedor;
+END
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_ListarDocumentosCCReporte]    Script Date: 8/9/2024 1:10:04 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ListarDocumentosCCReporte]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        dcc.PK_Documento_CC,
+        c.Nombre AS Nombre_Cliente,
+        v.Nombre AS Nombre_Vendedor,
+        dcc.Fecha_Documento,
+        dcc.Fecha_Vencimiento,
+        dcc.Total_XC,
+        dcc.Saldo_Pendiente
+    FROM 
+        dbo.TBL_DOCUMENTO_CC dcc
+    LEFT JOIN 
+        dbo.TBL_CLIENTES c ON dcc.FK_Cliente = c.PK_Cliente
+    LEFT JOIN 
+        dbo.TBL_VENDEDORES v ON c.FK_Vendedor = v.PK_Vendedor
+    ORDER BY 
+        dcc.PK_Documento_CC;
+END;
+
 	
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
