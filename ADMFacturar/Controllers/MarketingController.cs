@@ -204,6 +204,25 @@ namespace ADMFacturar.Controllers
             }
         }
 
+        public async Task<IActionResult> ListarGrupoCorreos()
+        {
+
+            var respArts = await _httpClient.GetAsync("api/Marketing/ListarGC");
+
+
+            if (respArts.IsSuccessStatusCode)
+            {
+                var grupocorreoJson = await respArts.Content.ReadAsStringAsync();
+                var grupocorreos = JsonConvert.DeserializeObject<List<GrupoCorreo>>(grupocorreoJson);
+                return Json(grupocorreos);
+            }
+            else
+            {
+                return BadRequest("Error al obtener los grupos de correo");
+            }
+
+        }
+
 
     }
 }
