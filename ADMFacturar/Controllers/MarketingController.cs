@@ -44,14 +44,102 @@ namespace ADMFacturar.Controllers
             }
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> ObtenerGC(string Id)
         {
-            return null;
+            var resp = await _httpClient.GetAsync($"api/Marketing/ObtenerGC/{Id}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var Correos = JsonConvert.DeserializeObject<GrupoCorreo>(content);
+                return Ok(Correos);
+            }
+
+            else
+            {
+                var Correos = new GrupoCorreo();
+                return View(Correos);
+            }
         }
 
-        public IActionResult GCIndex()
+
+        [HttpPost]
+        public async Task<IActionResult> CreateGC([FromForm] GrupoCorreo GC)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var json = JsonConvert.SerializeObject(GC);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var response = await _httpClient.PostAsync("/api/Marketing/CrearGC", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Error al guardar el registro en la API" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = "Exception: " + ex.Message });
+                }
+            }
+            else
+            {
+                // Log model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = "Datos del formulario inválidos", errors });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateGC([FromForm] GrupoCorreo GC)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(GC);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/api/Marketing/ActualizarGC", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Error al obtener los articulo");
+                }
+            }
+            else
+            {
+                // Log model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = "Datos del formulario inválidos", errors });
+            }
+        }
+
+        public async Task<IActionResult> GCIndex()
+        {
+            var resp = await _httpClient.GetAsync("api/Marketing/ListarGC");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var Correos = JsonConvert.DeserializeObject<IEnumerable<GrupoCorreo>>(content);
+                return View(Correos);
+            }
+
+            else
+            {
+                var Correos = new List<Correo>();
+                return View(Correos);
+            }
         }
 
         public IActionResult TemplateIndex()
@@ -154,6 +242,25 @@ namespace ADMFacturar.Controllers
             {
                 return BadRequest("Error al obtener los correos");
             }
+        }
+
+        public async Task<IActionResult> ListarGrupoCorreos()
+        {
+
+            var respArts = await _httpClient.GetAsync("api/Marketing/ListarGC");
+
+
+            if (respArts.IsSuccessStatusCode)
+            {
+                var grupocorreoJson = await respArts.Content.ReadAsStringAsync();
+                var grupocorreos = JsonConvert.DeserializeObject<List<GrupoCorreo>>(grupocorreoJson);
+                return Json(grupocorreos);
+            }
+            else
+            {
+                return BadRequest("Error al obtener los grupos de correo");
+            }
+
         }
 
 

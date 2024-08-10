@@ -1,5 +1,4 @@
-﻿@{
-}
+﻿@model IEnumerable<GrupoCorreo>
 
     <!-- Formulario de filtros -->
     <form class="bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -21,7 +20,8 @@
             <i class="fas fa-list mr-3"></i> Listado de Grupos de Correos
             </p>
             <div>
-                <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded" onclick="abrirModal('modalCrearGC')">Crear Grupo de Correo</button>
+            <a onclick="abrirModal('modalCrearGC')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Grupo de Correo</a>
+
             </div>
         </div>
         <div class="overflow-auto mt-4">
@@ -34,53 +34,110 @@
                     </tr>
                 </thead>
                 <tbody class="text-center">
-                <tr class="even:bg-gray-700 hover:bg-gray-600">
-                    <td class="py-3 px-4 text-center">Todos</td>
-                    <td class="py-3 px-4 text-center">info@yourstore.com, sales@yourstore.com, support@yourstore.com,info@info.com, sales@sales.com, support@support.com</td>
-                    <td class="py-3 px-4 text-center">
-                            <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar Grupo de Correo" onclick="abrirModal('modalCrearGC')">
-                                <i class="fa-solid fa-edit"></i>
-                            </button>
-                            <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" title="Eliminar Grupo de Correo">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
+                    @if (Model != null)
+                    {
+                        @foreach (var grupoCorreo in Model)
+                        {
+                            <tr class="even:bg-gray-700 hover:bg-gray-600">
+                            <td class="py-3 px-4 text-center">@grupoCorreo.Name</td>
+                            <td class="py-3 px-4 text-center">@grupoCorreo.Correos</td>
+                            <td class="py-3 px-4 text-center">
+                                <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar Grupo de Correo" onclick="ActuVarGC('@grupoCorreo.Id')">
+                                    <i class="fa-solid fa-edit"></i>
+                                </button>
+                                <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" title="Eliminar Grupo de Correo">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                            </tr>
+                        }
+                    }
                 </tbody>
             </table>
         </div>
     </div>
 
 
-<!--                  Final Tabla                        -->
-<!--                  Inicio de Modal                        -->
-<!--                  Modal de Crear Abono                        -->
+<!--                  Modal de Crear Template                        -->
+<!--Reducción de codigo realizando vista parcial
+    Ajuste 7/9/24 por Joseth Araya -->
 <div id="modalCrearGC" class="modal">
     <div class="modal-content">
-
-        <form action="#" class="flex flex-col space-y-8 text-white">
-
-            <div>
-                <h3 class="text-2xl font-semibold text-center">Grupo de Correos</h3>
-                <hr>
-            </div>
-
-            <div class="form-item">
-                <label class="text-xl ">Nombre del Grupo</label>
-                <input type="text" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" />
-            </div>
-
-            <div class="form-item">
-                <label class="text-xl ">Correos</label>
-                <input type="text" class="w-full appearance-none text-black rounded py-1 px-2  mr-2 focus:outline-none  focus:border-blue-200" />
-            </div>
-
-            <div class="form-item w-full">
-                <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
-                <button type="submit" class="rounded-md bg-red-600 px-2 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Cancelar</button>
-            </div>
-        </form>
+        @Html.Partial("GCPars/_CreateGrupoCorreo", new GrupoCorreo());
     </div>
 </div>
-<!--                  Final Modal de Crear Abono                        -->
+<!--                  Final Modal de Crear Tempalte                        -->
+
+<div id="modalActuGC" class="modal">
+    <div class="modal-content">
+        @Html.Partial("GCPars/_UpdateGrupoCorreo", new GrupoCorreo());
+    </div>
+</div>
+
 <!--                  Final Modales                        -->
+<script>
+    /*funcion encargada de abrir el modal
+        incorporación 6/10/24 por Joseth Araya */
+    function openModal(idModal) {
+        var modal = document.getElementById(idModal);
+        modal.style.display = "block";
+    }
+
+    // Función para mostrar modal de confirmación de desactivación
+    function mostrarConfirmacion(event) {
+        event.preventDefault();
+        document.getElementById('confirmacionModal').classList.remove('hidden');
+        window.confirmarDesactivacion = function () {
+            event.target.closest('form').submit();
+        };
+        window.cancelarDesactivacion = function () {
+            document.getElementById('confirmacionModal').classList.add('hidden');
+        };
+
+        return false;
+    }
+
+    /*funcion encargada de obtener y colocar los datos en la modal
+        incorporación 10/8/24 por Joseth Araya */
+    function ActuVarGC(Id) {
+        console.log("Respuesta   " + Id);
+        fetch(`/Marketing/ObtenerGC?Id=${Id}`, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error al obtener el artículo');
+                }
+            })
+            .then(data => {
+                //Pruebas de datos
+                console.log('Datos del GC:', data);
+                console.log('Datos del Id:', data.id); 
+                console.log('Datos del Name:', data.name); 
+                console.log('Datos del Correos:', data.correos); 
+                
+                //Asignación de datos al modal
+                document.getElementById('GCId').value = data.id;
+                document.getElementById('GCName').value = data.name;
+                document.getElementById('GCcorreo').value = data.correos;
+
+                // Abrir el modal de actualización
+                openModal('modalActuGC');
+            })
+            .catch(error => {
+                // Mostrar mensaje de error con SweetAlert2 u otra forma
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al obtener los datos del artículo',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            });
+    }
+
+</script>

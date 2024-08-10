@@ -28,6 +28,33 @@ namespace ADM.API.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("ListarGC")]
+        public IEnumerable<GrupoCorreo> ListaGrupoCorreos()
+        {
+            DataTable tCorreo = null;
+            tCorreo = DBData.List("sp_ListarGC");
+            string jsonArticle = JsonConvert.SerializeObject(tCorreo);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<GrupoCorreo>>(jsonArticle);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("ObtenerGC/{Id}")]
+        public GrupoCorreo ListaGrupoCorreos(string? Id)
+        {
+            List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@Id", Id)
+                    };
+            DataTable tGC = DBData.List("sp_ObtenerGrupoCorreo", parameters);
+
+            string jsonGC = JsonConvert.SerializeObject(tGC);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<GrupoCorreo>>(jsonGC);
+            GrupoCorreo rest = result.FirstOrDefault();
+            return rest;
+        }
+
 
 
         [HttpPost]
@@ -46,6 +73,52 @@ namespace ADM.API.Controllers
             };
 
             var result = DBData.Execute("sp_InsertarEnvCorreo", parameters);
+
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + result);
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("CrearGC")]
+        public bool CrearGC(GrupoCorreo GC)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Grupo recibido: " + JsonConvert.SerializeObject(GC));
+
+            List<DBParameter> parameters = new List<DBParameter>
+            {
+                new DBParameter("@Name", GC.Name),
+                new DBParameter("@Correos", GC.Correos)
+
+            };
+
+            var result = DBData.Execute("sp_CrearGrupoCorreo", parameters);
+
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + result);
+
+            return result;
+        }
+
+
+        [HttpPost]
+        [Route("ActualizarGC")]
+        public bool ActualizarGC(GrupoCorreo GC)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Grupo recibido: " + JsonConvert.SerializeObject(GC));
+
+            List<DBParameter> parameters = new List<DBParameter>
+            {
+                new DBParameter("@Id", GC.Id.ToString()),
+                new DBParameter("@Name", GC.Name),
+                new DBParameter("@Correos", GC.Correos)
+
+            };
+
+            var result = DBData.Execute("sp_ActualizarGrupoCorreo", parameters);
 
             // Log the result of the database operation
             Console.WriteLine("Database operation result: " + result);
