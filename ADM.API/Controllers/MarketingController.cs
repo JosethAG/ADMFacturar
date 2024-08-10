@@ -39,6 +39,24 @@ namespace ADM.API.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("ActualizarGC/{id}")]
+        public GrupoCorreo ListaGrupoCorreos(string? id)
+        {
+            List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@PK_FK_Documento", id)
+                    };
+            DataTable tArticulo = DBData.List("sp_ObtenerGrupoCorreo", parameters);
+
+            string jsonArticle = JsonConvert.SerializeObject(tArticulo);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<GrupoCorreo>>(jsonArticle);
+            var rest = result.FirstOrDefault();
+            return rest;
+        }
+
+
+
         [HttpPost]
         [Route("Crear")]
         public bool CrearCorreo(Correo Correo)
@@ -83,6 +101,31 @@ namespace ADM.API.Controllers
 
             return result;
         }
+
+
+        [HttpPost]
+        [Route("ActualizarGC")]
+        public bool ActualizarGC(GrupoCorreo GC)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Grupo recibido: " + JsonConvert.SerializeObject(GC));
+
+            List<DBParameter> parameters = new List<DBParameter>
+            {
+                new DBParameter("@Id", GC.Id.ToString()),
+                new DBParameter("@Name", GC.Name),
+                new DBParameter("@Correos", GC.Correos)
+
+            };
+
+            var result = DBData.Execute("sp_ActualizarGrupoCorreo", parameters);
+
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + result);
+
+            return result;
+        }
+
 
     }
 
