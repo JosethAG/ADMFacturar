@@ -4123,6 +4123,40 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[sp_ActualizarGrupoCorreo]
+    @Id INT,
+    @Name NVARCHAR(255),
+    @Correos NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.TBL_GRUPOCORREO
+    SET 
+        Name = @Name,
+        Correos = @Correos
+    WHERE 
+        Id = @Id;
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerGrupoCorreo]
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        Id,
+        Name,
+        Correos
+    FROM 
+        dbo.TBL_GRUPOCORREO
+    WHERE 
+        Id = @Id;
+END
+GO
+
 CREATE PROCEDURE [dbo].[sp_ListarGC]
 AS
 BEGIN
