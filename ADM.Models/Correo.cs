@@ -6,6 +6,5 @@
         public string Asunto { get; set; }
         public string Contenido { get; set; }
         public DateTime? Fecha { get; set; }
-
     }
 }
