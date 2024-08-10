@@ -20,7 +20,7 @@
             <i class="fas fa-list mr-3"></i> Listado de Grupos de Correos
             </p>
             <div>
-            <a onclick="abrirModal('modalCrearFC')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Grupo de Correo</a>
+            <a onclick="abrirModal('modalCrearGC')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Grupo de Correo</a>
 
             </div>
         </div>
@@ -42,7 +42,7 @@
                             <td class="py-3 px-4 text-center">@grupoCorreo.Name</td>
                             <td class="py-3 px-4 text-center">@grupoCorreo.Correos</td>
                             <td class="py-3 px-4 text-center">
-                                <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar Grupo de Correo" onclick="abrirModal('modalCrearGC')">
+                                <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar Grupo de Correo" onclick="abrirModal('modalActuGC')">
                                     <i class="fa-solid fa-edit"></i>
                                 </button>
                                 <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" title="Eliminar Grupo de Correo">
@@ -63,12 +63,18 @@
 <!--                  Modal de Crear Template                        -->
 <!--Reducción de codigo realizando vista parcial
     Ajuste 7/9/24 por Joseth Araya -->
-<div id="modalCrearFC" class="modal">
+<div id="modalCrearGC" class="modal">
     <div class="modal-content">
         @Html.Partial("GCPars/_CreateGrupoCorreo", new GrupoCorreo())
     </div>
 </div>
 <!--                  Final Modal de Crear Tempalte                        -->
+
+<div id="modalActuGC" class="modal">
+    <div class="modal-content">
+        @Html.Partial("GCPars/_CreateGrupoCorreo", new GrupoCorreo())
+    </div>
+</div>
 
 <!--                  Final Tabla                        -->
 <!--                  Inicio de Modal                        -->
