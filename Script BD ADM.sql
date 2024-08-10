@@ -544,7 +544,14 @@ CREATE TABLE TBL_ENVCORREOS (
 
 );
 
-	
+
+/****** Table [dbo].[TBL_ENVCORREOS]  ******/
+CREATE TABLE TBL_GRUPOCORREO (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    Correos NVARCHAR(MAX) NOT NULL
+);
+
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
 ----------------------------------------------------------------------------------------------------
@@ -4103,6 +4110,35 @@ BEGIN
 END;
 
 	
+/* Grupos de correo*/
+CREATE PROCEDURE [dbo].[sp_CrearGrupoCorreo]
+    @Name NVARCHAR(100),
+    @Correos NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO TBL_GRUPOCORREO (Name, Correos)
+    VALUES (@Name, @Correos);
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_ListarGC]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        Id,
+        Name,
+        Correos
+    FROM 
+        TBL_GRUPOCORREO;
+END
+GO
+
+
+
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
 ----------------------------------------------------------------------------------------------------
@@ -5234,6 +5270,10 @@ INSERT [dbo].[TBL_DISTRITO] ([ID_PROVINCIA], [ID_CANTON], [ID_DISTRITO], [NOMBRE
 GO
 INSERT [dbo].[TBL_DISTRITO] ([ID_PROVINCIA], [ID_CANTON], [ID_DISTRITO], [NOMBRE]) VALUES (7, 6, 5, N'DUACARÍ')
 GO
+
+INSERT INTO TBL_GRUPOCORREO (Name, Correos) VALUES ('Vendedores', 'correo1@ejemplo.com,correo2@ejemplo.com');
+INSERT INTO TBL_GRUPOCORREO (Name, Correos) VALUES ('Gobierno', 'correo3@ejemplo.com,correo4@ejemplo.com');
+INSERT INTO TBL_GRUPOCORREO (Name, Correos) VALUES ('Sector Público', 'correo5@ejemplo.com,correo6@ejemplo.com');
 
 
 
