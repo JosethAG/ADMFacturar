@@ -44,11 +44,24 @@ namespace ADMFacturar.Controllers
             }
         }
 
-
-        public IActionResult CreateGC()
+        public async Task<IActionResult> _UpdateGrupoCorreo(string id)
         {
-            return View();
+            var resp = await _httpClient.GetAsync($"api/Marketing/ActualizarGC/{id}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var Correos = JsonConvert.DeserializeObject<GrupoCorreo>(content);
+                return View(Correos);
+            }
+
+            else
+            {
+                var Correos = new GrupoCorreo();
+                return View(Correos);
+            }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateGC([FromForm] GrupoCorreo GC)
@@ -61,6 +74,40 @@ namespace ADMFacturar.Controllers
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                     var response = await _httpClient.PostAsync("/api/Marketing/CrearGC", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Error al guardar el registro en la API" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = "Exception: " + ex.Message });
+                }
+            }
+            else
+            {
+                // Log model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = "Datos del formulario inválidos", errors });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateGC([FromForm] GrupoCorreo GC)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var json = JsonConvert.SerializeObject(GC);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    var response = await _httpClient.PostAsync("/api/Marketing/ActualizarGC", content);
 
                     if (response.IsSuccessStatusCode)
                     {
