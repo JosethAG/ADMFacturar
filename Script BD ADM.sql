@@ -532,6 +532,7 @@ CREATE TABLE dbo.TBL_ABONOS (
         REFERENCES dbo.TBL_DOCUMENTO_CP(PK_Documento)
 );
 
+GO
 /****** Table [dbo].[TBL_ENVCORREOS]  ******/
 
 CREATE TABLE TBL_ENVCORREOS (
@@ -544,13 +545,34 @@ CREATE TABLE TBL_ENVCORREOS (
 
 );
 
-
+GO 
 /****** Table [dbo].[TBL_ENVCORREOS]  ******/
 CREATE TABLE TBL_GRUPOCORREO (
     Id INT PRIMARY KEY IDENTITY(1,1),
     Name NVARCHAR(100) NOT NULL,
     Correos NVARCHAR(MAX) NOT NULL
 );
+
+
+/****** Object:  Table [dbo].[TBL_GRUPOCORREO]    Script Date: 8/11/2024 11:00:31 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_TEMPLATECORREO](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [nvarchar](100)  NULL,
+	[Asunto] [nvarchar](200)  NULL,
+	[Contenido] [nvarchar](max)  NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
@@ -3963,6 +3985,70 @@ BEGIN
 
 END
 
+GO
+
+
+-- Procedimiento para crear un template de correo
+CREATE PROCEDURE sp_CrearTemplateCorreo
+    @Nombre NVARCHAR(100),
+    @Asunto NVARCHAR(200),
+    @Contenido NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO [dbo].[TBL_TEMPLATECORREO] (Nombre, Asunto, Contenido)
+    VALUES (@Nombre, @Asunto, @Contenido);
+END
+GO
+
+-- Procedimiento para actualizar un template de correo
+CREATE PROCEDURE sp_ActualizarTemplateCorreo
+    @Id INT,
+    @Nombre NVARCHAR(100),
+    @Asunto NVARCHAR(200),
+    @Contenido NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE [dbo].[TBL_TEMPLATECORREO]
+    SET Nombre = @Nombre,
+        Asunto = @Asunto,
+        Contenido = @Contenido
+    WHERE Id = @Id;
+END
+GO
+
+-- Procedimiento para eliminar un template de correo
+CREATE PROCEDURE sp_EliminarTemplateCorreo
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM [dbo].[TBL_TEMPLATECORREO]
+    WHERE Id = @Id;
+END
+GO
+
+-- Procedimiento para listar todos los templates de correo
+CREATE PROCEDURE sp_ListarTemplateCorreo
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT Id, Nombre, Asunto, Contenido
+    FROM [dbo].[TBL_TEMPLATECORREO];
+END
+GO
+
+-- Procedimiento para obtener un template de correo por Id
+CREATE PROCEDURE sp_ObtenerTemplateCorreo
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT Id, Nombre, Asunto, Contenido
+    FROM [dbo].[TBL_TEMPLATECORREO]
+    WHERE Id = @Id;
+END
 GO
 
 
