@@ -126,6 +126,27 @@ namespace ADM.API.Controllers
             return result;
         }
 
+        [HttpPost]
+        [Route("EliminarGC/{ID}")]
+        public bool EliminarGC(string ID)
+        {
+            if (ID == null || ID.Length == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                {
+                    new DBParameter("@Id", ID)
+                };
+
+                var result = DBData.Execute("sp_EliminarGrupoCorreos", parameters);
+
+                return result;
+            }
+        }
+
 
     }
 
