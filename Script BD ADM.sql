@@ -666,7 +666,7 @@ BEGIN
     DECLARE @TotalVenta DECIMAL(18, 2);
     SELECT @TotalVenta = SUM(Total)
     FROM dbo.TBL_FACTURA
-    WHERE Tipo_Doc = 'F';
+    WHERE Tipo_Doc = 'F' AND Fac_Referencia IS NULL;
 
     -- Total Cobro
     DECLARE @TotalCobro DECIMAL(18, 2);
