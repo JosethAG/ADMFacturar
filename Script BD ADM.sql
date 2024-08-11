@@ -4172,6 +4172,18 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[sp_EliminarGrupoCorreos]
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM dbo.TBL_GRUPOCORREO
+    WHERE Id = @Id;
+END
+GO
+
+
 
 
 ----------------------------------------------------------------------------------------------------
