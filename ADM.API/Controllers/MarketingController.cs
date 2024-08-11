@@ -40,18 +40,18 @@ namespace ADM.API.Controllers
         }
 
         [HttpGet]
-        [Route("ActualizarGC/{id}")]
-        public GrupoCorreo ListaGrupoCorreos(string? id)
+        [Route("ObtenerGC/{Id}")]
+        public GrupoCorreo ListaGrupoCorreos(string? Id)
         {
             List<DBParameter> parameters = new List<DBParameter>
                     {
-                        new DBParameter("@PK_FK_Documento", id)
+                        new DBParameter("@Id", Id)
                     };
-            DataTable tArticulo = DBData.List("sp_ObtenerGrupoCorreo", parameters);
+            DataTable tGC = DBData.List("sp_ObtenerGrupoCorreo", parameters);
 
-            string jsonArticle = JsonConvert.SerializeObject(tArticulo);
-            var result = JsonProvider.DeserializeSimple<IEnumerable<GrupoCorreo>>(jsonArticle);
-            var rest = result.FirstOrDefault();
+            string jsonGC = JsonConvert.SerializeObject(tGC);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<GrupoCorreo>>(jsonGC);
+            GrupoCorreo rest = result.FirstOrDefault();
             return rest;
         }
 
@@ -124,6 +124,27 @@ namespace ADM.API.Controllers
             Console.WriteLine("Database operation result: " + result);
 
             return result;
+        }
+
+        [HttpPost]
+        [Route("EliminarGC/{ID}")]
+        public bool EliminarGC(string ID)
+        {
+            if (ID == null || ID.Length == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                {
+                    new DBParameter("@Id", ID)
+                };
+
+                var result = DBData.Execute("sp_EliminarGrupoCorreos", parameters);
+
+                return result;
+            }
         }
 
 

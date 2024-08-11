@@ -44,15 +44,15 @@ namespace ADMFacturar.Controllers
             }
         }
 
-        public async Task<IActionResult> _UpdateGrupoCorreo(string id)
+        public async Task<IActionResult> ObtenerGC(string Id)
         {
-            var resp = await _httpClient.GetAsync($"api/Marketing/ActualizarGC/{id}");
+            var resp = await _httpClient.GetAsync($"api/Marketing/ObtenerGC/{Id}");
 
             if (resp.IsSuccessStatusCode)
             {
                 var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
                 var Correos = JsonConvert.DeserializeObject<GrupoCorreo>(content);
-                return View(Correos);
+                return Ok(Correos);
             }
 
             else
@@ -68,25 +68,18 @@ namespace ADMFacturar.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                var json = JsonConvert.SerializeObject(GC);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                
+                var response = await _httpClient.PostAsync("/api/Marketing/CrearGC", content);
+                
+                if (response.IsSuccessStatusCode)
                 {
-                    var json = JsonConvert.SerializeObject(GC);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    var response = await _httpClient.PostAsync("/api/Marketing/CrearGC", content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return Ok();
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = "Error al guardar el registro en la API" });
-                    }
+                    return RedirectToAction("GCIndex");
                 }
-                catch (Exception ex)
+                else
                 {
-                    return Json(new { success = false, message = "Exception: " + ex.Message });
+                    return BadRequest("Error al obtener los articulo");
                 }
             }
             else
@@ -102,25 +95,18 @@ namespace ADMFacturar.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                var json = JsonConvert.SerializeObject(GC);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/api/Marketing/ActualizarGC", content);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var json = JsonConvert.SerializeObject(GC);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    var response = await _httpClient.PostAsync("/api/Marketing/ActualizarGC", content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return Ok();
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = "Error al guardar el registro en la API" });
-                    }
+                    return RedirectToAction("GCIndex");
                 }
-                catch (Exception ex)
+                else
                 {
-                    return Json(new { success = false, message = "Exception: " + ex.Message });
+                    return BadRequest("Error al obtener los articulo");
                 }
             }
             else
@@ -130,6 +116,29 @@ namespace ADMFacturar.Controllers
                 return Json(new { success = false, message = "Datos del formulario inválidos", errors });
             }
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarGC(string ID)
+        {
+            if (ModelState.IsValid)
+            {
+                var content = new StringContent(ID, Encoding.UTF8, "application/json");
+                var resp = await _httpClient.PostAsync($"/api/Marketing/EliminarGC/{ID}", content);
+                string responseContent = await resp.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                return NotFound();
+
+            }
+            return Ok();
+        }
+
 
         public async Task<IActionResult> GCIndex()
         {
