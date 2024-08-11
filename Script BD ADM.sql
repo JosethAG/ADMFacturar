@@ -44,7 +44,7 @@ CREATE TABLE TBL_Usuario (
     Fecha_Creacion DATETIME NOT NULL,
     Fecha_Modificacion DATETIME NOT NULL
 );
-
+GO
 
 
 
@@ -4108,6 +4108,7 @@ BEGIN
     ORDER BY 
         dcc.PK_Documento_CC;
 END;
+GO
 
 	
 /* Grupos de correo*/
