@@ -1,86 +1,109 @@
 ﻿@model IEnumerable<GrupoCorreo>
 
-    <!-- Formulario de filtros -->
-    <form class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <div class="border-b border-gray-900/10 pb-6">
-            <h2 class="text-lg font-semibold leading-7 text-white mb-4">Grupos de Correo</h2>
-            <div class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-8">              
-                <div class="sm:col-span-2">
-                    <label for="nombre_grupo" class="block text-sm font-medium leading-6 text-white">Nombre del grupo</label>
-                    <input type="text" id="nombre_grupo" name="nombre_grupo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
-                </div>
+<!-- Formulario de filtros -->
+<form class="bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div class="border-b border-gray-900/10 pb-6">
+        <h2 class="text-lg font-semibold leading-7 text-white mb-4">Grupos de Correo</h2>
+     @*    <div class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-8">
+            <div class="sm:col-span-1">
+                <label for="nombre_grupo" class="block text-sm font-medium leading-6 text-white">Nombre del grupo</label>
+                <input type="text" id="nombre_grupo" name="nombre_grupo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" onkeyup="filtrarTabla()" placeholder="Buscar por grupo">
+            </div>
+        </div> *@
+        <div class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-8">
+            <div class="sm:col-span-2">
+                <label for="nombre_grupo" class="block text-sm font-medium leading-6 text-white">Nombre del grupo</label>
+                <input type="text" id="nombre_grupo" name="nombre_grupo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" onkeyup="filtrarTabla()" placeholder="Buscar por grupo">
             </div>
         </div>
-    </form>
+    </div>
+</form>
 
-    <!-- Tabla de grupos de correo -->
-    <div class="mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
-        <div class="flex justify-between items-center pb-4 border-b border-gray-700">
-            <p class="text-xl font-semibold text-white">
+<!-- Tabla de grupos de correo -->
+<div class="mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div class="flex justify-between items-center pb-4 border-b border-gray-700">
+        <p class="text-xl font-semibold text-white">
             <i class="fas fa-list mr-3"></i> Listado de Grupos de Correos
-            </p>
-            <div>
-            <a onclick="abrirModal('modalCrearGC')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Grupo de Correo</a>
-
-            </div>
+        </p>
+        <div>
+            <a onclick="openModal('modalCrearGC')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Grupo de Correo</a>
         </div>
-        <div class="overflow-auto mt-4">
-            <table class="min-w-full bg-gray-800 text-white">
-                <thead class="bg-gray-900">
-                    <tr>
-                        <th class="py-2 px-4 text-center">Nombre del grupo</th>
-                        <th class="py-2 px-4 text-center">Correos</th>
-                        <th class="py-2 px-4 text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    @if (Model != null)
+    </div>
+    <div class="overflow-auto mt-4">
+        <table class="min-w-full bg-gray-800 text-white" id="tablaGruposCorreo">
+            <thead class="bg-gray-900">
+                <tr>
+                    <th class="py-2 px-4 text-center">Nombre del grupo</th>
+                    <th class="py-2 px-4 text-center">Correos</th>
+                    <th class="py-2 px-4 text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @if (Model != null)
+                {
+                    @foreach (var grupoCorreo in Model)
                     {
-                        @foreach (var grupoCorreo in Model)
-                        {
-                            <tr class="even:bg-gray-700 hover:bg-gray-600">
+                        <tr class="even:bg-gray-700 hover:bg-gray-600">
                             <td class="py-3 px-4 text-center">@grupoCorreo.Name</td>
                             <td class="py-3 px-4 text-center">@grupoCorreo.Correos</td>
                             <td class="py-3 px-4 text-center">
-                                <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar Grupo de Correo" onclick="ActuVarGC('@grupoCorreo.Id')">
-                                    <i class="fa-solid fa-edit"></i>
-                                </button>
-                                <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" title="Eliminar Grupo de Correo">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
+                                <div class="flex justify-center space-x-2">
+                                    <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar Grupo de Correo" onclick="ActuVarGC('@grupoCorreo.Id')">
+                                        <i class="fa-solid fa-edit"></i>
+                                    </button>
+                                    <form asp-action="EliminarGC" method="post" class="desactivar-form">
+                                        <input type="hidden" name="Id" value="@grupoCorreo.Id" />
+                                        <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" title="Eliminar Grupo de Correo">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
-                            </tr>
-                        }
+                        </tr>
                     }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
+</div>
 
-
-<!--                  Modal de Crear Template                        -->
-<!--Reducción de codigo realizando vista parcial
-    Ajuste 7/9/24 por Joseth Araya -->
+<!-- Modal de Crear Grupo de Correo -->
 <div id="modalCrearGC" class="modal">
     <div class="modal-content">
-        @Html.Partial("GCPars/_CreateGrupoCorreo", new GrupoCorreo());
+        @Html.Partial("GCPars/_CreateGrupoCorreo", new GrupoCorreo())
     </div>
 </div>
-<!--                  Final Modal de Crear Tempalte                        -->
 
+<!-- Modal de Actualización de Grupo de Correo -->
 <div id="modalActuGC" class="modal">
     <div class="modal-content">
-        @Html.Partial("GCPars/_UpdateGrupoCorreo", new GrupoCorreo());
+        @Html.Partial("GCPars/_UpdateGrupoCorreo", new GrupoCorreo())
     </div>
 </div>
 
-<!--                  Final Modales                        -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    /*funcion encargada de abrir el modal
-        incorporación 6/10/24 por Joseth Araya */
+    // Función para abrir el modal
     function openModal(idModal) {
         var modal = document.getElementById(idModal);
         modal.style.display = "block";
+    }
+
+    // Función para filtrar la tabla
+    function filtrarTabla() {
+        var nombreFiltro = document.getElementById('nombre_grupo').value.toLowerCase();
+        var tabla = document.getElementById('tablaGruposCorreo');
+        var filas = tabla.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+        for (var i = 0; i < filas.length; i++) {
+            var nombreGrupo = filas[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+
+            if (nombreGrupo.indexOf(nombreFiltro) > -1) {
+                filas[i].style.display = "";
+            } else {
+                filas[i].style.display = "none";
+            }
+        }
     }
 
     // Función para mostrar modal de confirmación de desactivación
@@ -97,10 +120,8 @@
         return false;
     }
 
-    /*funcion encargada de obtener y colocar los datos en la modal
-        incorporación 10/8/24 por Joseth Araya */
+    // Función para obtener datos y mostrar en el modal de actualización
     function ActuVarGC(Id) {
-        console.log("Respuesta   " + Id);
         fetch(`/Marketing/ObtenerGC?Id=${Id}`, {
             method: 'GET'
         })
@@ -108,31 +129,21 @@
                 if (response.ok) {
                     return response.json();
                 } else {
-                    throw new Error('Error al obtener el artículo');
+                    throw new Error('Error al obtener el grupo de correo');
                 }
             })
             .then(data => {
-                //Pruebas de datos
-                console.log('Datos del GC:', data);
-                console.log('Datos del Id:', data.id); 
-                console.log('Datos del Name:', data.name); 
-                console.log('Datos del Correos:', data.correos); 
-                
-                //Asignación de datos al modal
                 document.getElementById('GCId').value = data.id;
                 document.getElementById('GCName').value = data.name;
                 document.getElementById('GCcorreo').value = data.correos;
 
-                // Abrir el modal de actualización
                 openModal('modalActuGC');
             })
             .catch(error => {
-                // Mostrar mensaje de error con SweetAlert2 u otra forma
-                console.error('Error:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Error al obtener los datos del artículo',
+                    text: 'Error al obtener los datos del grupo de correo',
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
@@ -140,4 +151,53 @@
             });
     }
 
+    // Validación y confirmación de desactivación
+    document.querySelectorAll('.desactivar-form').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Detener el envío normal del formulario
+
+            var Id = this.querySelector('input[name="Id"]').value;
+            Swal.fire({
+                title: '¿Está seguro?',
+                text: "¿Desea Eliminar este Grupo de Correos?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, Eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/Marketing/EliminarGC?ID=${Id}`, {
+                        method: 'POST'
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Grupo de Correos Eliminado Correctamente',
+                                    showConfirmButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                throw new Error('Error al eliminar el Grupo de Correos');
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: error.message,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                }
+            });
+        });
+    });
 </script>

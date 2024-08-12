@@ -47,7 +47,7 @@
                 <div class="timeline-item bg-gray-800 p-4 rounded-lg shadow-md mb-4">
                     <div class="flex justify-between items-center">
                         <div class="date-box mr-4">
-                            <div class="date text-gray-400">@correo.Fecha.ToString()</div>
+                            <div class="date text-gray-400">@String.Format("{0:dd/MM/yyyy}", correo.Fecha)</div>
                         </div>
                         <div class="title-status flex-1">
                             <div class="title text-xl text-white">Título: @correo.Asunto</div>
@@ -94,7 +94,7 @@
 
                 <!-- Botón de Plantillas -->
                 <div class="max-w-xs w-full p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer">
-                    <div class="flex items-center justify-center" onclick="abrirModal('modalPlantillas')">
+                    <div class="flex items-center justify-center" onclick="openModalTemplate()">
                         <svg class="w-6 h-6 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 576 512">
                             <path d="M264.5 5.2c14.9-6.9 32.1-6.9 47 0l218.6 101c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 149.8C37.4 145.8 32 137.3 32 128s5.4-17.9 13.9-21.8L264.5 5.2zM476.9 209.6l53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 277.8C37.4 273.8 32 265.3 32 256s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0l152-70.2zm-152 198.2l152-70.2 53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 405.8C37.4 401.8 32 393.3 32 384s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0z" />
                         </svg>
@@ -105,9 +105,7 @@
 
             <div class="form-item">
                 <label class="block text-sm font-medium leading-6 text-white">Para:</label>
-                <input type="email" name="to" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
-                
-                />
+                <input type="email" name="to" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
             </div>
             <div class="form-item">
                 <label class="block text-sm font-medium leading-6 text-white">Asunto:</label>
@@ -160,6 +158,37 @@
 </div>
 <!-- Fin Modal Buscar Grupo Correo -->
 
+<!-- Modal Buscar Template Correo -->
+<div id="modalTemplate" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden">
+    <div class="bg-gray-800 text-white rounded-lg p-6 w-full max-w-md shadow-xl">
+        <div class="mb-6">
+            <h3 class="text-xl font-bold mb-4">Buscar Template de Correo</h3>
+            <div class="relative">
+                <input type="text" id="buscarTemplateCorreo" class="block w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Buscar por template o título">
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-gray-800 text-white" id="tablaTemplateCorreo">
+                <thead class="bg-gray-900">
+                    <tr>
+                        <th class="py-3 px-4 text-center">Template</th>
+                        <th class="py-3 px-4 text-center">Título</th>
+                        <th class="py-3 px-4 text-center">Contenido</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <!-- Filas de artículos generadas dinámicamente por JavaScript -->
+                </tbody>
+            </table>
+
+        </div>
+        <div class="mt-6 flex justify-end">
+            <button type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded" onclick="closeModalTemplate()">Cerrar</button>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal Template Grupo Correo -->
+
 
 
 
@@ -190,6 +219,65 @@
         }
     });
 
+    function openModalTemplate() {
+        fetch('/Marketing/ListarTemplateCorreos')
+            .then(response => response.json())
+            .then(data => {
+                renderTableTC(data);
+                document.getElementById('modalTemplate').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error al obtener los templates de correos:', error);
+       
+            });
+    }
+
+    function renderTableTC(data) {
+        const buscar = document.getElementById('buscarTemplateCorreo').value.toLowerCase();
+        const filteredData = data.filter(template =>
+            template.nombre.toLowerCase().includes(buscar) || template.asunto.toLowerCase().includes(buscar)
+        );
+
+        const tableBody = document.querySelector('#tablaTemplateCorreo tbody');
+        if (tableBody) {
+            let tableRows = '';
+            filteredData.forEach(template => {
+                tableRows += `
+                    <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer"
+                        onclick="seleccionarTemplate('${template.asunto}', \`${template.contenido}\`)">
+                        <td class="py-3 px-4 border-b border-gray-700">${template.nombre}</td>
+                        <td class="py-3 px-4 border-b border-gray-700">${template.asunto}</td>
+                        <td class="py-3 px-4 border-b border-gray-700">${template.contenido}</td>
+                    </tr>
+                `;
+            });
+            tableBody.innerHTML = tableRows;
+        }
+    }
+
+    function closeModalTemplate() {
+        document.getElementById('modalTemplate').classList.add('hidden');
+    }
+
+    function seleccionarTemplate(asunto, contenido) {
+        const subjectInput = document.querySelector('input[name="subject"]');
+        const bodyTextarea = document.querySelector('textarea[name="body"]'); 
+
+        if (subjectInput) {
+            subjectInput.value = asunto;
+        }
+
+        if (bodyTextarea) {
+            bodyTextarea.value = contenido;
+        }
+
+        closeModalTemplate();
+        abrirModal('modalCrearCorreo');
+    }
+
+    document.getElementById('buscarTemplateCorreo').addEventListener('input', function () {
+        openModalTemplate();
+    });
 
     function openModal() {
         fetch('/Marketing/ListarGrupoCorreos')
