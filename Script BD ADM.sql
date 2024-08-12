@@ -2,6 +2,7 @@ drop database ADM;
 create database ADM;
 use ADM;
 
+
 ----------------------------------------------------------------------------------------------------
 								     	/*CREACION DE TABLAS*/
 ----------------------------------------------------------------------------------------------------
@@ -532,6 +533,7 @@ CREATE TABLE dbo.TBL_ABONOS (
         REFERENCES dbo.TBL_DOCUMENTO_CP(PK_Documento)
 );
 
+GO
 /****** Table [dbo].[TBL_ENVCORREOS]  ******/
 
 CREATE TABLE TBL_ENVCORREOS (
@@ -544,13 +546,56 @@ CREATE TABLE TBL_ENVCORREOS (
 
 );
 
-
+GO 
 /****** Table [dbo].[TBL_ENVCORREOS]  ******/
 CREATE TABLE TBL_GRUPOCORREO (
     Id INT PRIMARY KEY IDENTITY(1,1),
     Name NVARCHAR(100) NOT NULL,
     Correos NVARCHAR(MAX) NOT NULL
 );
+
+
+/****** Object:  Table [dbo].[TBL_GRUPOCORREO]    Script Date: 8/11/2024 11:00:31 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TBL_TEMPLATECORREO](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nombre] [nvarchar](100)  NULL,
+	[Asunto] [nvarchar](200)  NULL,
+	[Contenido] [nvarchar](max)  NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE TBL_IMAGENES
+(
+    Id INT IDENTITY(1,1) PRIMARY KEY, 
+    Prompt NVARCHAR(MAX) NOT NULL, 
+    Img NVARCHAR(MAX) NOT NULL 
+);
+GO
+
+CREATE TABLE TBL_KARDEX (
+    Id INT IDENTITY(1,1) PRIMARY KEY, 
+    Fecha DATETIME NOT NULL, 
+    Articulo NVARCHAR(100) NOT NULL,
+    Descripcion NVARCHAR(255) NULL,
+    Movimiento NVARCHAR(50) NOT NULL, 
+    TipoMovimiento NVARCHAR(50) NOT NULL,
+    Documento NVARCHAR(100) NULL, -- 
+    CantidadMovimiento DECIMAL(18,2) NOT NULL, 
+    Existencia DECIMAL(18,2) NOT NULL 
+);
+
+GO	
+
 
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
@@ -657,7 +702,7 @@ GO
 USE ADM;
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_Reportes]
+Create OR ALTER PROCEDURE [dbo].[sp_Reportes]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -666,7 +711,7 @@ BEGIN
     DECLARE @TotalVenta DECIMAL(18, 2);
     SELECT @TotalVenta = SUM(Total)
     FROM dbo.TBL_FACTURA
-    WHERE Tipo_Doc = 'F';
+    WHERE Tipo_Doc = 'F' AND Fac_Referencia IS NULL;
 
     -- Total Cobro
     DECLARE @TotalCobro DECIMAL(18, 2);
@@ -674,9 +719,11 @@ BEGIN
     FROM dbo.TBL_DOCUMENTO_CC;
 
     -- Total Ganancia
-    DECLARE @TotalGanancia DECIMAL(18, 2);
-    SELECT @TotalGanancia = SUM((Cantidad * Precio) - (Cantidad * Costo))
-    FROM dbo.TBL_FACTURA_LINEA;
+   DECLARE @TotalGanancia DECIMAL(18, 2);
+    SELECT @TotalGanancia = SUM(
+        CASE WHEN A_Devolver = 0 THEN (Cantidad * Precio) - (Cantidad * Costo) ELSE 0 END
+    )
+    FROM TBL_FACTURA_LINEA;
 
     -- Total Costo Articulos
     DECLARE @TotalCosto DECIMAL(18, 2);
@@ -2432,7 +2479,9 @@ ORDER BY
     Fecha_Compra DESC;
 END
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarIngresoMercaderia]    Script Date: 6/23/2024 10:48:15 AM ******/
+
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarIngresoMercaderia]    Script Date: 8/11/2024 9:36:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2451,7 +2500,7 @@ CREATE PROCEDURE [dbo].[sp_InsertarActualizarIngresoMercaderia]
 AS
 BEGIN
     SET NOCOUNT ON;
-
+	
     -- Verificar si ya existe el ingreso
     IF EXISTS (SELECT 1 FROM [dbo].[TBL_INGRESO_MERCADERIA]
                WHERE [PK_FK_Documento] = @PK_FK_Documento
@@ -2462,7 +2511,7 @@ BEGIN
         UPDATE [dbo].[TBL_INGRESO_MERCADERIA]
         SET [Cantidad] = @Cantidad,
             [Costo] = @Costo,
-			[Subtotal] = @Cantidad * @Costo
+            [Subtotal] = @Cantidad * @Costo
         WHERE [PK_FK_Documento] = @PK_FK_Documento
         AND [PK_FK_Proveedor] = @PK_FK_Proveedor
         AND [PK_FK_Articulo] = @PK_FK_Articulo;
@@ -2479,7 +2528,7 @@ BEGIN
             [Cantidad],
             [Costo],
             [Subtotal],
-			[Estado],
+            [Estado],
             [FK_Usuario_Creacion],
             [FK_Usuario_Modificacion],
             [Fecha_Creacion],
@@ -2494,16 +2543,40 @@ BEGIN
             @Cantidad,
             @Costo,
             @Cantidad * @Costo,
-			'Pendiente',
+            'Pendiente',
             @FK_Usuario_Creacion,
             @FK_Usuario_Modificacion,
             GETDATE(),
             GETDATE()
         );
     END
+
+    -- Insertar el movimiento en TBL_KARDEX
+    INSERT INTO dbo.TBL_KARDEX (
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    )
+    VALUES (
+        GETDATE(), -- Fecha del movimiento
+        @PK_FK_Articulo, -- Artículo FK
+       (SELECT Descripcion FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @PK_FK_Articulo), 
+        'Ingreso Mercadería', -- Movimiento
+        'Ingreso', -- Tipo de movimiento
+        @PK_FK_Documento, -- Documento asociado
+        @Cantidad, -- Cantidad movida
+        (SELECT Cantidad FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @PK_FK_Articulo) -- Existencia actual
+    );
+
 END
 
-GO 
+GO
+	
 /****** Object:  StoredProcedure [dbo].[sp_GuardarIngresoMercaderia]    Script Date: 6/24/2024 4:15:06 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -2693,9 +2766,9 @@ ORDER BY
     Fecha_Salida DESC;
 END
 
-
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarSalidaMercaderia]    Script Date: 6/27/2024 9:41:30 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarSalidaMercaderia]    Script Date: 8/11/2024 9:46:27 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2755,8 +2828,30 @@ BEGIN
             GETDATE()
         );
     END
-END
 
+	
+    -- Insertar el movimiento en TBL_KARDEX
+    INSERT INTO dbo.TBL_KARDEX (
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    )
+    VALUES (
+        GETDATE(), -- Fecha del movimiento
+        @PK_FK_Articulo, -- Artículo FK
+       (SELECT Descripcion FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @PK_FK_Articulo), 
+        'Salida Mercadería', -- Movimiento
+        'Salida', -- Tipo de movimiento
+        @PK_FK_Documento, -- Documento asociado
+        @Cantidad, -- Cantidad movida
+        (SELECT Cantidad FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @PK_FK_Articulo) -- Existencia actual
+    );
+END
 
 GO
 /****** Object:  StoredProcedure [dbo].[sp_ListarSalidaPorDoc]    Script Date: 6/27/2024 10:14:08 PM ******/
@@ -3027,7 +3122,8 @@ END;
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/8/2024 7:22:17 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 8/11/2024 9:06:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3035,20 +3131,21 @@ GO
 CREATE PROCEDURE [dbo].[sp_InsertarFacturaLinea]
     @PK_FK_Factura VARCHAR(50),
     @FK_Articulo VARCHAR(50),
-    @Cantidad int,
-	@Precio decimal(18,2)
+    @Cantidad INT,
+    @Precio DECIMAL(18,2)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-	    DECLARE @Costo decimal(18,2); -- Declarar la variable para el costo		
+    DECLARE @Costo DECIMAL(18,2); -- Declarar la variable para el costo		
+    DECLARE @Existencia DECIMAL(18,2); -- Variable para la existencia actual después del movimiento
 
     -- Obtener el COSTO asociado al articulo
     SELECT @Costo = Costo
     FROM TBL_ARTICULO
     WHERE PK_Articulo = @FK_Articulo;
-
 	
+    -- Insertar la línea de la factura
     INSERT INTO dbo.TBL_FACTURA_LINEA (
         PK_FK_Factura,
         FK_Articulo,
@@ -3073,12 +3170,37 @@ BEGIN
         GETDATE(),
         GETDATE()
     );
-	
-    -- Rebaja existencia de inventario
+
+	    -- Rebaja existencia de inventario y obtiene la nueva existencia
     UPDATE dbo.TBL_ARTICULO
     SET Cantidad = Cantidad - @Cantidad
-    WHERE PK_Articulo = @FK_Articulo;
 
+	
+
+    -- Insertar el movimiento en TBL_KARDEX
+    INSERT INTO dbo.TBL_KARDEX (
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    )
+    VALUES (
+        GETDATE(), -- Fecha del movimiento
+        @FK_Articulo, -- Artículo FK
+		(SELECT Descripcion FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @FK_Articulo), -- Existencia actual
+        'Factura', -- Tipo de movimiento
+        'Salida', -- Tipo de movimiento
+        @PK_FK_Factura, -- Documento asociado
+        @Cantidad, -- Cantidad movida
+        (SELECT Cantidad FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @FK_Articulo) -- Existencia actual
+    );
+
+	
+    
 END;
 
 GO
@@ -3280,9 +3402,8 @@ BEGIN
 
 END;
 
-
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarNCLinea]    Script Date: 7/13/2024 12:09:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_InsertarNCLinea]    Script Date: 8/11/2024 9:21:28 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3296,19 +3417,22 @@ BEGIN
     SET NOCOUNT ON;
 
     DECLARE @Costo DECIMAL(18,2); -- Declarar la variable para el costo		
-    DECLARE @CantidOriginal INT; -- Declarar la variable para el CantidOriginal	
+    DECLARE @CantidOriginal INT; -- Declarar la variable para la Cantidad Original	
     DECLARE @Precio DECIMAL(18,2); -- Declarar la variable para el precio		
     DECLARE @Motivo VARCHAR(50); -- Declarar la variable para el motivo
+    DECLARE @Existencia DECIMAL(18,2); -- Variable para la existencia actual después del movimiento
 
     -- Obtener el COSTO asociado al articulo
     SELECT @Costo = Costo
     FROM TBL_FACTURA_LINEA
     WHERE FK_Articulo = @FK_Articulo;
 
+    -- Obtener la Cantidad Original
     SELECT @CantidOriginal = Cantidad
     FROM TBL_FACTURA_LINEA
     WHERE FK_Articulo = @FK_Articulo;
 
+    -- Obtener el Precio asociado al articulo
     SELECT @Precio = Precio
     FROM TBL_FACTURA_LINEA
     WHERE FK_Articulo = @FK_Articulo;
@@ -3318,6 +3442,13 @@ BEGIN
     FROM TBL_FACTURA
     WHERE PK_Factura = @PK_FK_Factura;
 
+
+        UPDATE dbo.TBL_ARTICULO
+        SET Cantidad = Cantidad + @Cantidad
+  
+
+
+    -- Insertar línea de la factura de nota de crédito
     INSERT INTO dbo.TBL_FACTURA_LINEA (
         PK_FK_Factura,
         FK_Articulo,
@@ -3343,15 +3474,34 @@ BEGIN
         GETDATE()
     );
 
-    -- Actualizar la existencia de inventario
-    --IF @Motivo = 'Devolucion'
-    BEGIN
-        UPDATE dbo.TBL_ARTICULO
-        SET Cantidad = Cantidad + @Cantidad
-        WHERE PK_Articulo = @FK_Articulo;
-    END
+  
+
+    -- Insertar el movimiento en TBL_KARDEX
+    INSERT INTO dbo.TBL_KARDEX (
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    )
+    VALUES (
+        GETDATE(), -- Fecha del movimiento
+        @FK_Articulo, -- Artículo FK
+       (SELECT Descripcion FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @FK_Articulo), 
+        'Nota Crédito', -- Movimiento
+        'Ingreso', -- Tipo de movimiento
+        @PK_FK_Factura, -- Documento asociado
+        @Cantidad, -- Cantidad movida
+        (SELECT Cantidad FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @FK_Articulo) -- Existencia actual
+    );
+
+
 
 END;
+
 GO
 	
 -------------------------------------------------
@@ -3966,10 +4116,76 @@ END
 GO
 
 
+-- Procedimiento para crear un template de correo
+CREATE PROCEDURE sp_CrearTemplateCorreo
+    @Nombre NVARCHAR(100),
+    @Asunto NVARCHAR(200),
+    @Contenido NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO [dbo].[TBL_TEMPLATECORREO] (Nombre, Asunto, Contenido)
+    VALUES (@Nombre, @Asunto, @Contenido);
+END
+GO
+
+-- Procedimiento para actualizar un template de correo
+CREATE PROCEDURE sp_ActualizarTemplateCorreo
+    @Id INT,
+    @Nombre NVARCHAR(100),
+    @Asunto NVARCHAR(200),
+    @Contenido NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE [dbo].[TBL_TEMPLATECORREO]
+    SET Nombre = @Nombre,
+        Asunto = @Asunto,
+        Contenido = @Contenido
+    WHERE Id = @Id;
+END
+GO
+
+-- Procedimiento para eliminar un template de correo
+CREATE PROCEDURE sp_EliminarTemplateCorreo
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM [dbo].[TBL_TEMPLATECORREO]
+    WHERE Id = @Id;
+END
+GO
+
+-- Procedimiento para listar todos los templates de correo
+CREATE PROCEDURE sp_ListarTemplateCorreo
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT Id, Nombre, Asunto, Contenido
+    FROM [dbo].[TBL_TEMPLATECORREO];
+END
+GO
+
+-- Procedimiento para obtener un template de correo por Id
+CREATE PROCEDURE sp_ObtenerTemplateCorreo
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT Id, Nombre, Asunto, Contenido
+    FROM [dbo].[TBL_TEMPLATECORREO]
+    WHERE Id = @Id;
+END
+GO
+
+
 -------------------------------------------------
 		/*REPORTES*/
 -------------------------------------------------
-/****** Object:  StoredProcedure [dbo].[sp_ObtenerDatosFacturas]    Script Date: 8/9/2024 1:09:23 AM ******/
+USE [ADM]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerDatosFacturas]    Script Date: 8/11/2024 5:27:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4000,8 +4216,10 @@ BEGIN
             SELECT TOP 1 PK_Documento_CC
             FROM dbo.TBL_DOCUMENTO_CC
             WHERE FK_Cliente = f.FK_Cliente
+            AND Tipo_Doc = 'F'
             ORDER BY Fecha_Vencimiento DESC
-        );
+        )
+    AND f.Tipo_Doc = 'F';
 
     -- Calcular el total pendiente de todas las facturas
     SELECT 
@@ -4015,10 +4233,11 @@ BEGIN
             SELECT TOP 1 PK_Documento_CC
             FROM dbo.TBL_DOCUMENTO_CC
             WHERE FK_Cliente = f.FK_Cliente
+            AND Tipo_Doc = 'F'
             ORDER BY Fecha_Vencimiento DESC
-        );
+        )
+    AND f.Tipo_Doc = 'F';
 END
-
 GO
 
 
@@ -4172,7 +4391,37 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE [dbo].[sp_EliminarGrupoCorreos]
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    DELETE FROM dbo.TBL_GRUPOCORREO
+    WHERE Id = @Id;
+END
+GO
+
+CREATE PROCEDURE sp_ListarIMG
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT Id, Prompt, Img
+    FROM TBL_IMAGENES;
+END
+GO
+
+
+CREATE PROCEDURE sp_CrearIMG
+    @Prompt NVARCHAR(MAX),
+    @Img NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO TBL_IMAGENES (Prompt, Img)
+    VALUES (@Prompt, @Img);
+END
+GO
 
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
@@ -5358,6 +5607,18 @@ VALUES
  ('Proveedor 3', '345-678-9012', 'proveedor3@empresa.com', 'Calle 3, Ciudad C', 1, 'usuario_creacion3', GETDATE()),
  ('Proveedor 4', '456-789-0123', 'proveedor4@empresa.com', 'Calle 4, Ciudad D', 1, 'usuario_creacion4', GETDATE()),
  ('Proveedor 5', '567-890-1234', 'proveedor5@empresa.com', 'Calle 5, Ciudad E', 1, 'usuario_creacion5', GETDATE());
+
+
+ /*Inserts de Imagenes*/
+SET IDENTITY_INSERT [dbo].[TBL_IMAGENES] ON 
+GO
+INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (3, N'Nube de algodon', N'https://processed-model-result.s3.us-east-2.amazonaws.com/e41db207-ffa0-48d7-bb11-18c0c7cbe7d6_0.png')
+GO
+INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (6, N'Modelo de verano', N'https://processed-model-result.s3.us-east-2.amazonaws.com/2af49324-a1e2-4274-b885-a36cea6a0fa4_0.png')
+GO
+SET IDENTITY_INSERT [dbo].[TBL_IMAGENES] OFF
+GO
+
 
 -- Insertar datos de ejemplo en la tabla TBL_ARTICULO
 INSERT INTO [dbo].[TBL_ARTICULO] 
