@@ -1,4 +1,5 @@
 using ADM.Models;
+using ADM.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,12 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpS
 // Add services to the container.
 builder.Services.AddHttpClient();
 builder.Services.AddControllersWithViews();
+
+//ApiMonster
+builder.Services.AddScoped<IMonsterApiService, MonsterApiService>();
+builder.Services.AddScoped<IRestrictionService, RestrictionService>();
+
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(option =>
