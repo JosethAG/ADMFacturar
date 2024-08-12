@@ -582,6 +582,20 @@ CREATE TABLE TBL_IMAGENES
 );
 GO
 
+CREATE TABLE TBL_KARDEX (
+    Id INT IDENTITY(1,1) PRIMARY KEY, 
+    Fecha DATETIME NOT NULL, 
+    Articulo NVARCHAR(100) NOT NULL,
+    Descripcion NVARCHAR(255) NULL,
+    Movimiento NVARCHAR(50) NOT NULL, 
+    TipoMovimiento NVARCHAR(50) NOT NULL,
+    Documento NVARCHAR(100) NULL, -- 
+    CantidadMovimiento DECIMAL(18,2) NOT NULL, 
+    Existencia DECIMAL(18,2) NOT NULL 
+);
+
+GO	
+
 
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
@@ -2465,7 +2479,9 @@ ORDER BY
     Fecha_Compra DESC;
 END
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarIngresoMercaderia]    Script Date: 6/23/2024 10:48:15 AM ******/
+
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarIngresoMercaderia]    Script Date: 8/11/2024 9:36:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2484,7 +2500,7 @@ CREATE PROCEDURE [dbo].[sp_InsertarActualizarIngresoMercaderia]
 AS
 BEGIN
     SET NOCOUNT ON;
-
+	
     -- Verificar si ya existe el ingreso
     IF EXISTS (SELECT 1 FROM [dbo].[TBL_INGRESO_MERCADERIA]
                WHERE [PK_FK_Documento] = @PK_FK_Documento
@@ -2495,7 +2511,7 @@ BEGIN
         UPDATE [dbo].[TBL_INGRESO_MERCADERIA]
         SET [Cantidad] = @Cantidad,
             [Costo] = @Costo,
-			[Subtotal] = @Cantidad * @Costo
+            [Subtotal] = @Cantidad * @Costo
         WHERE [PK_FK_Documento] = @PK_FK_Documento
         AND [PK_FK_Proveedor] = @PK_FK_Proveedor
         AND [PK_FK_Articulo] = @PK_FK_Articulo;
@@ -2512,7 +2528,7 @@ BEGIN
             [Cantidad],
             [Costo],
             [Subtotal],
-			[Estado],
+            [Estado],
             [FK_Usuario_Creacion],
             [FK_Usuario_Modificacion],
             [Fecha_Creacion],
@@ -2527,16 +2543,40 @@ BEGIN
             @Cantidad,
             @Costo,
             @Cantidad * @Costo,
-			'Pendiente',
+            'Pendiente',
             @FK_Usuario_Creacion,
             @FK_Usuario_Modificacion,
             GETDATE(),
             GETDATE()
         );
     END
+
+    -- Insertar el movimiento en TBL_KARDEX
+    INSERT INTO dbo.TBL_KARDEX (
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    )
+    VALUES (
+        GETDATE(), -- Fecha del movimiento
+        @PK_FK_Articulo, -- Artículo FK
+       (SELECT Descripcion FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @PK_FK_Articulo), 
+        'Ingreso Mercadería', -- Movimiento
+        'Ingreso', -- Tipo de movimiento
+        @PK_FK_Documento, -- Documento asociado
+        @Cantidad, -- Cantidad movida
+        (SELECT Cantidad FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @PK_FK_Articulo) -- Existencia actual
+    );
+
 END
 
-GO 
+GO
+	
 /****** Object:  StoredProcedure [dbo].[sp_GuardarIngresoMercaderia]    Script Date: 6/24/2024 4:15:06 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -2726,9 +2766,9 @@ ORDER BY
     Fecha_Salida DESC;
 END
 
-
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarSalidaMercaderia]    Script Date: 6/27/2024 9:41:30 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarActualizarSalidaMercaderia]    Script Date: 8/11/2024 9:46:27 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2788,8 +2828,30 @@ BEGIN
             GETDATE()
         );
     END
-END
 
+	
+    -- Insertar el movimiento en TBL_KARDEX
+    INSERT INTO dbo.TBL_KARDEX (
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    )
+    VALUES (
+        GETDATE(), -- Fecha del movimiento
+        @PK_FK_Articulo, -- Artículo FK
+       (SELECT Descripcion FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @PK_FK_Articulo), 
+        'Salida Mercadería', -- Movimiento
+        'Salida', -- Tipo de movimiento
+        @PK_FK_Documento, -- Documento asociado
+        @Cantidad, -- Cantidad movida
+        (SELECT Cantidad FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @PK_FK_Articulo) -- Existencia actual
+    );
+END
 
 GO
 /****** Object:  StoredProcedure [dbo].[sp_ListarSalidaPorDoc]    Script Date: 6/27/2024 10:14:08 PM ******/
@@ -3060,7 +3122,8 @@ END;
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 7/8/2024 7:22:17 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[sp_InsertarFacturaLinea]    Script Date: 8/11/2024 9:06:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3068,20 +3131,21 @@ GO
 CREATE PROCEDURE [dbo].[sp_InsertarFacturaLinea]
     @PK_FK_Factura VARCHAR(50),
     @FK_Articulo VARCHAR(50),
-    @Cantidad int,
-	@Precio decimal(18,2)
+    @Cantidad INT,
+    @Precio DECIMAL(18,2)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-	    DECLARE @Costo decimal(18,2); -- Declarar la variable para el costo		
+    DECLARE @Costo DECIMAL(18,2); -- Declarar la variable para el costo		
+    DECLARE @Existencia DECIMAL(18,2); -- Variable para la existencia actual después del movimiento
 
     -- Obtener el COSTO asociado al articulo
     SELECT @Costo = Costo
     FROM TBL_ARTICULO
     WHERE PK_Articulo = @FK_Articulo;
-
 	
+    -- Insertar la línea de la factura
     INSERT INTO dbo.TBL_FACTURA_LINEA (
         PK_FK_Factura,
         FK_Articulo,
@@ -3106,12 +3170,37 @@ BEGIN
         GETDATE(),
         GETDATE()
     );
-	
-    -- Rebaja existencia de inventario
+
+	    -- Rebaja existencia de inventario y obtiene la nueva existencia
     UPDATE dbo.TBL_ARTICULO
     SET Cantidad = Cantidad - @Cantidad
-    WHERE PK_Articulo = @FK_Articulo;
 
+	
+
+    -- Insertar el movimiento en TBL_KARDEX
+    INSERT INTO dbo.TBL_KARDEX (
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    )
+    VALUES (
+        GETDATE(), -- Fecha del movimiento
+        @FK_Articulo, -- Artículo FK
+		(SELECT Descripcion FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @FK_Articulo), -- Existencia actual
+        'Factura', -- Tipo de movimiento
+        'Salida', -- Tipo de movimiento
+        @PK_FK_Factura, -- Documento asociado
+        @Cantidad, -- Cantidad movida
+        (SELECT Cantidad FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @FK_Articulo) -- Existencia actual
+    );
+
+	
+    
 END;
 
 GO
@@ -3313,9 +3402,8 @@ BEGIN
 
 END;
 
-
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertarNCLinea]    Script Date: 7/13/2024 12:09:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_InsertarNCLinea]    Script Date: 8/11/2024 9:21:28 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3329,19 +3417,22 @@ BEGIN
     SET NOCOUNT ON;
 
     DECLARE @Costo DECIMAL(18,2); -- Declarar la variable para el costo		
-    DECLARE @CantidOriginal INT; -- Declarar la variable para el CantidOriginal	
+    DECLARE @CantidOriginal INT; -- Declarar la variable para la Cantidad Original	
     DECLARE @Precio DECIMAL(18,2); -- Declarar la variable para el precio		
     DECLARE @Motivo VARCHAR(50); -- Declarar la variable para el motivo
+    DECLARE @Existencia DECIMAL(18,2); -- Variable para la existencia actual después del movimiento
 
     -- Obtener el COSTO asociado al articulo
     SELECT @Costo = Costo
     FROM TBL_FACTURA_LINEA
     WHERE FK_Articulo = @FK_Articulo;
 
+    -- Obtener la Cantidad Original
     SELECT @CantidOriginal = Cantidad
     FROM TBL_FACTURA_LINEA
     WHERE FK_Articulo = @FK_Articulo;
 
+    -- Obtener el Precio asociado al articulo
     SELECT @Precio = Precio
     FROM TBL_FACTURA_LINEA
     WHERE FK_Articulo = @FK_Articulo;
@@ -3351,6 +3442,13 @@ BEGIN
     FROM TBL_FACTURA
     WHERE PK_Factura = @PK_FK_Factura;
 
+
+        UPDATE dbo.TBL_ARTICULO
+        SET Cantidad = Cantidad + @Cantidad
+  
+
+
+    -- Insertar línea de la factura de nota de crédito
     INSERT INTO dbo.TBL_FACTURA_LINEA (
         PK_FK_Factura,
         FK_Articulo,
@@ -3376,15 +3474,34 @@ BEGIN
         GETDATE()
     );
 
-    -- Actualizar la existencia de inventario
-    --IF @Motivo = 'Devolucion'
-    BEGIN
-        UPDATE dbo.TBL_ARTICULO
-        SET Cantidad = Cantidad + @Cantidad
-        WHERE PK_Articulo = @FK_Articulo;
-    END
+  
+
+    -- Insertar el movimiento en TBL_KARDEX
+    INSERT INTO dbo.TBL_KARDEX (
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    )
+    VALUES (
+        GETDATE(), -- Fecha del movimiento
+        @FK_Articulo, -- Artículo FK
+       (SELECT Descripcion FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @FK_Articulo), 
+        'Nota Crédito', -- Movimiento
+        'Ingreso', -- Tipo de movimiento
+        @PK_FK_Factura, -- Documento asociado
+        @Cantidad, -- Cantidad movida
+        (SELECT Cantidad FROM dbo.TBL_ARTICULO WHERE PK_Articulo = @FK_Articulo) -- Existencia actual
+    );
+
+
 
 END;
+
 GO
 	
 -------------------------------------------------
