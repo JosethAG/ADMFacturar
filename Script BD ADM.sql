@@ -574,6 +574,14 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
+CREATE TABLE TBL_IMAGENES
+(
+    Id INT IDENTITY(1,1) PRIMARY KEY, 
+    Prompt NVARCHAR(MAX) NOT NULL, 
+    Img NVARCHAR(MAX) NOT NULL 
+);
+GO
+
 
 ----------------------------------------------------------------------------------------------------
 									/*PROCEDIMIENTOS ALMACENADOS*/
@@ -4277,8 +4285,26 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE sp_ListarIMG
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT Id, Prompt, Img
+    FROM TBL_IMAGENES;
+END
+GO
 
 
+CREATE PROCEDURE sp_CrearIMG
+    @Prompt NVARCHAR(MAX),
+    @Img NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO TBL_IMAGENES (Prompt, Img)
+    VALUES (@Prompt, @Img);
+END
+GO
 
 ----------------------------------------------------------------------------------------------------
 									/*INSERCION DE DATOS*/
@@ -5464,6 +5490,18 @@ VALUES
  ('Proveedor 3', '345-678-9012', 'proveedor3@empresa.com', 'Calle 3, Ciudad C', 1, 'usuario_creacion3', GETDATE()),
  ('Proveedor 4', '456-789-0123', 'proveedor4@empresa.com', 'Calle 4, Ciudad D', 1, 'usuario_creacion4', GETDATE()),
  ('Proveedor 5', '567-890-1234', 'proveedor5@empresa.com', 'Calle 5, Ciudad E', 1, 'usuario_creacion5', GETDATE());
+
+
+ /*Inserts de Imagenes*/
+SET IDENTITY_INSERT [dbo].[TBL_IMAGENES] ON 
+GO
+INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (3, N'Nube de algodon', N'https://processed-model-result.s3.us-east-2.amazonaws.com/e41db207-ffa0-48d7-bb11-18c0c7cbe7d6_0.png')
+GO
+INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (6, N'Modelo de verano', N'https://processed-model-result.s3.us-east-2.amazonaws.com/2af49324-a1e2-4274-b885-a36cea6a0fa4_0.png')
+GO
+SET IDENTITY_INSERT [dbo].[TBL_IMAGENES] OFF
+GO
+
 
 -- Insertar datos de ejemplo en la tabla TBL_ARTICULO
 INSERT INTO [dbo].[TBL_ARTICULO] 
