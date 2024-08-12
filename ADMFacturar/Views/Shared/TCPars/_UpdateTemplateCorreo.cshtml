@@ -1,0 +1,32 @@
+﻿@model TemplateCorreo
+
+<form asp-action="UpdateTC" method="post" id="formupdate" class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+        <h3 class="text-xl font-bold mb-4 text-center text-white">Actualizar Template</h3>
+        <hr class="mb-4">
+        <div class="flex flex-col space-y-4 text-white">
+            <div class="form-item">
+                <label class="block text-sm font-medium leading-6 text-white">Código del Template</label>
+                <input asp-for="Id" type="text" id="TCId" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" readonly />
+            </div>
+            <div class="form-item">
+                <label class="block text-sm font-medium leading-6 text-white">Nombre Template</label>
+                <input asp-for="Nombre" type="text" id="TCNombre" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+            </div>
+
+            <div class="form-item">
+                <label class="block text-sm font-medium leading-6 text-white">Asunto</label>
+                <input asp-for="Asunto" type="text" id="TCAsunto" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+            </div>
+
+            <div class="form-item">
+                <label class="block text-sm font-medium leading-6 text-white">Contenido</label>
+                <textarea asp-for="Contenido" id="TCContenido" cols="30" rows="10" class="w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+            </div>
+
+            <div class="flex justify-center space-x-4">
+            <a href="@Url.Action("TemplateIndex", "Marketing")" class="w-full py-2 px-4 bg-gray-600 hover:bg-gray-500 text-white rounded-lg text-center inline-block">Cancelar</a>
+            <button type="submit" id="btnGuardar" class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-lg">Guardar</button>
+            </div>
+        </div>
+
+</form>

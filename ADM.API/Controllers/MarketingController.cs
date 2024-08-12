@@ -55,8 +55,6 @@ namespace ADM.API.Controllers
             return rest;
         }
 
-
-
         [HttpPost]
         [Route("Crear")]
         public bool CrearCorreo(Correo Correo)
@@ -102,7 +100,6 @@ namespace ADM.API.Controllers
             return result;
         }
 
-
         [HttpPost]
         [Route("ActualizarGC")]
         public bool ActualizarGC(GrupoCorreo GC)
@@ -146,6 +143,113 @@ namespace ADM.API.Controllers
                 return result;
             }
         }
+
+
+
+
+
+        [HttpPost]
+        [Route("CrearTC")]
+        public bool CrearTC(TemplateCorreo TC)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Grupo recibido: " + JsonConvert.SerializeObject(TC));
+
+            List<DBParameter> parameters = new List<DBParameter>
+            {
+                new DBParameter("@Nombre", TC.Nombre),
+                new DBParameter("@Asunto", TC.Asunto),
+                new DBParameter("@Contenido", TC.Contenido)
+
+            };
+
+            var result = DBData.Execute("sp_CrearTemplateCorreo", parameters);
+
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + result);
+
+            return result;
+        }
+
+
+        [HttpPost]
+        [Route("ActualizarTC")]
+        public bool ActualizarTC(TemplateCorreo TC)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Grupo recibido: " + JsonConvert.SerializeObject(TC));
+
+            List<DBParameter> parameters = new List<DBParameter>
+            {
+                new DBParameter("@Id", TC.Id.ToString()),
+                new DBParameter("@Nombre", TC.Nombre),
+                new DBParameter("@Asunto", TC.Asunto),
+                new DBParameter("@Contenido", TC.Contenido)
+
+            };
+
+            var result = DBData.Execute("sp_ActualizarTemplateCorreo", parameters);
+
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + result);
+
+            return result;
+        }
+
+        [HttpPost]
+        [Route("EliminarTC/{ID}")]
+        public bool EliminarTC(string ID)
+        {
+            if (ID == null || ID.Length == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                {
+                    new DBParameter("@Id", ID)
+                };
+
+                var result = DBData.Execute("sp_EliminarTemplateCorreo", parameters);
+
+                return result;
+            }
+        }
+
+
+        [HttpGet]
+        [Route("ListarTC")]
+        public IEnumerable<TemplateCorreo> ListaTemplateCorreos()
+        {
+            DataTable tCorreo = null;
+            tCorreo = DBData.List("sp_ListarTemplateCorreo");
+            string jsonArticle = JsonConvert.SerializeObject(tCorreo);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<TemplateCorreo>>(jsonArticle);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("ObtenerTC/{Id}")]
+        public TemplateCorreo ListaTemplateCorreos(string? Id)
+        {
+            List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@Id", Id)
+                    };
+            DataTable tTC = DBData.List("sp_ObtenerTemplateCorreo", parameters);
+
+            string jsonTC = JsonConvert.SerializeObject(tTC);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<TemplateCorreo>>(jsonTC);
+            TemplateCorreo rest = result.FirstOrDefault();
+            return rest;
+        }
+
+
+
+
+
+
 
 
     }
