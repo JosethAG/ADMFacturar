@@ -1,0 +1,71 @@
+﻿<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .chat-bg {
+            background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/dark_embroidery.png');
+            background-size: cover;
+        }
+    </style>
+</head>
+
+@{
+    ViewData["Title"] = "Generador de Imágenes";
+}
+
+<div class="min-h-screen chat-bg flex items-center justify-center py-6 px-4 sm:px-2 lg:px-8">
+    <div class="max-w-md w-full space-y-4 bg-white p-8 rounded-xl shadow-lg">
+        <div class="flex items-center justify-center">
+            <img src="~/imgs/Logo Oscuro.png" style="width :80px" />
+        </div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Generar Imagen</h2>
+        <form class="mt-8 space-y-6" method="post" asp-action="GenerateImg">
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div class="mb-4">
+                    <label for="prompt" class="sr-only">Prompt:</label>
+                    <input type="text" id="prompt" name="prompt" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Escribe tu prompt" required>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Generar
+                </button>
+            </div>
+        </form>
+
+        <a asp-controller="ImageGenerator" asp-action="Galeria" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Ver galería
+        </a>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4" role="alert">
+                <span class="block sm:inline">@ViewBag.Error</span>
+            </div>
+        }
+
+        @if (ViewBag.JsonResponse != null)
+        {
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg mt-4">
+                <div class="px-4 py-5 sm:px-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Respuesta JSON Completa</h3>
+                    <div class="mt-1 text-sm text-gray-500">
+                        <pre>@ViewBag.JsonResponse</pre>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (ViewBag.ImageResult != null)
+        {
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg mt-4">
+                <div class="px-4 py-5 sm:px-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Imagen Generada</h3>
+                    <div class="mt-1 text-sm text-gray-500">
+                        <img src="@ViewBag.ImageResult" alt="Imagen Generada" class="w-full object-cover rounded-lg">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

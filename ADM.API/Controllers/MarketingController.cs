@@ -8,6 +8,7 @@ using ADM.Interface;
 using ADM.Architectur;
 using ADM.Architecture;
 using Newtonsoft.Json;
+using ADM.Models.ApiMonster;
 
 namespace ADM.API.Controllers
 {
@@ -144,6 +145,41 @@ namespace ADM.API.Controllers
             }
         }
 
+        /*Sección de Generado de imágenes*/
+
+        [HttpGet]
+        [Route("ListarIMG")]
+        public IEnumerable<ImagePrompt> ListarIMG()
+        {
+            DataTable tImg = null;
+            tImg = DBData.List("sp_ListarIMG");
+            string jsonImg = JsonConvert.SerializeObject(tImg);
+            var result = JsonProvider.DeserializeSimple<IEnumerable<ImagePrompt>>(jsonImg);
+            return result;
+        }
+
+
+        [HttpPost]
+        [Route("CrearIMG")]
+        public bool CrearIMG(ImagePrompt ImgPro)
+        {
+            // Log received data for debugging
+            Console.WriteLine("Grupo recibido: " + JsonConvert.SerializeObject(ImgPro));
+
+            List<DBParameter> parameters = new List<DBParameter>
+            {
+                new DBParameter("@Prompt", ImgPro.Prompt),
+                new DBParameter("@Img", ImgPro.Img)
+
+            };
+
+            var result = DBData.Execute("sp_CrearIMG", parameters);
+
+            // Log the result of the database operation
+            Console.WriteLine("Database operation result: " + result);
+
+            return result;
+        }
 
 
 
