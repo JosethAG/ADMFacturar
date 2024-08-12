@@ -2,6 +2,7 @@ drop database ADM;
 create database ADM;
 use ADM;
 
+
 ----------------------------------------------------------------------------------------------------
 								     	/*CREACION DE TABLAS*/
 ----------------------------------------------------------------------------------------------------
@@ -679,7 +680,7 @@ GO
 USE ADM;
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_Reportes]
+Create OR ALTER PROCEDURE [dbo].[sp_Reportes]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -696,9 +697,11 @@ BEGIN
     FROM dbo.TBL_DOCUMENTO_CC;
 
     -- Total Ganancia
-    DECLARE @TotalGanancia DECIMAL(18, 2);
-    SELECT @TotalGanancia = SUM((Cantidad * Precio) - (Cantidad * Costo))
-    FROM dbo.TBL_FACTURA_LINEA;
+   DECLARE @TotalGanancia DECIMAL(18, 2);
+    SELECT @TotalGanancia = SUM(
+        CASE WHEN A_Devolver = 0 THEN (Cantidad * Precio) - (Cantidad * Costo) ELSE 0 END
+    )
+    FROM TBL_FACTURA_LINEA;
 
     -- Total Costo Articulos
     DECLARE @TotalCosto DECIMAL(18, 2);
@@ -4055,7 +4058,9 @@ GO
 -------------------------------------------------
 		/*REPORTES*/
 -------------------------------------------------
-/****** Object:  StoredProcedure [dbo].[sp_ObtenerDatosFacturas]    Script Date: 8/9/2024 1:09:23 AM ******/
+USE [ADM]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ObtenerDatosFacturas]    Script Date: 8/11/2024 5:27:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4086,8 +4091,10 @@ BEGIN
             SELECT TOP 1 PK_Documento_CC
             FROM dbo.TBL_DOCUMENTO_CC
             WHERE FK_Cliente = f.FK_Cliente
+            AND Tipo_Doc = 'F'
             ORDER BY Fecha_Vencimiento DESC
-        );
+        )
+    AND f.Tipo_Doc = 'F';
 
     -- Calcular el total pendiente de todas las facturas
     SELECT 
@@ -4101,10 +4108,11 @@ BEGIN
             SELECT TOP 1 PK_Documento_CC
             FROM dbo.TBL_DOCUMENTO_CC
             WHERE FK_Cliente = f.FK_Cliente
+            AND Tipo_Doc = 'F'
             ORDER BY Fecha_Vencimiento DESC
-        );
+        )
+    AND f.Tipo_Doc = 'F';
 END
-
 GO
 
 
