@@ -50,12 +50,24 @@ namespace ADMFacturar.Controllers
 			// Manejo de errores si la llamada a la API falla
 			return View(new List<FacturaVentaViewModel>());
 		}
-		public IActionResult RCardex()
-		{
-			return View();
-		}
+        public async Task<IActionResult> RKardex()
+        {
+            var response = await _httpClient.GetAsync("api/Reporte/ReporteKardex");
 
-		public async Task<IActionResult> RInventario()
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<IEnumerable<KardexViewModel>>(content);
+
+                // Pasar los datos a la vista como modelo
+                return View(result);
+            }
+
+            // Manejo de errores si la llamada a la API falla
+            return View(new List<KardexViewModel>());
+        }
+
+        public async Task<IActionResult> RInventario()
 		{
 			var resp = await _httpClient.GetAsync("api/Reporte/ReporteArticulos");
 

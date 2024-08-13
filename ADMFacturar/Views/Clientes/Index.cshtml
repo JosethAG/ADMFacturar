@@ -14,8 +14,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Ingreso de Clientes</title>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 	<link href="~/css/custom.css" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 	<!-- SweetAlert2 CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 	<!-- Tabla Paginar  -->
@@ -34,16 +34,16 @@
 			<h2 class="text-lg font-bold mb-4">Filtro de clientes</h2>
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
 				<div class="sm:col-span-1">
-					<label for="nombre_cliente" class="block text-sm font-medium">Nombre de Cliente</label>
+					<label for="nombre_cliente" class="block text-sm font-medium leading-6 text-white">Nombre de Cliente</label>
 					<div class="mt-1">
-						<input type="text" id="nombre_cliente" name="nombre_cliente" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+						<input type="text" id="nombre_cliente" name="nombre_cliente" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
 					</div>
 				</div>
 			</div>
 		</div>
 	</form>
 	<!-- Fin del Formulario -->
-	<div class="w-full mt-8">
+	<div class="w-full mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
 		<div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
 			<h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Clientes</h3>
 			<div>
@@ -53,33 +53,33 @@
 			</div>
 		</div>
 		<!-- Tabla -->
-		<div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
-			<table id="tablaClientes" class="min-w-full leading-normal">
-				<thead>
-					<tr class="bg-gray-800 text-white">
-						<th class="py-3 text-center">Código</th>
-						<th class="py-3 text-center">Tipo Identificación</th>
-						<th class="py-3 text-center">Nº Identificación</th>
-						<th class="py-3 text-center">Nombre</th>
-						<th class="py-3 text-center">Teléfono</th>
-						<th class="py-3 text-center">Correo</th>
-						<th class="py-3 text-center">Estado</th>
-						<th class="py-3 text-center">Acciones</th>
+		<div class="overflow-auto mt-4">
+			<table id="tablaClientes" class="min-w-full bg-gray-800 text-white">
+				<thead class="bg-gray-900">
+					<tr>
+						<th class="py-3 px-4 text-center">Código</th>
+						<th class="py-3 px-4 text-center">Tipo Identificación</th>
+						<th class="py-3 px-4 text-center">Nº Identificación</th>
+						<th class="py-3 px-4 text-center">Nombre</th>
+						<th class="py-3 px-4 text-center">Teléfono</th>
+						<th class="py-3 px-4 text-center">Correo</th>
+						<th class="py-3 px-4 text-center">Estado</th>
+						<th class="py-3 px-4 text-center">Acciones</th>
 					</tr>
 				</thead>
-				<tbody id="bodyTablaClientes" class="text-gray-700">
+				<tbody id="bodyTablaClientes" class="text-center">
 					@if (clientes != null)
 					{
 						@foreach (var cliente in clientes)
 						{
-							<tr class="border-b border-gray-200 hover:bg-gray-100">
-								<td class="py-3 text-center">@Html.DisplayFor(modelItem => cliente.PK_Cliente)</td>
-								<td class="py-3 text-center">@Html.DisplayFor(modelItem => cliente.TipoIdentificacion)</td>
-								<td class="py-3 text-center">@Html.DisplayFor(modelItem => cliente.Identificacion)</td>
-								<td class="py-3 text-center">@Html.DisplayFor(modelItem => cliente.Nombre)</td>
-								<td class="py-3 text-center">@Html.DisplayFor(modelItem => cliente.Telefono)</td>
-								<td class="py-3 text-center">@Html.DisplayFor(modelItem => cliente.Correo)</td>
-								<td class="py-3 text-center">
+							<tr class="even:bg-gray-700 hover:bg-gray-600">
+								<td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cliente.PK_Cliente)</td>
+								<td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cliente.TipoIdentificacion)</td>
+								<td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cliente.Identificacion)</td>
+								<td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cliente.Nombre)</td>
+								<td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cliente.Telefono)</td>
+								<td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => cliente.Correo)</td>
+								<td class="py-3 px-4 border-b border-gray-700">
 									@if (cliente.Estado)
 									{
 										<span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
@@ -726,7 +726,6 @@
 		// <!-- Fin Validación botón desactivar -->
 		
 
-		//Funcion para paginar en index
 		$(document).ready(function () {
 			$('#tablaClientes').DataTable({
 				"paging": true, // Habilita la paginación
