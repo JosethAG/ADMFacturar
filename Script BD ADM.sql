@@ -4328,6 +4328,31 @@ BEGIN
         dcc.PK_Documento_CC;
 END;
 GO
+	USE [ADM]
+GO
+/** Object:  StoredProcedure [dbo].[sp_ListarKardex]    Script Date: 8/12/2024 10:07:43 AM **/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ListarKardex]
+AS
+BEGIN
+    -- Selecciona todos los registros de la tabla TBL_KARDEX
+    SELECT 
+        Id,
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    FROM TBL_KARDEX
+END
+GO
+
 
 	
 /* Grupos de correo*/
