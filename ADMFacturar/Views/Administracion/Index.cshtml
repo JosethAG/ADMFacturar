@@ -1,61 +1,4 @@
-﻿@* <link href="~/css/custom.css" rel="stylesheet" />
-
-<div class="w-full">
-</div>
-
-<main class="max-w-6xl mx-auto pt-10 pb-36 px-8">
-
-    <!--        Tarjetas            -->
-    <div class="container mx-auto py-8 ">
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-4">
-
-            <a asp-action="Index" asp-controller="Clientes">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                    <i class="fa-solid fa-user-tag text-5xl text-blue-500 mb-4"></i>
-                    <h3 class="text-lg font-semibold">Clientes</h3>
-                    <p class="text-gray-600">Adminsitración de Clientes</p>
-                </div>
-            </a>
-
-            <a asp-action="Index" asp-controller="Articulos">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                    <i class="fa-solid fa-grip-vertical text-5xl text-blue-500 mb-4"></i>
-                    <h3 class="text-lg font-semibold">Artículos</h3>
-                    <p class="text-gray-600">Adminsitración de Artículos</p>
-                </div>
-            </a>
-
-            <a asp-action="Index" asp-controller="Proveedores">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                    <i class="fa-solid fa-address-book text-5xl text-blue-500 mb-4"></i>
-                    <h3 class="text-lg font-semibold">Proveedores</h3>
-                    <p class="text-gray-600">Adminsitración de Proveedores </p>
-                </div>
-            </a>
-
-            <a asp-action="Index" asp-controller="Vendedores">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                    <i class="fa-solid fa-user-tie text-5xl text-blue-500 mb-4"></i>
-                    <h3 class="text-lg font-semibold">Vendedores</h3>
-                    <p class="text-gray-600">Adminsitración de Vendedores</p>
-                </div>
-            </a>
-
-            <a asp-action="Index" asp-controller="Transportes">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                    <i class="fa-solid fa-truck-fast text-5xl text-blue-500 mb-4"></i>
-                    <h3 class="text-lg font-semibold">Transportes</h3>
-                    <p class="text-gray-600">Adminsitración de Transportes</p>
-                </div>
-            </a>
-        </div>
-    </div>
-
-
-    <!--        Final Seleccion de tarea      -->
-
-</main> *@
-<link href="~/css/custom.css" rel="stylesheet" />
+﻿<link href="~/css/custom.css" rel="stylesheet" />
 
 <main class="main-container">
     <div class="cards-container">
@@ -64,10 +7,10 @@
             @if (User.IsInRole("Administrador") || User.IsInRole("Usuario"))
             {
                 <a asp-action="Index" asp-controller="Clientes" class="transform hover:scale-105 transition duration-500">
-                    <div class="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl">
+                    <div class="max-w-sm p-6 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer text-center">
                         <i class="fa-solid fa-user-tag text-5xl text-indigo-500 mb-4"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Clientes</h3>
-                        <p class="text-gray-600">Administración de Clientes</p>
+                        <h3 class="text-lg font-semibold text-white">Clientes</h3>
+                        <p class="text-white">Administración de Clientes</p>
                     </div>
                 </a>
             }
@@ -75,34 +18,34 @@
             @if (User.IsInRole("Administrador"))
             {
                 <a asp-action="Index" asp-controller="Articulos" class="transform hover:scale-105 transition duration-500">
-                    <div class="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl">
+                    <div class="max-w-sm p-6 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer text-center">
                         <i class="fa-solid fa-grip-vertical text-5xl text-indigo-500 mb-4"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Artículos</h3>
-                        <p class="text-gray-600">Administración de Artículos</p>
+                        <h3 class="text-lg font-semibold text-white">Artículos</h3>
+                        <p class="text-white">Administración de Artículos</p>
                     </div>
                 </a>
 
                 <a asp-action="Index" asp-controller="Proveedores" class="transform hover:scale-105 transition duration-500">
-                    <div class="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl">
+                    <div class="max-w-sm p-6 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer text-center">
                         <i class="fa-solid fa-address-book text-5xl text-indigo-500 mb-4"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Proveedores</h3>
-                        <p class="text-gray-600">Administración de Proveedores</p>
+                        <h3 class="text-lg font-semibold text-white">Proveedores</h3>
+                        <p class="text-white">Administración de Proveedores</p>
                     </div>
                 </a>
 
                 <a asp-action="Index" asp-controller="Vendedores" class="transform hover:scale-105 transition duration-500">
-                    <div class="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl">
+                    <div class="max-w-sm p-6 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer text-center">
                         <i class="fa-solid fa-user-tie text-5xl text-indigo-500 mb-4"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Vendedores</h3>
-                        <p class="text-gray-600">Administración de Vendedores</p>
+                        <h3 class="text-lg font-semibold text-white">Vendedores</h3>
+                        <p class="text-white">Administración de Vendedores</p>
                     </div>
                 </a>
 
                 <a asp-action="Index" asp-controller="Transportes" class="transform hover:scale-105 transition duration-500">
-                    <div class="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl">
+                    <div class="max-w-sm p-6 bg-gray-900 border border-gray-700 rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-gray-800 cursor-pointer text-center">
                         <i class="fa-solid fa-truck-fast text-5xl text-indigo-500 mb-4"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Transportes</h3>
-                        <p class="text-gray-600">Administración de Transportes</p>
+                        <h3 class="text-lg font-semibold text-white">Transportes</h3>
+                        <p class="text-white">Administración de Transportes</p>
                     </div>
                 </a>
             }
