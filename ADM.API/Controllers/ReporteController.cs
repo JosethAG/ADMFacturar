@@ -147,5 +147,17 @@ namespace ADM.API.Controllers
 
 			return Ok(documentosCC);
 		}
-	}
+
+        [HttpGet]
+        [Route("ReporteKardex")]
+        public IActionResult ObtenerKardex()
+        {
+            DataTable dtKardex = DBData.List("sp_ListarKardex"); // Asegúrate de que tienes este procedimiento almacenado
+
+            string jsonKardex = JsonConvert.SerializeObject(dtKardex);
+            var kardex = JsonConvert.DeserializeObject<IEnumerable<KardexViewModel>>(jsonKardex);
+
+            return Ok(kardex);
+        }
+    }
 }

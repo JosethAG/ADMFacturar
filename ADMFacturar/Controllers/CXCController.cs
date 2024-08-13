@@ -69,8 +69,9 @@ namespace ADMFacturar.Controllers
             {
                 var content = await resp.Content.ReadAsStringAsync();
                 var abonos = JsonConvert.DeserializeObject<IEnumerable<AbonoCXC>>(content);
-                return View("abonos");
-            }
+				ViewData["AbonosCXC"] = abonos ?? new List<AbonoCXC>();
+				return View("Detalles");
+			}
 
             return View();
         }
