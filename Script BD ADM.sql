@@ -5641,6 +5641,10 @@ INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (3, N'Nube de algodon
 GO
 INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (6, N'Modelo de verano', N'https://processed-model-result.s3.us-east-2.amazonaws.com/2af49324-a1e2-4274-b885-a36cea6a0fa4_0.png')
 GO
+INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (7, N'Vestido Rojo', N'https://processed-model-result.s3.us-east-2.amazonaws.com/58876ac6-047f-4678-9c36-27fbca2e06f7_0.png')
+GO
+INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (8, N'vestido rojo', N'https://processed-model-result.s3.us-east-2.amazonaws.com/00606828-f833-4a04-9c37-d8f1b3401662_0.png')
+GO
 SET IDENTITY_INSERT [dbo].[TBL_IMAGENES] OFF
 GO
 
