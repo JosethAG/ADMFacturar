@@ -442,10 +442,10 @@
 
 
 
-/* Estilo para DataTables Proveedores*/
+/* Estilo para DataTables Proveedores en modo oscuro */
 #tablaProveedores_wrapper {
     padding: 20px;
-    background-color: #f3f4f6;
+    background-color: #1f2937; /* Fondo oscuro para el contenedor de la tabla */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -462,30 +462,63 @@
     float: right;
 }
 
+/* Color del texto para el filtro */
 #tablaProveedores_filter label {
     font-weight: bold;
+    color: #ffffff; /* Texto blanco */
 }
 
+/* Color de fondo y texto para los controles de DataTables */
 .dataTables_length select,
 .dataTables_filter input[type="search"],
 .dataTables_paginate .paginate_button {
     border-radius: 4px;
     padding: 6px 12px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
     margin-left: 5px;
 }
 
+.dataTables_length select {
+    background-color: #374151; /* Fondo oscuro para el selector de longitud */
+}
+
+.dataTables_filter input[type="search"] {
+    background-color: #374151; /* Fondo oscuro para el campo de búsqueda */
+}
+
+/* Color de texto para la información de la tabla y controles */
+.dataTables_info {
+    margin-top: 8px;
+    color: #ffffff; /* Texto blanco para la información de la tabla */
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #9ca3af; /* Color de texto para cuando no hay datos */
+}
+
+/* Color de los botones de paginación */
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+
     .dataTables_paginate .paginate_button:hover {
-        background-color: #e2e8f0;
-        color: #1a202c;
-        border-color: #cbd5e0;
+        background-color: #4b5563; /* Fondo al pasar el cursor */
+        color: #ffffff; /* Texto blanco */
+        border-color: #4b5563; /* Borde al pasar el cursor */
     }
 
     .dataTables_paginate .paginate_button.current {
-        background-color: #3182ce;
-        color: #fff;
-        border-color: #3182ce;
+        background-color: #2563eb; /* Fondo para la página actual */
+        color: #ffffff; /* Texto blanco */
+        border-color: #2563eb; /* Borde para la página actual */
     }
 
     .dataTables_paginate .paginate_button.disabled {
@@ -493,26 +526,26 @@
         cursor: not-allowed;
     }
 
-.dataTables_info {
-    margin-top: 8px;
-}
-
-.dataTables_empty {
-    text-align: center;
-    padding: 10px;
-    color: #718096;
-}
-
 /* Estilo para filas de la tabla */
-#tablaProveedores tbody tr:hover {
-    background-color: #f7fafc;
+#tablaProveedores tbody tr {
+    background-color: #1f2937; /* Fondo oscuro para las filas de la tabla */
+    color: #ffffff; /* Texto blanco para el contenido de la tabla */
+}
+
+    #tablaProveedores tbody tr:hover {
+        background-color: #4b5563; /* Color de fondo al pasar el cursor sobre una fila */
+    }
+
+#tablaProveedores tbody td {
+    border-bottom: 1px solid #4b5563; /* Borde oscuro para las celdas de la tabla */
+    padding: 8px; /* Espaciado en las celdas */
 }
 
 
-/* Estilo para DataTables Articulos */
+/* Estilo para DataTables Artículos en modo oscuro */
 #tablaArticulos_wrapper {
     padding: 20px;
-    background-color: #f3f4f6;
+    background-color: #1f2937; /* Fondo oscuro para el contenedor de la tabla */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -529,30 +562,63 @@
     float: right;
 }
 
+/* Color del texto para el filtro */
 #tablaArticulos_filter label {
     font-weight: bold;
+    color: #ffffff; /* Texto blanco */
 }
 
+/* Color de fondo y texto para los controles de DataTables */
 .dataTables_length select,
 .dataTables_filter input[type="search"],
 .dataTables_paginate .paginate_button {
     border-radius: 4px;
     padding: 6px 12px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
     margin-left: 5px;
 }
 
+.dataTables_length select {
+    background-color: #374151; /* Fondo oscuro para el selector de longitud */
+}
+
+.dataTables_filter input[type="search"] {
+    background-color: #374151; /* Fondo oscuro para el campo de búsqueda */
+}
+
+/* Color de texto para la información de la tabla y controles */
+.dataTables_info {
+    margin-top: 8px;
+    color: #ffffff; /* Texto blanco para la información de la tabla */
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #9ca3af; /* Color de texto para cuando no hay datos */
+}
+
+/* Color de los botones de paginación */
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+
     .dataTables_paginate .paginate_button:hover {
-        background-color: #e2e8f0;
-        color: #1a202c;
-        border-color: #cbd5e0;
+        background-color: #4b5563; /* Fondo al pasar el cursor */
+        color: #ffffff; /* Texto blanco */
+        border-color: #4b5563; /* Borde al pasar el cursor */
     }
 
     .dataTables_paginate .paginate_button.current {
-        background-color: #3182ce;
-        color: #fff;
-        border-color: #3182ce;
+        background-color: #2563eb; /* Fondo para la página actual */
+        color: #ffffff; /* Texto blanco */
+        border-color: #2563eb; /* Borde para la página actual */
     }
 
     .dataTables_paginate .paginate_button.disabled {
@@ -560,27 +626,26 @@
         cursor: not-allowed;
     }
 
-.dataTables_info {
-    margin-top: 8px;
-}
-
-.dataTables_empty {
-    text-align: center;
-    padding: 10px;
-    color: #718096;
-}
-
 /* Estilo para filas de la tabla */
-#tablaArticulos tbody tr:hover {
-    background-color: #f7fafc;
+#tablaArticulos tbody tr {
+    background-color: #1f2937; /* Fondo oscuro para las filas de la tabla */
+    color: #ffffff; /* Texto blanco para el contenido de la tabla */
+}
+
+    #tablaArticulos tbody tr:hover {
+        background-color: #4b5563; /* Color de fondo al pasar el cursor sobre una fila */
+    }
+
+#tablaArticulos tbody td {
+    border-bottom: 1px solid #4b5563; /* Borde oscuro para las celdas de la tabla */
+    padding: 8px; /* Espaciado en las celdas */
 }
 
 
-
-/* Estilo para DataTables Clientes  */
+/* Estilo para DataTables Clientes en modo oscuro */
 #tablaClientes_wrapper {
     padding: 20px;
-    background-color: #f3f4f6;
+    background-color: #1f2937; /* Fondo oscuro para el contenedor de la tabla */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -597,30 +662,63 @@
     float: right;
 }
 
+/* Color del texto para el filtro */
 #tablaClientes_filter label {
     font-weight: bold;
+    color: #ffffff; /* Texto blanco */
 }
 
+/* Color de fondo y texto para los controles de DataTables */
 .dataTables_length select,
 .dataTables_filter input[type="search"],
 .dataTables_paginate .paginate_button {
     border-radius: 4px;
     padding: 6px 12px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
     margin-left: 5px;
 }
 
+.dataTables_length select {
+    background-color: #374151; /* Fondo oscuro para el selector de longitud */
+}
+
+.dataTables_filter input[type="search"] {
+    background-color: #374151; /* Fondo oscuro para el campo de búsqueda */
+}
+
+/* Color de texto para la información de la tabla y controles */
+.dataTables_info {
+    margin-top: 8px;
+    color: #ffffff; /* Texto blanco para la información de la tabla */
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #9ca3af; /* Color de texto para cuando no hay datos */
+}
+
+/* Color de los botones de paginación */
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+
     .dataTables_paginate .paginate_button:hover {
-        background-color: #e2e8f0;
-        color: #1a202c;
-        border-color: #cbd5e0;
+        background-color: #4b5563; /* Fondo al pasar el cursor */
+        color: #ffffff; /* Texto blanco */
+        border-color: #4b5563; /* Borde al pasar el cursor */
     }
 
     .dataTables_paginate .paginate_button.current {
-        background-color: #3182ce;
-        color: #fff;
-        border-color: #3182ce;
+        background-color: #2563eb; /* Fondo para la página actual */
+        color: #ffffff; /* Texto blanco */
+        border-color: #2563eb; /* Borde para la página actual */
     }
 
     .dataTables_paginate .paginate_button.disabled {
@@ -628,92 +726,27 @@
         cursor: not-allowed;
     }
 
-.dataTables_info {
-    margin-top: 8px;
-}
-
-.dataTables_empty {
-    text-align: center;
-    padding: 10px;
-    color: #718096;
-}
-
 /* Estilo para filas de la tabla */
-#tablaClientes tbody tr:hover {
-    background-color: #f7fafc;
+#tablaClientes tbody tr {
+    background-color: #1f2937; /* Fondo oscuro para las filas de la tabla */
+    color: #ffffff; /* Texto blanco para el contenido de la tabla */
 }
 
-
-/* Estilo para DataTables Transportes*/
-#tablaTransportes_wrapper {
-    padding: 20px;
-    background-color: #f3f4f6;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-#tablaTransportes_length,
-#tablaTransportes_filter,
-#tablaTransportes_info,
-#tablaTransportes_paginate {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-#tablaTransportes_paginate {
-    float: right;
-}
-
-#tablaTransportes_filter label {
-    font-weight: bold;
-}
-
-.dataTables_length select,
-.dataTables_filter input[type="search"],
-.dataTables_paginate .paginate_button {
-    border-radius: 4px;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    margin-left: 5px;
-}
-
-    .dataTables_paginate .paginate_button:hover {
-        background-color: #e2e8f0;
-        color: #1a202c;
-        border-color: #cbd5e0;
+    #tablaClientes tbody tr:hover {
+        background-color: #4b5563; /* Color de fondo al pasar el cursor sobre una fila */
     }
 
-    .dataTables_paginate .paginate_button.current {
-        background-color: #3182ce;
-        color: #fff;
-        border-color: #3182ce;
-    }
-
-    .dataTables_paginate .paginate_button.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-.dataTables_info {
-    margin-top: 8px;
+#tablaClientes tbody td {
+    border-bottom: 1px solid #4b5563; /* Borde oscuro para las celdas de la tabla */
+    padding: 8px; /* Espaciado en las celdas */
 }
 
-.dataTables_empty {
-    text-align: center;
-    padding: 10px;
-    color: #718096;
-}
 
-/* Estilo para filas de la tabla */
-#tablaTransportes tbody tr:hover {
-    background-color: #f7fafc;
-}
 
-/* Estilo para DataTables Vendedores */
+/* Estilo para DataTables Vendedores en modo oscuro */
 #tablaVendedores_wrapper {
     padding: 20px;
-    background-color: #f3f4f6;
+    background-color: #1f2937; /* Fondo oscuro para el contenedor de la tabla */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -730,30 +763,63 @@
     float: right;
 }
 
+/* Color del texto para el filtro */
 #tablaVendedores_filter label {
     font-weight: bold;
+    color: #ffffff; /* Texto blanco */
 }
 
+/* Color de fondo y texto para los controles de DataTables */
 .dataTables_length select,
 .dataTables_filter input[type="search"],
 .dataTables_paginate .paginate_button {
     border-radius: 4px;
     padding: 6px 12px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
     margin-left: 5px;
 }
 
+.dataTables_length select {
+    background-color: #374151; /* Fondo oscuro para el selector de longitud */
+}
+
+.dataTables_filter input[type="search"] {
+    background-color: #374151; /* Fondo oscuro para el campo de búsqueda */
+}
+
+/* Color de texto para la información de la tabla y controles */
+.dataTables_info {
+    margin-top: 8px;
+    color: #ffffff; /* Texto blanco para la información de la tabla */
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #9ca3af; /* Color de texto para cuando no hay datos */
+}
+
+/* Color de los botones de paginación */
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+
     .dataTables_paginate .paginate_button:hover {
-        background-color: #e2e8f0;
-        color: #1a202c;
-        border-color: #cbd5e0;
+        background-color: #4b5563; /* Fondo al pasar el cursor */
+        color: #ffffff; /* Texto blanco */
+        border-color: #4b5563; /* Borde al pasar el cursor */
     }
 
     .dataTables_paginate .paginate_button.current {
-        background-color: #3182ce;
-        color: #fff;
-        border-color: #3182ce;
+        background-color: #2563eb; /* Fondo para la página actual */
+        color: #ffffff; /* Texto blanco */
+        border-color: #2563eb; /* Borde para la página actual */
     }
 
     .dataTables_paginate .paginate_button.disabled {
@@ -761,26 +827,124 @@
         cursor: not-allowed;
     }
 
+/* Estilo para filas de la tabla */
+#tablaVendedores tbody tr {
+    background-color: #1f2937; /* Fondo oscuro para las filas de la tabla */
+    color: #ffffff; /* Texto blanco para el contenido de la tabla */
+}
+
+    #tablaVendedores tbody tr:hover {
+        background-color: #4b5563; /* Color de fondo al pasar el cursor sobre una fila */
+    }
+
+#tablaVendedores tbody td {
+    border-bottom: 1px solid #4b5563; /* Borde oscuro para las celdas de la tabla */
+    padding: 8px; /* Espaciado en las celdas */
+}
+
+
+
+/* Estilo para DataTables Transportes en modo oscuro */
+#tablaTransportes_wrapper {
+    padding: 20px;
+    background-color: #1f2937; /* Fondo oscuro para el contenedor de la tabla */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#tablaTransportes_length,
+#tablaTransportes_filter,
+#tablaTransportes_info,
+#tablaTransportes_paginate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+    /* Color del texto para el filtro */
+    #tablaTransportes_filter label {
+        font-weight: bold;
+        color: #ffffff; /* Texto blanco */
+    }
+
+/* Color de fondo y texto para los controles de DataTables */
+.dataTables_length select,
+.dataTables_filter input[type="search"],
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+    margin-left: 5px;
+}
+
+.dataTables_length select {
+    background-color: #374151; /* Fondo oscuro para el selector de longitud */
+}
+
+.dataTables_filter input[type="search"] {
+    background-color: #374151; /* Fondo oscuro para el campo de búsqueda */
+}
+
+/* Color de texto para la información de la tabla y controles */
 .dataTables_info {
     margin-top: 8px;
+    color: #ffffff; /* Texto blanco para la información de la tabla */
 }
 
 .dataTables_empty {
     text-align: center;
     padding: 10px;
-    color: #718096;
+    color: #9ca3af; /* Color de texto para cuando no hay datos */
 }
+
+/* Color de los botones de paginación */
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #4b5563; /* Fondo al pasar el cursor */
+        color: #ffffff; /* Texto blanco */
+        border-color: #4b5563; /* Borde al pasar el cursor */
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: #2563eb; /* Fondo para la página actual */
+        color: #ffffff; /* Texto blanco */
+        border-color: #2563eb; /* Borde para la página actual */
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 
 /* Estilo para filas de la tabla */
-#tablaVendedores tbody tr:hover {
-    background-color: #f7fafc;
+#tablaTransportes tbody tr {
+    background-color: #1f2937; /* Fondo oscuro para las filas de la tabla */
+    color: #ffffff; /* Texto blanco para el contenido de la tabla */
+}
+
+    #tablaTransportes tbody tr:hover {
+        background-color: #4b5563; /* Color de fondo al pasar el cursor sobre una fila */
+    }
+
+#tablaTransportes tbody td {
+    border-bottom: 1px solid #4b5563; /* Borde oscuro para las celdas de la tabla */
+    padding: 8px; /* Espaciado en las celdas */
 }
 
 
-/* Estilo para DataTables Segurtidad */
+
+/* Estilo para DataTables Seguridad en modo oscuro */
 #tablaSeguridad_wrapper {
     padding: 20px;
-    background-color: #f3f4f6;
+    background-color: #1f2937; /* Fondo oscuro para el contenedor de la tabla */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -797,30 +961,63 @@
     float: right;
 }
 
+/* Color del texto para el filtro */
 #tablaSeguridad_filter label {
     font-weight: bold;
+    color: #ffffff; /* Texto blanco */
 }
 
+/* Color de fondo y texto para los controles de DataTables */
 .dataTables_length select,
 .dataTables_filter input[type="search"],
 .dataTables_paginate .paginate_button {
     border-radius: 4px;
     padding: 6px 12px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
     margin-left: 5px;
 }
 
+.dataTables_length select {
+    background-color: #374151; /* Fondo oscuro para el selector de longitud */
+}
+
+.dataTables_filter input[type="search"] {
+    background-color: #374151; /* Fondo oscuro para el campo de búsqueda */
+}
+
+/* Color de texto para la información de la tabla y controles */
+.dataTables_info {
+    margin-top: 8px;
+    color: #ffffff; /* Texto blanco para la información de la tabla */
+}
+
+.dataTables_empty {
+    text-align: center;
+    padding: 10px;
+    color: #9ca3af; /* Color de texto para cuando no hay datos */
+}
+
+/* Color de los botones de paginación */
+.dataTables_paginate .paginate_button {
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid #4b5563; /* Borde oscuro */
+    background-color: #374151; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+
     .dataTables_paginate .paginate_button:hover {
-        background-color: #e2e8f0;
-        color: #1a202c;
-        border-color: #cbd5e0;
+        background-color: #4b5563; /* Fondo al pasar el cursor */
+        color: #ffffff; /* Texto blanco */
+        border-color: #4b5563; /* Borde al pasar el cursor */
     }
 
     .dataTables_paginate .paginate_button.current {
-        background-color: #3182ce;
-        color: #fff;
-        border-color: #3182ce;
+        background-color: #2563eb; /* Fondo para la página actual */
+        color: #ffffff; /* Texto blanco */
+        border-color: #2563eb; /* Borde para la página actual */
     }
 
     .dataTables_paginate .paginate_button.disabled {
@@ -828,19 +1025,19 @@
         cursor: not-allowed;
     }
 
-.dataTables_info {
-    margin-top: 8px;
-}
-
-.dataTables_empty {
-    text-align: center;
-    padding: 10px;
-    color: #718096;
-}
-
 /* Estilo para filas de la tabla */
-#tablaSeguridad tbody tr:hover {
-    background-color: #f7fafc;
+#tablaSeguridad tbody tr {
+    background-color: #1f2937; /* Fondo oscuro para las filas de la tabla */
+    color: #ffffff; /* Texto blanco para el contenido de la tabla */
+}
+
+    #tablaSeguridad tbody tr:hover {
+        background-color: #4b5563; /* Color de fondo al pasar el cursor sobre una fila */
+    }
+
+#tablaSeguridad tbody td {
+    border-bottom: 1px solid #4b5563; /* Borde oscuro para las celdas de la tabla */
+    padding: 8px; /* Espaciado en las celdas */
 }
 
 

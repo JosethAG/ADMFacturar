@@ -1,16 +1,16 @@
-﻿@model IEnumerable<ReporteVendedoresViewModel>
+﻿@model IEnumerable<KardexViewModel>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Vendedores</title>
+    <title>Reporte Kardex</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="~/css/custom.css" rel="stylesheet" />
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <!-- Tabla Paginar -->
+    <!-- Tabla Paginar  -->
     <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -18,89 +18,87 @@
 <body>
     <div class="w-full">
     </div>
+
     <!-- Inicio Formulario de Filtros -->
     <form id="filterForm">
         <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
             <h2 class="text-lg font-bold mb-4">Filtros de Búsqueda</h2>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <!-- Fecha Inicio -->
-                <div class="sm:col-span-1">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+                <!-- Filtro por Fecha Inicio -->
+                <div class="sm:col-span-2">
                     <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Inicio</label>
                     <div class="mt-2">
                         <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
-                <!-- Fecha Final -->
-                <div class="sm:col-span-1">
+                <!-- Filtro por Fecha Final -->
+                <div class="sm:col-span-2">
                     <label for="expiry_date" class="block text-sm font-medium leading-6 text-white">Fecha Final</label>
                     <div class="mt-2">
                         <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
-
-                <!-- Nombre del Vendedor -->
-                <div class="sm:col-span-1">
-                    <label for="vendedor" class="block text-sm font-medium leading-6 text-white">Vendedor</label>
+                <!-- Filtro por Artículo -->
+                <div class="sm:col-span-2">
+                    <label for="articulo" class="block text-sm font-medium leading-6 text-white">Artículo</label>
                     <div class="mt-2">
-                        <input type="text" id="vendedor" name="vendedor" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input type="text" id="articulo" name="articulo" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
             </div>
         </div>
     </form>
-    <!-- Final de Formulario -->
+    <!-- Fin Formulario de Filtros -->
 
     <div class="w-full mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
         <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
-            <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Vendedores</h3>
+            <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Kardex</h3>
             <div>
                 <button id="exportButton" class="bg-green-500 text-white px-4 py-2 mr-4 rounded hover:bg-green-600">Exportar a Excel</button>
             </div>
         </div>
 
-        <!-- Tabla -->
+        <!-- Tabla de Kardex -->
         <div class="overflow-auto mt-4">
-            <table id="tablaVendedores" class="min-w-full bg-gray-800 text-white">
+            <table id="tablaKardex" class="min-w-full bg-gray-800 text-white">
                 <thead class="bg-gray-900">
                     <tr>
-                        <th class="py-3 px-4 text-center">ID Factura</th>
-                        <th class="py-3 px-4 text-center">Nombre Cliente</th>
+                        <th class="py-3 px-4 text-center">ID</th>
                         <th class="py-3 px-4 text-center">Fecha</th>
-                        <th class="py-3 px-4 text-center">Nombre Vendedor</th>
-                        <th class="py-3 px-4 text-center">Descuento</th>
-                        <th class="py-3 px-4 text-center">Total</th>
-                        <th class="py-3 px-4 text-center">Comisión</th>
+                        <th class="py-3 px-4 text-center">Artículo</th>
+                        <th class="py-3 px-4 text-center">Descripción</th>
+                        <th class="py-3 px-4 text-center">Movimiento</th>
+                        <th class="py-3 px-4 text-center">Tipo Movimiento</th>
+                        <th class="py-3 px-4 text-center">Documento</th>
+                        <th class="py-3 px-4 text-center">Cantidad Movimiento</th>
+                        <th class="py-3 px-4 text-center">Existencia</th>
                     </tr>
                 </thead>
-                <tbody id="bodyTablaVendedores" class="text-center">
+                <tbody id="bodyTablaKardex" class="text-center">
                     @if (Model != null && Model.Any())
                     {
-                        foreach (var vendedor in Model)
+                        foreach (var item in Model)
                         {
                             <tr class="even:bg-gray-700 hover:bg-gray-600">
-                                <td class="py-3 px-4 border-b border-gray-700">@vendedor.PK_Factura</td>
-                                <td class="py-3 px-4 border-b border-gray-700">@vendedor.Nombre_Cliente</td>
-                                <td class="py-3 px-4 border-b border-gray-700">@vendedor.Fecha.ToString("d")</td>
-                                <td class="py-3 px-4 border-b border-gray-700">@vendedor.Nombre_Vendedor</td>
-                                <td class="py-3 px-4 border-b border-gray-700">@vendedor.Descuento.ToString("C")</td>
-                                <td class="py-3 px-4 border-b border-gray-700">@vendedor.Total</td>
-                                <td class="py-3 px-4 border-b border-gray-700">@vendedor.Comision</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.Id</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.Fecha.ToString("d")</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.Articulo</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.Descripcion</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.Movimiento</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.TipoMovimiento</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.Documento</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.CantidadMovimiento</td>
+                                <td class="py-3 px-4 border-b border-gray-700">@item.Existencia</td>
                             </tr>
                         }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="7" class="text-center">No hay datos disponibles.</td>
+                            <td colspan="9">No hay datos disponibles.</td>
                         </tr>
                     }
                 </tbody>
-                <tfoot>
-                    <tr class="bg-gray-800 text-white">
-                        <td colspan="6" class="py-3 text-right font-bold">Total:</td>
-                        <td id="totalComision" class="py-3 text-center font-bold"></td>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
@@ -113,15 +111,15 @@
             // Obtener los valores del formulario
             var fechaInicio = document.getElementById('entry_date').value;
             var fechaFinal = document.getElementById('expiry_date').value;
-            var nombreVendedor = document.getElementById('vendedor').value.toLowerCase();
+            var articulo = document.getElementById('articulo').value.toLowerCase();
 
             // Obtener todas las filas de la tabla
-            var filas = document.querySelectorAll('#bodyTablaVendedores tr');
+            var filas = document.querySelectorAll('#bodyTablaKardex tr');
 
             filas.forEach(fila => {
                 var celdas = fila.querySelectorAll('td');
-                var fecha = celdas[2].textContent.trim(); // Fecha en la tercera columna
-                var vendedor = celdas[3].textContent.trim().toLowerCase(); // Vendedor en la cuarta columna
+                var fecha = celdas[1].textContent.trim(); // Fecha en la segunda columna
+                var articuloFila = celdas[2].textContent.trim().toLowerCase(); // Artículo en la tercera columna
 
                 // Convertir las fechas a objetos Date para comparación
                 var fechaFactura = new Date(fecha);
@@ -138,50 +136,26 @@
                     mostrarFila = false;
                 }
 
-                // Filtrar por nombre del vendedor
-                if (nombreVendedor && !vendedor.includes(nombreVendedor)) {
+                // Filtrar por artículo
+                if (articulo && !articuloFila.includes(articulo)) {
                     mostrarFila = false;
                 }
 
                 // Mostrar u ocultar la fila según el filtro
                 fila.style.display = mostrarFila ? '' : 'none';
             });
-
-            // Calcular el total después de aplicar los filtros
-            calcularTotalComision();
-        }
-
-        // Función para calcular el total de las comisiones
-        function calcularTotalComision() {
-            var totalComision = 0;
-
-            // Obtener todas las filas visibles de la tabla
-            var filas = document.querySelectorAll('#bodyTablaVendedores tr');
-            filas.forEach(fila => {
-                if (fila.style.display !== 'none') { // Solo considerar filas visibles
-                    var celdas = fila.querySelectorAll('td');
-                    var comision = parseFloat(celdas[6].textContent.replace('$', '').replace(',', ''));
-
-                    if (!isNaN(comision)) {
-                        totalComision += comision;
-                    }
-                }
-            });
-
-            // Mostrar el total en el elemento específico
-            document.getElementById('totalComision').textContent = totalComision.toFixed(2);
         }
 
         // Función para exportar la tabla a Excel
         function exportarTablaAExcel() {
             // Obtén la tabla completa
-            var table = document.getElementById('tablaVendedores');
+            var table = document.getElementById('tablaKardex');
 
             // Convierte la tabla a una hoja de cálculo
             var wb = XLSX.utils.table_to_book(table);
 
             // Crea un archivo Excel y descarga
-            XLSX.writeFile(wb, 'reporteVendedores.xlsx');
+            XLSX.writeFile(wb, 'reporteKardex.xlsx');
         }
 
         // Llamar a la función de filtro cuando el formulario cambie
