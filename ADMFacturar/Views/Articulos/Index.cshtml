@@ -88,13 +88,13 @@
                             </td>
                             <td>
                                 <div class="flex justify-center space-x-2">
-                                    <a onclick="ActuVarArticulo('@articulo.PK_Articulo')" class="text-blue-600 hover:text-blue-900" title="Editar">
-                                        <i class="fas fa-edit"></i>
+										<a onclick="ActuVarArticulo('@articulo.PK_Articulo')" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar">
+											<i class="fa-solid fa-edit"></i>
                                     </a>
                                     <form method="post" asp-action="DesactivarArticulo" class="desactivar-form">
                                         <input type="hidden" name="PK_Articulo" value="@articulo.PK_Articulo">
-                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                            <i class="fa-solid fa-ban"></i>
+											<button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" title="Desactivar">
+												<i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -438,5 +438,25 @@
 		});
 
 	</script>
+	<style>
+		#tablaArticulos tbody td {
+			border-bottom: none;
+		}
+		/* Cambia el color del texto de la paginación a blanco */
+		.dataTables_wrapper .dataTables_paginate ,
+		.dataTables_wrapper .dataTables_info,
+		.dataTables_wrapper .dataTables_length select {
+			color: white !important;
+		}
+
+			/* Cambia el color al pasar el ratón por encima */
+
+
+			/* Cambia el color de fondo y el color del texto para el botón de la página actual */
+			.dataTables_wrapper .dataTables_paginate  {
+				background-color: #202c34 !important;
+				color: black !important;
+			}
+	</style>
 </body>
 </html>
