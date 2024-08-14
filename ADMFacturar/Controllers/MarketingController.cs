@@ -44,20 +44,232 @@ namespace ADMFacturar.Controllers
             }
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> ObtenerGC(string Id)
         {
-            return null;
+            var resp = await _httpClient.GetAsync($"api/Marketing/ObtenerGC/{Id}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var Correos = JsonConvert.DeserializeObject<GrupoCorreo>(content);
+                return Ok(Correos);
+            }
+
+            else
+            {
+                var Correos = new GrupoCorreo();
+                return View(Correos);
+            }
         }
 
-        public IActionResult GCIndex()
+
+        [HttpPost]
+        public async Task<IActionResult> CreateGC([FromForm] GrupoCorreo GC)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(GC);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                
+                var response = await _httpClient.PostAsync("/api/Marketing/CrearGC", content);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("GCIndex");
+                }
+                else
+                {
+                    return BadRequest("Error al obtener los articulo");
+                }
+            }
+            else
+            {
+                // Log model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = "Datos del formulario inválidos", errors });
+            }
         }
 
-        public IActionResult TemplateIndex()
+        [HttpPost]
+        public async Task<IActionResult> UpdateGC([FromForm] GrupoCorreo GC)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(GC);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/api/Marketing/ActualizarGC", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("GCIndex");
+                }
+                else
+                {
+                    return BadRequest("Error al obtener los articulo");
+                }
+            }
+            else
+            {
+                // Log model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = "Datos del formulario inválidos", errors });
+            }
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarGC(string ID)
+        {
+            if (ModelState.IsValid)
+            {
+                var content = new StringContent(ID, Encoding.UTF8, "application/json");
+                var resp = await _httpClient.PostAsync($"/api/Marketing/EliminarGC/{ID}", content);
+                string responseContent = await resp.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                return NotFound();
+
+            }
+            return Ok();
+        }
+
+
+        public async Task<IActionResult> GCIndex()
+        {
+            var resp = await _httpClient.GetAsync("api/Marketing/ListarGC");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var Correos = JsonConvert.DeserializeObject<IEnumerable<GrupoCorreo>>(content);
+                return View(Correos);
+            }
+
+            else
+            {
+                var Correos = new List<Correo>();
+                return View(Correos);
+            }
+        }
+
+        public async Task<IActionResult> TemplateIndex()
+        {
+            var resp = await _httpClient.GetAsync("api/Marketing/ListarTC");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var Correos = JsonConvert.DeserializeObject<IEnumerable<TemplateCorreo>>(content);
+                return View(Correos);
+            }
+
+            else
+            {
+                var Correos = new List<TemplateCorreo>();
+                return View(Correos);
+            }
+        }
+        public async Task<IActionResult> ObtenerTC(string Id)
+        {
+            var resp = await _httpClient.GetAsync($"api/Marketing/ObtenerTC/{Id}");
+
+            if (resp.IsSuccessStatusCode)
+            {
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var Correos = JsonConvert.DeserializeObject<TemplateCorreo>(content);
+                return Ok(Correos);
+            }
+
+            else
+            {
+                var Correos = new TemplateCorreo();
+                return View(Correos);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTC([FromForm] TemplateCorreo TC)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(TC);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/api/Marketing/CrearTC", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("TemplateIndex");
+                }
+                else
+                {
+                    return BadRequest("Error al obtener los articulo");
+                }
+            }
+            else
+            {
+                // Log model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = "Datos del formulario inválidos", errors });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTC([FromForm] TemplateCorreo TC)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(TC);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/api/Marketing/ActualizarTC", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("TemplateIndex");
+                }
+                else
+                {
+                    return BadRequest("Error al obtener los articulo");
+                }
+            }
+            else
+            {
+                // Log model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = "Datos del formulario inválidos", errors });
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarTC(string ID)
+        {
+            if (ModelState.IsValid)
+            {
+                var content = new StringContent(ID, Encoding.UTF8, "application/json");
+                var resp = await _httpClient.PostAsync($"/api/Marketing/EliminarTC/{ID}", content);
+                string responseContent = await resp.Content.ReadAsStringAsync();
+                Console.WriteLine("Response from API: " + responseContent);
+
+                if (resp.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("TemplateIndex");
+                }
+
+                return NotFound();
+
+            }
+            return Ok();
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> EnviarCorreo(string to, string subject, string body, List<IFormFile> attachments)
@@ -154,6 +366,43 @@ namespace ADMFacturar.Controllers
             {
                 return BadRequest("Error al obtener los correos");
             }
+        }
+
+        public async Task<IActionResult> ListarGrupoCorreos()
+        {
+
+            var respArts = await _httpClient.GetAsync("api/Marketing/ListarGC");
+
+
+            if (respArts.IsSuccessStatusCode)
+            {
+                var grupocorreoJson = await respArts.Content.ReadAsStringAsync();
+                var grupocorreos = JsonConvert.DeserializeObject<List<GrupoCorreo>>(grupocorreoJson);
+                return Json(grupocorreos);
+            }
+            else
+            {
+                return BadRequest("Error al obtener los grupos de correo");
+            }
+
+        }
+        public async Task<IActionResult> ListarTemplateCorreos()
+        {
+
+            var respArts = await _httpClient.GetAsync("api/Marketing/ListarTC");
+
+
+            if (respArts.IsSuccessStatusCode)
+            {
+                var grupocorreoJson = await respArts.Content.ReadAsStringAsync();
+                var grupocorreos = JsonConvert.DeserializeObject<List<TemplateCorreo>>(grupocorreoJson);
+                return Json(grupocorreos);
+            }
+            else
+            {
+                return BadRequest("Error al obtener los grupos de correo");
+            }
+
         }
 
 

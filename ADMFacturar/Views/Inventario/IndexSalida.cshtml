@@ -16,21 +16,21 @@
             <h2 class="text-lg font-bold mb-4">Filtros de Búsqueda</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
                 <div class="sm:col-span-1">
-                    <label for="entry_date" class="block text-sm font-medium">Fecha Inicio</label>
+                    <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Inicio</label>
                     <div class="mt-2">
-                        <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
                 <div class="sm:col-span-1">
-                    <label for="expiry_date" class="block text-sm font-medium">Fecha Final</label>
+                    <label for="expiry_date" class="block text-sm font-medium leading-6 text-white">Fecha Final</label>
                     <div class="mt-2">
-                        <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
                 <div class="sm:col-span-1">
-                    <label for="TipoSalida" class="block text-sm font-medium">Tipo Salida</label>
+                    <label for="TipoSalida" class="block text-sm font-medium text-white">Tipo Salida</label>
                     <div class="mt-2">
-                        <select asp-for="Tipo_Salida" id="TipoSalida" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                        <select asp-for="Tipo_Salida" id="TipoSalida" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
                             <option value="">Seleccione una opción</option>
                             <option value="Daño">Daño</option>
                             <option value="Regalía">Regalía</option>
@@ -40,15 +40,15 @@
                     </div>
                 </div>
                 <div class="sm:col-span-1">
-                    <label for="document_number" class="block text-sm font-medium">Número de Documento</label>
+                    <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número de Documento</label>
                     <div class="mt-2">
-                        <input type="text" id="document_number" name="document_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px; height: 38px;">
+                        <input type="text" id="document_number" name="document_number" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
                 <div class="sm:col-span-1">
-                    <label for="estado" class="block text-sm font-medium">Estado</label>
+                    <label for="estado" class="block text-sm font-medium text-white">Estado</label>
                     <div class="mt-2">
-                        <select id="estado" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                        <select id="estado" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
                             <option value="">Seleccione una opción</option>
                             <option value="Completado">Completado</option>
                             <option value="Pendiente">Pendiente</option>
@@ -59,7 +59,7 @@
         </div>
     </form>
 
-    <div class="w-full mt-8">
+    <div class="w-full mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
         <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
             <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado Salidas de Inventario</h3>
             <div>
@@ -68,19 +68,19 @@
         </div>
 
         <!-- Tabla -->
-        <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
-            <table class="min-w-full leading-normal">
-                <thead>
-                    <tr class="bg-gray-800 text-white">
-                        <th class="text-center py-3">Documento</th>
-                        <th class="text-center py-3">Fecha Salida</th>
-                        <th class="text-center py-3">Tipo Salida</th>
-                        <th class="text-center py-3">Observaciones</th>
-                        <th class="text-center py-3">Estado</th>
-                        <th class="text-center py-3">Acciones</th>
+        <div class=overflow-auto mt-4">
+            <table class="min-w-full bg-gray-800 text-white">
+                <thead class="bg-gray-900">
+                    <tr>
+                        <th class="py-3 px-4 text-center">Documento</th>
+                        <th class="py-3 px-4 text-center">Fecha Salida</th>
+                        <th class="py-3 px-4 text-center">Tipo Salida</th>
+                        <th class="py-3 px-4 text-center">Observaciones</th>
+                        <th class="py-3 px-4 text-center">Estado</th>
+                        <th class="py-3 px-4 text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="bodyTablaIngresos" class="text-gray-700">
+                <tbody id="bodyTablaIngresos" class="text-center">
                 </tbody>
             </table>
         </div>
@@ -100,13 +100,13 @@
 
                     data.forEach(item => {
                         const row = `
-                                    <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                        <td class="py-3 text-center">${item.pK_FK_Documento}</td>
-                                        <td class="py-3 text-center">${new Date(item.fecha_Salida).toLocaleDateString()}</td>
-                                        <td class="py-3 text-center">${item.tipo_Salida}</td>
-                                        <td class="py-3 text-center">${item.observaciones}</td>
-                                        <td class="py-3 text-center">${item.estado}</td>
-                                        <td class="py-3 text-center">
+                                            <tr class="even:bg-gray-700 hover:bg-gray-600">
+                                                <td class="py-3 px-4 border-b border-gray-700">${item.pK_FK_Documento}</td>
+                                                <td class="py-3 px-4 border-b border-gray-700">${new Date(item.fecha_Salida).toLocaleDateString()}</td>
+                                                <td class="py-3 px-4 border-b border-gray-700">${item.tipo_Salida}</td>
+                                                <td class="py-3 px-4 border-b border-gray-700">${item.observaciones}</td>
+                                                <td class="py-3 px-4 border-b border-gray-700">${item.estado}</td>
+                                                <td class="py-3 px-4 border-b border-gray-700">
                                             <div class="flex justify-center space-x-2">
                                                <a href="#" class="text-blue-600 hover:text-blue-900 editar-ingreso" data-documento="${item.pK_FK_Documento}" data-estado="${item.estado}" title="Editar">
                                                    <i class="fas fa-edit"></i>

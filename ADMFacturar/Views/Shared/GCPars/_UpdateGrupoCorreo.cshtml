@@ -1,0 +1,30 @@
+﻿@model GrupoCorreo
+
+<form asp-action="UpdateGC" method="post" id="formupdate" class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+    <h2 class="text-lg font-semibold leading-7 text-white mb-4">Crear Grupo de Correos</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-s lg:grid-cols-1 gap-6">
+        <div>
+            <label class="block text-sm font-medium leading-6 text-white">Código</label>
+            <input asp-for="Id" type="text" id="GCId" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 
+                focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" readonly />
+        </div>
+        <div>
+            <label class="block text-sm font-medium leading-6 text-white">Nombre</label>
+            <div class="flex">
+                <input asp-for="Name" type="text" id="GCName" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 
+                    text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+            </div>
+        </div>
+        <div>
+            <label class="block text-sm font-medium leading-6 text-white">Correos</label>
+            <div class="flex">
+                <input asp-for="Correos" type="text" id="GCcorreo" class="mt-1 block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+            </div>
+        </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-x-4">
+        <a href="@Url.Action("GCIndex", "Marketing")" class="w-full py-2 px-4 bg-gray-600 hover:bg-gray-500 text-white rounded-lg text-center inline-block">Cancelar</a>
+        <button type="submit" id="btnGuardar" class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-lg">Guardar</button>
+    </div>
+</form>
+

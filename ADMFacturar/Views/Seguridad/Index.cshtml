@@ -29,9 +29,9 @@
             <h2 class="text-lg font-bold mb-4">Filtro de Seguridad</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
                 <div class="sm:col-span-1">
-                    <label for="usuario" class="block text-sm font-medium">Usuario</label>
+                    <label for="usuario" class="block text-sm font-medium leading-6 text-white">Usuario</label>
                     <div class="mt-1">
-                        <input type="text" id="usuario" name="usuario" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        <input type="text" id="usuario" name="usuario" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
             </div>
@@ -39,76 +39,70 @@
     </form>
     <!-- Final de Formulario -->
 
-    <div class="w-full mt-8">
-        <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
-            <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Seguridad</h3>
-            <div>
-                <a onclick="abrirModal('modalCrearSeguridad')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Usuario</a>
-            </div>
-        </div>
-
-        <!-- Tabla -->
-        <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
-            <table id="tablaSeguridad" class="min-w-full leading-normal">
-                <thead>
-                    <tr class="bg-gray-800 text-white">
-                        <th class="py-3 text-center">ID</th>
-                        <th class="py-3 text-center">Usuario</th>
-                        <th class="py-3 text-center">Correo</th>
-                        <th class="py-3 text-center">Rol</th>
-                        <th class="py-3 text-center">Estado</th>
-                        <th class="py-3 text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="BodyTablaSeguridad" class="text-gray-700">
-                    @if (usuarios != null)
+   <div class="w-full mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+        <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Seguridad</h3>
+        <a onclick="abrirModal('modalCrearSeguridad')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Usuario</a>
+    </div>
+    <!-- Tabla -->
+    <div class="overflow-auto mt-4">
+        <table id="tablaSeguridad" class="min-w-full bg-gray-800 text-white">
+            <thead class="bg-gray-900">
+                <tr>
+                    <th class="py-3 px-4 text-center">ID</th>
+                    <th class="py-3 px-4 text-center">Usuario</th>
+                    <th class="py-3 px-4 text-center">Correo</th>
+                    <th class="py-3 px-4 text-center">Rol</th>
+                    <th class="py-3 px-4 text-center">Estado</th>
+                    <th class="py-3 px-4 text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="BodyTablaSeguridad" class="text-center">
+                @if (usuarios != null)
+                {
+                    @foreach (var usuario in usuarios)
                     {
-                        @foreach (var usuario in usuarios)
-                        {
-                            <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => usuario.PK_IdUsuario)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => usuario.Nombre)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => usuario.Correo)</td>
-                                <td class="py-3 text-center">@Html.DisplayFor(modelItem => usuario.Rol)</td>
-                                <td class="py-3 text-center">
-                                    @if (usuario.Estado)
-                                    {
-                                        <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
-                                    }
-                                </td>
-                                <td>
-                                    <div class="flex justify-center space-x-2">
-                                        <div class="flex justify-center space-x-2">
-                                            <a asp-action="ActualizarSeguridad" asp-route-PK="@usuario.PK_IdUsuario" class="text-blue-600 hover:text-blue-900" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-
-                                            <form method="post" asp-action="DesactivarSeguridad" class="desactivar-form">
-                                                <input type="hidden" name="PK_IdUsuario" value="@usuario.PK_IdUsuario">
-                                                <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                                    <i class="fa-solid fa-ban"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="6">No hay datos disponibles.</td>
+                        <tr class="even:bg-gray-700 hover:bg-gray-600">
+                            <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => usuario.PK_IdUsuario)</td>
+                            <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => usuario.Nombre)</td>
+                            <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => usuario.Correo)</td>
+                            <td class="py-3 px-4 border-b border-gray-700">@Html.DisplayFor(modelItem => usuario.Rol)</td>
+                            <td class="py-3 px-4 border-b border-gray-700">
+                                @if (usuario.Estado)
+                                {
+                                    <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactivo</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="flex justify-center space-x-2">
+                                    <a asp-action="ActualizarSeguridad" asp-route-PK="@usuario.PK_IdUsuario" class="text-blue-600 hover:text-blue-900" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="post" asp-action="DesactivarSeguridad" class="desactivar-form">
+                                        <input type="hidden" name="PK_IdUsuario" value="@usuario.PK_IdUsuario">
+                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
+                                            <i class="fa-solid fa-ban"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     }
-                </tbody>
-            </table>
-        </div>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="py-3 text-center">No hay datos disponibles.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
+</div>
     <!-- Final de Tabla -->
     <!-- Modal de Crear Usuario -->
     <div id="modalCrearSeguridad" class="modal">

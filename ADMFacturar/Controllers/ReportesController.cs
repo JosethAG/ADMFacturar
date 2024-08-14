@@ -34,18 +34,40 @@ namespace ADMFacturar.Controllers
 				return View();
 			}
 		}
+		public async Task<IActionResult> RVentas()
+		{
+			var response = await _httpClient.GetAsync("api/Reporte/ReporteVentas");
 
+			if (response.IsSuccessStatusCode)
+			{
+				var content = await response.Content.ReadAsStringAsync();
+				var result = JsonConvert.DeserializeObject<IEnumerable<FacturaVentaViewModel>>(content);
 
-		public IActionResult RVentas()
+				// Pasar los datos a la vista como modelo
+				return View(result);
+			}
+
+			// Manejo de errores si la llamada a la API falla
+			return View(new List<FacturaVentaViewModel>());
+		}
+        public async Task<IActionResult> RKardex()
         {
-            return View();
-        }
-        public IActionResult RCardex()
-        {
-            return View();
+            var response = await _httpClient.GetAsync("api/Reporte/ReporteKardex");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<IEnumerable<KardexViewModel>>(content);
+
+                // Pasar los datos a la vista como modelo
+                return View(result);
+            }
+
+            // Manejo de errores si la llamada a la API falla
+            return View(new List<KardexViewModel>());
         }
 
-		public async Task<IActionResult> RInventario()
+        public async Task<IActionResult> RInventario()
 		{
 			var resp = await _httpClient.GetAsync("api/Reporte/ReporteArticulos");
 
@@ -60,17 +82,43 @@ namespace ADMFacturar.Controllers
 			return View();
 		}
 
-		public IActionResult RVendedores()
-        {
-            return View();
-        }
-        public IActionResult RCxC()
-        {
-            return View();
-        }
+		public async Task<IActionResult> RVendedores()
+		{
+			var response = await _httpClient.GetAsync("api/Reporte/ReporteVendedores");
+
+			if (response.IsSuccessStatusCode)
+			{
+				var content = await response.Content.ReadAsStringAsync();
+				var result = JsonConvert.DeserializeObject<IEnumerable<ReporteVendedoresViewModel>>(content);
+
+				// Pasar los datos a la vista como modelo
+				return View(result);
+			}
+
+			// Manejo de errores si la llamada a la API falla
+			return View(new List<ReporteVendedoresViewModel>());
+		}
 
 
-        public async Task<IActionResult> RCxP()
+		public async Task<IActionResult> RCxC()
+		{
+			var response = await _httpClient.GetAsync("api/Reporte/ReporteDocumentosCC");
+
+			if (response.IsSuccessStatusCode)
+			{
+				var content = await response.Content.ReadAsStringAsync();
+				var result = JsonConvert.DeserializeObject<IEnumerable<DocumentosCCViewModel>>(content);
+
+				// Pasar los datos a la vista como modelo
+				return View(result);
+			}
+
+			// Manejo de errores si la llamada a la API falla
+			return View(new List<DocumentosCCViewModel>());
+		}
+
+
+		public async Task<IActionResult> RCxP()
         {
             var resp = await _httpClient.GetAsync("api/Reporte/ReporteCXP");
 
@@ -100,26 +148,26 @@ namespace ADMFacturar.Controllers
             return View();
         }
 
-        public async Task<IActionResult> REstadosCuentas()
-        {
-            // Llamada al endpoint de la API para obtener los estados de cuentas
-            var response = await _httpClient.GetAsync("api/Reporte/ReporteEstadosCuentas");
+		public async Task<IActionResult> REstadosCuentas()
+		{
+			// Llamada al endpoint de la API para obtener los estados de cuentas
+			var response = await _httpClient.GetAsync("api/Reporte/ReporteEstadosCuentas");
 
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<ReporteEstadosCuentasViewModel>(content);
+			if (response.IsSuccessStatusCode)
+			{
+				var content = await response.Content.ReadAsStringAsync();
+				var result = JsonConvert.DeserializeObject<ReporteEstadosCuentasViewModel>(content);
 
-                // Pasar los datos a la vista
-                ViewData["Facturas"] = result.Facturas;
-                ViewData["TotalPendiente"] = result.TotalPendiente;
-                return View();
-            }
+				// Pasar los datos a la vista
+				ViewData["Facturas"] = result.Facturas;
+				ViewData["TotalPendiente"] = result.TotalPendiente;
+				return View();
+			}
 
-            // Manejo de errores si la llamada a la API falla
-            ViewData["Facturas"] = new List<FacturaModel>();
-            ViewData["TotalPendiente"] = 0;
-            return View();
-        }
-    }
+			// Manejo de errores si la llamada a la API falla
+			ViewData["Facturas"] = new List<FacturaModel>();
+			ViewData["TotalPendiente"] = 0;
+			return View();
+		}
+	}
 }
