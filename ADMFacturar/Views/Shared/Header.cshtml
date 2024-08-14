@@ -1,18 +1,25 @@
 ﻿@{
+    var isAuthenticated = User.Identity.IsAuthenticated;
 }
 
 <header class="w-full items-center bg-sidebar py-2 px-6 hidden sm:flex">
     <div class="relative w-1/2 flex justify-start"></div>
     <div class="relative w-1/2 flex justify-end">
-        <a asp-controller="Seguridad" asp-action="Login" class="mr-4">
-            <button class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-green-500 focus:outline-none">
-                <i class="fas fa-user" style="color:white"></i>
-            </button>
-        </a>
-        <a asp-controller="Seguridad" asp-action="Logout">
-            <button class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-red-500 focus:outline-none">
-                <i class="fa-solid fa-arrow-right-to-bracket" style="color:white"></i>
-            </button>
-        </a>
+        @if (isAuthenticated)
+        {
+            <a asp-controller="Seguridad" asp-action="Logout">
+                <button class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-red-500 focus:outline-none">
+                    <i class="fa-solid fa-arrow-right-to-bracket" style="color:white"></i>
+                </button>
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Seguridad" asp-action="Login" class="mr-4">
+                <button class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-green-500 focus:outline-none">
+                    <i class="fas fa-user" style="color:white"></i>
+                </button>
+            </a>
+        }
     </div>
 </header>
