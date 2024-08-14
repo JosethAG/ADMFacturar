@@ -14,23 +14,23 @@
     <form>
         <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
             <h2 class="text-lg font-bold mb-4">Filtros de Búsqueda</h2>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-6 items-center">
                 <div class="sm:col-span-1">
                     <label for="entry_date" class="block text-sm font-medium leading-6 text-white">Fecha Inicio</label>
                     <div class="mt-2">
-                        <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        <input type="date" id="entry_date" name="entry_date" class="block w-full rounded-md bg-gray-700 border-0 py-2 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
                 <div class="sm:col-span-1">
                     <label for="expiry_date" class="block text-sm font-medium leading-6 text-white">Fecha Final</label>
                     <div class="mt-2">
-                        <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        <input type="date" id="expiry_date" name="expiry_date" class="block w-full rounded-md bg-gray-700 border-0 py-2 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
                 <div class="sm:col-span-1">
                     <label for="TipoSalida" class="block text-sm font-medium text-white">Tipo Salida</label>
                     <div class="mt-2">
-                        <select asp-for="Tipo_Salida" id="TipoSalida" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                        <select asp-for="Tipo_Salida" id="TipoSalida" class="block w-full rounded-md bg-gray-700 border-0 py-2 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 41px;">
                             <option value="">Seleccione una opción</option>
                             <option value="Daño">Daño</option>
                             <option value="Regalía">Regalía</option>
@@ -42,13 +42,13 @@
                 <div class="sm:col-span-1">
                     <label for="document_number" class="block text-sm font-medium leading-6 text-white">Número de Documento</label>
                     <div class="mt-2">
-                        <input type="text" id="document_number" name="document_number" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
+                        <input type="text" id="document_number" name="document_number" class="block w-full rounded-md bg-gray-700 border-0 py-2 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
                 <div class="sm:col-span-1">
                     <label for="estado" class="block text-sm font-medium text-white">Estado</label>
                     <div class="mt-2">
-                        <select id="estado" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;">
+                        <select id="estado" class="block w-full rounded-md bg-gray-700 border-0 py-2 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 41px;">
                             <option value="">Seleccione una opción</option>
                             <option value="Completado">Completado</option>
                             <option value="Pendiente">Pendiente</option>
@@ -58,6 +58,7 @@
             </div>
         </div>
     </form>
+
 
     <div class="w-full mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
         <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
@@ -108,12 +109,12 @@
                                                 <td class="py-3 px-4 border-b border-gray-700">${item.estado}</td>
                                                 <td class="py-3 px-4 border-b border-gray-700">
                                             <div class="flex justify-center space-x-2">
-                                               <a href="#" class="text-blue-600 hover:text-blue-900 editar-ingreso" data-documento="${item.pK_FK_Documento}" data-estado="${item.estado}" title="Editar">
-                                                   <i class="fas fa-edit"></i>
+                                                       <a href="#"  class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-6000 editar-ingreso" data-documento="${item.pK_FK_Documento}" data-estado="${item.estado}" title="Editar">
+                                                             <i class="fa-solid fa-edit"></i>
                                                </a>
                                                 <form method="post" action="/Inventario/DesactivarIngreso/${item.pK_FK_Documento}" class="eliminar-form">
-                                                   <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                                       <i class="fas fa-trash"></i>
+                                                           <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 title="Desactivar">
+                                                                <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                     <input type="hidden" name="estado" value="${item.estado}">
                                                     <input type="hidden" name="documento" value="${item.pK_FK_Documento}">
