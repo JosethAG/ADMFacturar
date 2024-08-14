@@ -77,13 +77,13 @@
                             </td>
                             <td>
                                 <div class="flex justify-center space-x-2">
-                                    <a onclick="ActuVarTransporte('@transporte.PK_Medio_Transporte')" class="text-blue-600 hover:text-blue-900" title="Editar">
-                                        <i class="fas fa-edit"></i>
+                                        <a onclick="ActuVarTransporte('@transporte.PK_Medio_Transporte')" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar">
+                                            <i class="fa-solid fa-edit"></i>
                                     </a>
                                     <form method="post" asp-action="DesactivarTransporte" class="desactivar-form">
                                         <input type="hidden" name="PK_Medio_Transporte" value="@transporte.PK_Medio_Transporte">
-                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Desactivar">
-                                            <i class="fa-solid fa-ban"></i>
+                                            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" title="Desactivar">
+                                                <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -440,5 +440,27 @@
 			});
 		});
 </script>
+    <style>
+        #tablaTransportes tbody td {
+            border-bottom: none;
+        }
+        /* Cambia el color del texto de la paginación a blanco */
+        .dataTables_wrapper .dataTables_paginate .paginate_button,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_length select {
+            color: white !important;
+        }
+
+            /* Cambia el color al pasar el ratón por encima */
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                color: #ddd !important;
+            }
+
+            /* Cambia el color de fondo y el color del texto para el botón de la página actual */
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background-color: #333 !important;
+                color: white !important;
+            }
+    </style>
 </body>
 </html>
