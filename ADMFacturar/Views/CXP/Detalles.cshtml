@@ -18,16 +18,10 @@
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body>
-    <a href="/CXC/Index" class="text-white hover:text-gray-300">
-        <i class="fas fa-arrow-left fa-lg"></i> <!-- Ícono de flecha -->
-    </a>
-    <form>
-        <div class="border-b border-gray-900/10 pb-12">
-            <h2 class="text-base font-semibold leading-7 text-white">Detalle del Documento</h2>
-            <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
-
-
+    <form id="filterForm">
+        <div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
+            <h2 class="text-lg font-bold mb-4">Datalle del documento</h2>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
                 <div class="sm:col-span-2">
                     <label for="city" class="block text-sm font-medium leading-6 text-white">Documento</label>
                     <div class="mt-2">
@@ -38,7 +32,7 @@
                 <div class="sm:col-span-2">
                     <label for="city" class="block text-sm font-medium leading-6 text-white">Total Factura</label>
                     <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@abonos.FirstOrDefault().Monto">
+                        <input type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" disabled value="@abonos.FirstOrDefault()?.Monto">
                     </div>
                 </div>
 
