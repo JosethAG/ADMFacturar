@@ -279,6 +279,51 @@ namespace ADM.API.Controllers
 
             return Ok(facturaViewModel);
         }
+
+
+        [HttpGet]
+        [Route("ListarProductosL/{consecutivo}")]
+        public IEnumerable<ProductoLinea> ListarProductosL(string? consecutivo)
+        {
+            if (consecutivo != null)
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@consecutivo", consecutivo)
+                    };
+                DataTable tProducto = DBData.List("sp_rep_factura_linea", parameters);
+                string jsonArticle = JsonConvert.SerializeObject(tProducto);
+                var result = JsonProvider.DeserializeSimple<IEnumerable<ProductoLinea>>(jsonArticle);
+
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        [HttpGet]
+        [Route("ListarEncabezado/{consecutivo}")]
+        public EncabezadoFactura ListarEncabezado(string? consecutivo)
+        {
+            if (consecutivo != null)
+            {
+                List<DBParameter> parameters = new List<DBParameter>
+                    {
+                        new DBParameter("@consecutivo", consecutivo)
+                    };
+                DataTable tProducto = DBData.List("sp_rep_factura", parameters);
+                string jsonArticle = JsonConvert.SerializeObject(tProducto);
+                var result = JsonProvider.DeserializeSimple<IEnumerable<EncabezadoFactura>>(jsonArticle);
+
+                return result.FirstOrDefault();
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
 }
