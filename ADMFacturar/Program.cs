@@ -1,6 +1,7 @@
 using ADM.Models;
 using ADM.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IMonsterApiService, MonsterApiService>();
 builder.Services.AddScoped<IRestrictionService, RestrictionService>();
 
-
+QuestPDF.Settings.License = LicenseType.Community;
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(option =>

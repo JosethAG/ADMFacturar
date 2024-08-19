@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADM.Interface", "ADM.Interf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADM.Service", "ADM.Service\ADM.Service.csproj", "{D856C992-9987-4DA6-B37E-D35DC53B4814}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{F9D46059-DD6C-423A-ABE9-05EFCB89BF58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{D856C992-9987-4DA6-B37E-D35DC53B4814}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D856C992-9987-4DA6-B37E-D35DC53B4814}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D856C992-9987-4DA6-B37E-D35DC53B4814}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9D46059-DD6C-423A-ABE9-05EFCB89BF58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9D46059-DD6C-423A-ABE9-05EFCB89BF58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9D46059-DD6C-423A-ABE9-05EFCB89BF58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9D46059-DD6C-423A-ABE9-05EFCB89BF58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
