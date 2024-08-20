@@ -92,7 +92,7 @@
                                 <td class="py-3 px-4 text-center">${item.fecha}</td>
                                 <td class="py-3 px-4 text-center">${item.cliente}</td>
                                 <td class="py-3 px-4 text-center">₡${item.total}</td>
-                                <td class="py-3 px-4 text-center flex justify-center space-x-2">
+                                <td class="py-3 px-4 text-center flex justify-centerer space-x-2">
                                     ${item.tipoDoc !== 'Nota de Crédito' ? `
                                     <button class="crear-nota-credito bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded" title="Crear nota de Crédito" data-estado="${item.estado}" data-documento="${item.documento}" data-referencia="${item.fac_Referencia}">
                                         <i class="fas fa-credit-card"></i>
@@ -100,10 +100,11 @@
                                     ` : ''}
                                     <button class="ver-detalles bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded" title="Detalles" data-documento="${item.documento}" data-tipodoc="${item.tipoDoc}">
                                         <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="imprimirPDF  bg-gray-500 hover:bg-gray-600 text-white py-1 px-3 rounded" data-documento="${item.documento}">
+                                            <i class="fa-solid fa-print" style="color: #ffffff;"></i>
                                     </button>
-                                    <button class="bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-3 rounded" title="Imprimir">
-                                        <i class="fas fa-print"></i>
-                                    </button>
+                                    
                                 </td>
                             </tr>
                         `;
@@ -206,6 +207,16 @@
             } else if (tipoDoc === 'Factura') {
                 window.location.href = `/Facturas/DetallesFactura?documento=${documento}`;
             }
+        }
+    });
+
+
+    // Agregar funcionalidad de ver detalles
+    document.addEventListener('click', function (event) {
+        if (event.target.closest('.imprimirPDF')) {
+            const button = event.target.closest('.imprimirPDF');
+            const documento = button.getAttribute('data-documento');
+            window.location.href = `/Facturas/GenerarPDF?consecutivo=${documento}`;
         }
     });
 </script>

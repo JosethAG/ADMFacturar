@@ -3503,7 +3503,85 @@ BEGIN
 END;
 
 GO
-	
+/****** Object:  StoredProcedure [dbo].[sp_rep_factura]    Script Date: 8/19/2024 6:32:36 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_rep_factura]
+    @consecutivo VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT      
+		f.FK_Cliente AS Cliente,
+        c.Nombre AS Nombre,
+        c.Identificacion AS Identificacion,
+		c.Correo AS Correo,
+        c.Telefono AS Telefono,
+        cp.Descripcion AS CondicionPago,
+        v.Nombre AS Vendedor,
+        t.Descripcion AS Transporte,
+		CAST(f.Fecha_Creacion AS DATE) AS Fecha,
+		f.Subtotal,
+		f.Descuento,
+		f.Impuesto,
+		f.Total
+    FROM 
+        dbo.TBL_FACTURA f
+    INNER JOIN 
+        dbo.TBL_CLIENTES c ON f.FK_Cliente = c.PK_Cliente
+    INNER JOIN 
+        dbo.TBL_CONDICIONES_PAGO cp ON c.FK_CondicionPago = cp.PK_Condicion_Pago
+    INNER JOIN 
+        dbo.TBL_VENDEDORES v ON c.FK_Vendedor = v.PK_Vendedor
+    INNER JOIN 
+        dbo.TBL_TRANSPORTES t ON c.FK_Transporte = t.PK_Medio_Transporte
+    WHERE 
+        f.PK_Factura = @consecutivo; 
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_rep_factura_linea]    Script Date: 8/19/2024 6:32:38 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_rep_factura_linea]
+    @consecutivo VARCHAR(50)  
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    
+    SELECT 
+		 CASE 
+            WHEN f.Tipo_Doc = 'NC' THEN fl.A_Devolver
+            ELSE fl.Cantidad
+        END AS Cantidad,
+        a.PK_Articulo AS Codigo,
+        a.Descripcion AS Descripcion,
+        fl.Precio AS Precio,
+        CASE 
+            WHEN f.Tipo_Doc = 'NC' THEN fl.A_Devolver * fl.Precio
+            ELSE fl.Cantidad * fl.Precio
+        END AS Total
+    FROM 
+        dbo.TBL_FACTURA_LINEA fl
+    INNER JOIN 
+        dbo.TBL_ARTICULO a ON fl.FK_Articulo = a.PK_Articulo
+    INNER JOIN 
+        dbo.TBL_FACTURA f ON fl.PK_FK_Factura = f.PK_Factura
+    WHERE 
+        fl.PK_FK_Factura = @consecutivo;  
+END
+
+GO	
 -------------------------------------------------
 		/*Abonos-AbonoXC---Documento_CP-Documento_CC*/
 -------------------------------------------------
@@ -4328,6 +4406,31 @@ BEGIN
         dcc.PK_Documento_CC;
 END;
 GO
+	USE [ADM]
+GO
+/** Object:  StoredProcedure [dbo].[sp_ListarKardex]    Script Date: 8/12/2024 10:07:43 AM **/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ListarKardex]
+AS
+BEGIN
+    -- Selecciona todos los registros de la tabla TBL_KARDEX
+    SELECT 
+        Id,
+        Fecha,
+        Articulo,
+        Descripcion,
+        Movimiento,
+        TipoMovimiento,
+        Documento,
+        CantidadMovimiento,
+        Existencia
+    FROM TBL_KARDEX
+END
+GO
+
 
 	
 /* Grupos de correo*/
@@ -5615,6 +5718,10 @@ GO
 INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (3, N'Nube de algodon', N'https://processed-model-result.s3.us-east-2.amazonaws.com/e41db207-ffa0-48d7-bb11-18c0c7cbe7d6_0.png')
 GO
 INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (6, N'Modelo de verano', N'https://processed-model-result.s3.us-east-2.amazonaws.com/2af49324-a1e2-4274-b885-a36cea6a0fa4_0.png')
+GO
+INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (7, N'Vestido Rojo', N'https://processed-model-result.s3.us-east-2.amazonaws.com/58876ac6-047f-4678-9c36-27fbca2e06f7_0.png')
+GO
+INSERT [dbo].[TBL_IMAGENES] ([Id], [Prompt], [Img]) VALUES (8, N'vestido rojo', N'https://processed-model-result.s3.us-east-2.amazonaws.com/00606828-f833-4a04-9c37-d8f1b3401662_0.png')
 GO
 SET IDENTITY_INSERT [dbo].[TBL_IMAGENES] OFF
 GO
