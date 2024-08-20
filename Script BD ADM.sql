@@ -3503,7 +3503,85 @@ BEGIN
 END;
 
 GO
-	
+/****** Object:  StoredProcedure [dbo].[sp_rep_factura]    Script Date: 8/19/2024 6:32:36 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_rep_factura]
+    @consecutivo VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT      
+		f.FK_Cliente AS Cliente,
+        c.Nombre AS Nombre,
+        c.Identificacion AS Identificacion,
+		c.Correo AS Correo,
+        c.Telefono AS Telefono,
+        cp.Descripcion AS CondicionPago,
+        v.Nombre AS Vendedor,
+        t.Descripcion AS Transporte,
+		CAST(f.Fecha_Creacion AS DATE) AS Fecha,
+		f.Subtotal,
+		f.Descuento,
+		f.Impuesto,
+		f.Total
+    FROM 
+        dbo.TBL_FACTURA f
+    INNER JOIN 
+        dbo.TBL_CLIENTES c ON f.FK_Cliente = c.PK_Cliente
+    INNER JOIN 
+        dbo.TBL_CONDICIONES_PAGO cp ON c.FK_CondicionPago = cp.PK_Condicion_Pago
+    INNER JOIN 
+        dbo.TBL_VENDEDORES v ON c.FK_Vendedor = v.PK_Vendedor
+    INNER JOIN 
+        dbo.TBL_TRANSPORTES t ON c.FK_Transporte = t.PK_Medio_Transporte
+    WHERE 
+        f.PK_Factura = @consecutivo; 
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_rep_factura_linea]    Script Date: 8/19/2024 6:32:38 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_rep_factura_linea]
+    @consecutivo VARCHAR(50)  
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    
+    SELECT 
+		 CASE 
+            WHEN f.Tipo_Doc = 'NC' THEN fl.A_Devolver
+            ELSE fl.Cantidad
+        END AS Cantidad,
+        a.PK_Articulo AS Codigo,
+        a.Descripcion AS Descripcion,
+        fl.Precio AS Precio,
+        CASE 
+            WHEN f.Tipo_Doc = 'NC' THEN fl.A_Devolver * fl.Precio
+            ELSE fl.Cantidad * fl.Precio
+        END AS Total
+    FROM 
+        dbo.TBL_FACTURA_LINEA fl
+    INNER JOIN 
+        dbo.TBL_ARTICULO a ON fl.FK_Articulo = a.PK_Articulo
+    INNER JOIN 
+        dbo.TBL_FACTURA f ON fl.PK_FK_Factura = f.PK_Factura
+    WHERE 
+        fl.PK_FK_Factura = @consecutivo;  
+END
+
+GO	
 -------------------------------------------------
 		/*Abonos-AbonoXC---Documento_CP-Documento_CC*/
 -------------------------------------------------
