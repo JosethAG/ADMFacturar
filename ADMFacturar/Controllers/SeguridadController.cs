@@ -41,6 +41,25 @@ namespace ADMFacturar.Controllers
             }
         }
 
+        /*Listado para obtener la información de un usuario
+		Agregado el 26/8/24 por Joseth Araya*/
+        public async Task<IActionResult> ObtenerSeguridad(int PK)
+        {
+            var respUser = await _httpClient.GetAsync("api/Seguridad/Listar");
+
+            if (respUser.IsSuccessStatusCode)
+            {
+                var content = await respUser.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                var usuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(content);
+                Usuario user = usuarios.FirstOrDefault(u => u.PK_IdUsuario == PK);
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest("Error al obtener el usuario");
+            }
+        }
+
         [Authorize(Roles = "Administrador")]
         public IActionResult CrearSeguridad()
         {
