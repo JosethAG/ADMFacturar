@@ -84,7 +84,7 @@
 				</tbody>
 				<tfoot>
 					<tr class="bg-gray-800 text-white">
-						<td colspan="3" class="py-3 text-right font-bold">Total Costo:</td>
+						<td colspan="3" class="py-3 text-right font-bold">Total Costo por existencias:</td>
 						<td id="totalCosto" class="py-3 text-center font-bold"></td>
 					</tr>
 				</tfoot>
@@ -118,6 +118,58 @@
 				}
 			});
 		}
+
+		// Función para calcular el total del costo
+		function calcularTotalCosto() {
+			var totalCosto = 0;
+
+			// Obtener todas las filas de la tabla
+			var filas = document.querySelectorAll('#bodyTablaArticulos tr');
+
+			filas.forEach(fila => {
+				var cantidadCelda = fila.querySelector('td:nth-child(3)');
+				var costoCelda = fila.querySelector('td:nth-child(4)');
+
+				if (cantidadCelda && costoCelda) {
+					var cantidad = parseFloat(cantidadCelda.textContent.replace(',', '').trim());
+					var costo = parseFloat(costoCelda.textContent.replace('$', '').replace(',', '').trim());
+
+					if (!isNaN(cantidad) && !isNaN(costo)) {
+						totalCosto += cantidad * costo;
+					}
+				}
+			});
+
+			// Formatear el total con dos decimales
+			totalCosto = totalCosto.toFixed(2);
+
+			// Almacenar el total en localStorage (opcional)
+			localStorage.setItem('totalCosto', totalCosto);
+
+			// Actualizar el total en el elemento de la tabla
+			var totalCostoElemento = document.getElementById('totalCosto');
+
+			if (totalCostoElemento) {
+				totalCostoElemento.textContent = '₡' + totalCosto;
+			} else {
+				console.error('Elemento con ID "totalCosto" no encontrado.');
+			}
+		}
+
+		// Llamar a la función cuando la página se carga
+		document.addEventListener('DOMContentLoaded', calcularTotalCosto);
+
+		//Funcion para exportar a excel:
+		document.getElementById('exportButton').addEventListener('click', function () {
+			// Obtén la tabla completa
+			var table = document.getElementById('tablaArticulos');
+
+			// Convierte la tabla a una hoja de cálculo
+			var wb = XLSX.utils.table_to_book(table);
+
+			// Crea un archivo Excel y descarga
+			XLSX.writeFile(wb, 'reporteInventario.xlsx');
+		});
 
 		// Enlazar evento de input para el campo de nombre de artículo
 		document.getElementById('nombre_articulo').addEventListener('input', filtrarTabla);
@@ -185,55 +237,9 @@
 			}
 		});
 
+
+
 		
-
-
-		// Función para calcular el total del costo
-		document.addEventListener('DOMContentLoaded', function () {
-			calcularTotalCosto();
-		});
-
-		function calcularTotalCosto() {
-			var totalCosto = 0;
-
-			// Obtener todas las filas de la tabla
-			var filas = document.querySelectorAll('#bodyTablaArticulos tr');
-
-			filas.forEach(fila => {
-				var cantidadCelda = fila.querySelector('td:nth-child(3)');
-				var costoCelda = fila.querySelector('td:nth-child(4)');
-
-				if (cantidadCelda && costoCelda) {
-					var cantidad = parseFloat(cantidadCelda.textContent.replace(',', ''));
-					var costo = parseFloat(costoCelda.textContent.replace('$', '').replace(',', ''));
-
-					if (!isNaN(cantidad) && !isNaN(costo)) {
-						totalCosto += cantidad * costo;
-					}
-				}
-			});
-
-			// Almacenar el total en localStorage
-			localStorage.setItem('totalCosto', totalCosto.toFixed(2));
-
-			// Actualizar el total en la tabla
-			document.getElementById('totalCosto').textContent = '₡' + totalCosto.toFixed(2);
-		}
-
-		// Llamar a la función cuando la página se carga
-		document.addEventListener('DOMContentLoaded', calcularTotalCosto);
-
-		//Funcion para exportar a excel:
-		document.getElementById('exportButton').addEventListener('click', function () {
-			// Obtén la tabla completa
-			var table = document.getElementById('tablaArticulos');
-
-			// Convierte la tabla a una hoja de cálculo
-			var wb = XLSX.utils.table_to_book(table);
-
-			// Crea un archivo Excel y descarga
-			XLSX.writeFile(wb, 'reporteInventario.xlsx');
-		});
 
 	</script>
 </body>
