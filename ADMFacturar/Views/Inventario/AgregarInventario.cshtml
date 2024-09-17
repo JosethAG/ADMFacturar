@@ -25,23 +25,23 @@
             <h2 class="text-lg font-bold mb-4">Ingreso de Inventario</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
                 <div class="sm:col-span-2">
-                    <label for="PK_FK_Documento" class="block text-sm font-medium leading-6 text-white">Número de Documento</label>
+                    <label for="PK_FK_Documento" class="block text-sm font-medium">Número de Documento</label>
                     <div class="mt-2">
-                        <input asp-for="PK_FK_Documento" id="PK_FK_Documento" type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
+                        <input asp-for="PK_FK_Documento" id="PK_FK_Documento" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
                     </div>
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="Fecha_Compra" class="block text-sm font-medium leading-6 text-white">Fecha de Compra</label>
+                    <label for="Fecha_Compra" class="block text-sm font-medium">Fecha de Compra</label>
                     <div class="mt-2">
-                        <input asp-for="Fecha_Compra" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
+                        <input asp-for="Fecha_Compra" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
                     </div>
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="PK_FK_Proveedor" class="block text-sm font-medium leading-6 text-white">Proveedor</label>
+                    <label for="PK_FK_Proveedor" class="block text-sm font-medium">Proveedor</label>
                     <div class="mt-2">
-                        <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                        <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
                             <option value="">Seleccione un proveedor</option>
                             @if (proveedores != null)
                             {
@@ -55,9 +55,9 @@
                     </div>
                 </div>
                 <div class="sm:col-span-2">
-                    <label for="FK_CondicionPago" class="block text-sm font-medium leading-6 text-white">Condición de Pago</label>
+                    <label for="FK_CondicionPago" class="block text-sm font-medium">Condición de Pago</label>
                     <div class="mt-2">
-                        <select asp-for="FK_CondicionPago" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                        <select asp-for="FK_CondicionPago" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
                             <option value="">Seleccionar Forma de Pago</option>
                             <option value="1">Contado</option>
                             <option value="2">Crédito 30 días</option>
@@ -67,9 +67,9 @@
                     </div>
                 </div>
                 <div class="sm:col-span-4">
-                    <label for="document_number" class="block text-sm font-medium leading-6 text-white">Observaciones</label>
+                    <label for="document_number" class="block text-sm font-medium">Observaciones</label>
                     <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
+                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 <div class="sm:col-span-2">
                     <label for="PK_FK_Articulo" class="block text-sm font-medium leading-6 text-white">Código Artículo</label>
                     <div class="mt-2 flex items-center space-x-2">
-                        <input asp-for="PK_FK_Articulo" value="" type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
+                        <input asp-for="PK_FK_Articulo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
                         <button type="button" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded inline-flex items-center justify-center" onclick="openModal()">
                             <i class="fas fa-search"></i>
                         </button>
@@ -87,13 +87,13 @@
                 <div class="sm:col-span-2">
                     <label for="Cantidad" class="block text-sm font-medium leading-6 text-white">Cantidad</label>
                     <div class="mt-2">
-                        <input asp-for="Cantidad" value="" type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
+                        <input asp-for="Cantidad" value="" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
                     </div>
                 </div>
                 <div class="sm:col-span-2">
                     <label for="Costo" class="block text-sm font-medium leading-6 text-white">Costo</label>
                     <div class="mt-2 flex items-center space-x-2">
-                        <input asp-for="Costo" value="" type="text" class="flex-grow rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px; " required>
+                        <input asp-for="Costo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
                         <button type="submit" asp-action="AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-4 rounded">
                             Agregar Artículo
                         </button>
@@ -112,9 +112,17 @@
 
     <!--                  Inicio Tabla                        -->
 
-    <div class="mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
-        <div class="flex justify-between items-center pb-4 border-b border-gray-700">
-            <h3 class="text-xl font-semibold text-white">Listado de Articulos</h3>     
+    <div class="w-full mt-8">
+        <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
+            <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Articulos</h3>
+            @*       <div>
+            <form id="guardarForm" method="post" asp-action="GuardarIngresoMercaderia">
+            <input type="hidden" name="PK" id="hiddenPK" />
+            <button type="submit" id="btnGuardar" class="rounded-md bg-green-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-green-500 focus:ring-2 focus:ring-indigo-500">Guardar</button>
+            </form>
+            <a href="@Url.Action("Index", "Inventario")" class="rounded-md bg-red-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-indigo-500 inline-block mt-4">Salir</a>
+
+            </div> *@
             <div class="flex items-center space-x-2">
                 <form id="guardarForm" method="post" asp-action="GuardarIngresoMercaderia">
                     <input type="hidden" name="PK" id="hiddenPK" />
@@ -123,25 +131,25 @@
                 <a href="@Url.Action("Index", "Inventario")" class="rounded-md bg-red-600 px-4 py-1.5 font-bold text-white shadow-sm hover:bg-red-500 focus:ring-2 focus:ring-indigo-500">Salir</a>
             </div>
         </div>
-
-        <div class="overflow-auto mt-4">
-            <table class="min-w-full bg-gray-800 text-white">
-                <thead class="bg-gray-900">
-                    <tr>
-                    <th class="py-3 px-4 text-center">Código</th>
-                    <th class="py-3 px-4 text-center">Nombre</th>
-                    <th class="py-3 px-4 text-center">Cantidad</th>
-                    <th class="py-3 px-4 text-center">Costo</th>
-                    <th class="py-3 px-4 text-center">Total</th>
-                    <th class="py-3 px-4 text-center">Acciones</th>
+    </div>
+    <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+        <table class="min-w-full leading-normal" id="tablaArticulos">
+            <thead>
+                <tr class="bg-gray-800 text-white">
+                    <th class="text-center py-3">Código</th>
+                    <th class="text-center py-3">Nombre</th>
+                    <th class="text-center py-3">Cantidad</th>
+                    <th class="text-center py-3">Costo</th>
+                    <th class="text-center py-3">Total</th>
+                    <th class="text-center py-3">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="text-white">
+            <tbody class="text-gray-700">
                 @if (articulos != null)
                 {
                     @foreach (var articulo in articulos)
                     {
-                            <tr class="even:bg-gray-700 hover:bg-gray-600">
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 text-center">@articulo.PK_Articulo</td>
                             <td class="py-3 text-center">@articulo.Descripcion</td>
                             <td class="py-3 text-center">@articulo.Cantidad</td>
@@ -164,8 +172,8 @@
                                     <form method="post" asp-action="EliminarArticulo" class="eliminar-form">
                                         <input type="hidden" name="PK_FK_Documento" id="pkDocumentoEliminar" value="">
                                         <input type="hidden" name="PK_Articulo" value="@articulo.PK_Articulo">
-                                            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" title="Eliminar">
-                                                <i class="fa-solid fa-trash"></i>
+                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-transparent border-none p-0" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
 
@@ -176,33 +184,33 @@
                 }
             </tbody>
         </table>
-        </div>
     </div>
-    
+
 
     <!--                  Inicio Modal                       -->
 
     <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden">
-        <div class="bg-gray-800 text-white rounded-lg p-6 w-full max-w-md shadow-xl">
+        <div class="bg-gray-900 text-white rounded-lg p-6 w-full max-w-md shadow-xl">
             <div class="mb-6">
                 <h3 class="text-xl font-bold mb-4">Buscar Artículo</h3>
                 <div class="relative">
-                    <input type="text" id="buscarArticulo" class="block w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Buscar por código o descripción">
+                    <input type="text" id="buscarArticulo" class="block w-full rounded-md py-2 px-3 bg-white text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Buscar por código o descripción">
                 </div>
             </div>
             <div class="overflow-x-auto">
-                <table class="min-w-full bg-gray-800 text-white" id="tablaArticulosModal">
-                    <thead class="bg-gray-900">
-                        <tr>
-                            <th class="py-3 px-4 text-center">Código</th>
-                            <th class="py-3 px-4 text-center">Descripción</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center">
-                        <!-- Filas de artículos generadas dinámicamente por JavaScript -->
-                    </tbody>
-                </table>
-
+                <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
+                    <table class="min-w-full leading-normal" id="tablaArticulosModal">
+                        <thead>
+                            <tr class="bg-gray-800 text-white">
+                                <th class="text-center py-3 px-4">Código</th>
+                                <th class="text-center py-3 px-4">Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <!-- Filas de artículos generadas dinámicamente por JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="mt-6 flex justify-end">
                 <button type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded" onclick="closeModal()">Cerrar</button>
@@ -245,11 +253,11 @@
                         console.log('Artículo:', articulo);
 
                         var row = `
-                               <tr class="even:bg-gray-700 hover:bg-gray-600 cursor-pointer" onclick="seleccionarArticulo('${articulo.pK_Articulo}', '${articulo.descripcion}')">
-                                            <td class="py-3 px-4 border-b border-gray-700">${articulo.pK_Articulo}</td>
-                                            <td class="py-3 px-4 border-b border-gray-700">${articulo.descripcion}</td>
-                                        </tr>
-                                `;
+                                                <tr class="border-b border-gray-200 hover:bg-gray-100" cursor-pointer" onclick="seleccionarArticulo('${articulo.pK_Articulo}', '${articulo.descripcion}')">
+                                                <td class="py-3 text-center">${articulo.pK_Articulo}</td>
+                                                <td class="py-3 text-center">${articulo.descripcion}</td>
+                                            </tr>
+                                        `;
                         tableBody.innerHTML += row;
                     });
 
