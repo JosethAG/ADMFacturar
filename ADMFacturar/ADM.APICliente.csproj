@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <None Include="Views\ImageGenerator\Index.cshtml" />
-    <None Include="Views\Shared\ArticulosPars\_ActualizarArticulo.cshtml" />
-    <None Include="Views\Shared\ArticulosPars\_CrearArticulo.cshtml" />
+    <None Include="Views\Articulos\_ActualizarArticulo.cshtml" />
+    <None Include="Views\Articulos\_CrearArticulo.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Shared\ArticulosPars\" />
     <Folder Include="Views\Shared\ClientePars\" />
   </ItemGroup>
 
