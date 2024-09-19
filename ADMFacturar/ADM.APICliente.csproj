@@ -37,9 +37,4 @@
     <ProjectReference Include="..\ADM.Service\ADM.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Shared\ArticulosPars\" />
-    <Folder Include="Views\Shared\ClientePars\" />
-  </ItemGroup>
-
 </Project>
