@@ -165,26 +165,18 @@
 			document.getElementById('nombre_cliente').addEventListener('input', filtrarTabla); // Filtrar al cambiar el nombre
 		});
 
-		/* Apertura de modales */
-		/*funcion encargada de abrir el modal
-		incorporación por Joseth Araya */
-		function openModal(idModal) {
-			var modal = document.getElementById(idModal);
-			modal.style.display = "block";
-		}
-
 		/*funcion para abrir modal Crear AJAX para cargar la vista parcial*/
 		$(document).ready(function () {
 			$("#btnCreateCliente").click(function () {
 				$("#contentCrearCliente").load("/Clientes/_CrearCliente", function () {
-					openModal("modalCrearCliente");
+					abrirModal("modalCrearCliente");
 				});
 			});
 		});
 
 		function ParsActuCliente(id) {
 			$("#contentActuCliente").load(`/Clientes/_ActualizarCliente?id=${id}`, function () {
-				openModal("modalActuCliente");
+				abrirModal("modalActuCliente");
 			});
 		};
 
