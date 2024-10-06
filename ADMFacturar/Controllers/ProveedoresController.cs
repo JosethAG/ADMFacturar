@@ -27,17 +27,16 @@ namespace ADM.APIProveedor.Controllers
                 {
                     var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
                     var proveedores = JsonConvert.DeserializeObject<IEnumerable<Proveedor>>(content);
-					ViewData["Proveedores"] = proveedores ?? new List<Proveedor>();
-					return View("Index");
+					return View("Index", proveedores);
 				}
 
 				return View();
 			}
 		}
 
-		public IActionResult CrearProveedor()
+		public IActionResult _CrearProveedor()
         {
-            return View();
+            return PartialView("_CrearProveedor");
         }
 
         [HttpPost]
@@ -67,15 +66,15 @@ namespace ADM.APIProveedor.Controllers
         }
 
 
-		public async Task<IActionResult> ActualizarProveedor(int? PK)
+		public async Task<IActionResult> _ActualizarProveedor(int? id)
 		{
-			var resp = await _httpClient.GetAsync($"api/Proveedor/Obtener/{PK}");
+			var resp = await _httpClient.GetAsync($"api/Proveedor/Obtener/{id}");
 
 			if (resp.IsSuccessStatusCode)
 			{
-				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+				var content = await resp.Content.ReadAsStringAsync(); 
 				var proveedor = JsonConvert.DeserializeObject<Proveedor>(content);
-				return View("ActualizarProveedor", proveedor); // Devuelve 'Proveedors' en lugar de 'resp'
+				return PartialView("_ActualizarProveedor", proveedor); 
 			}
 
 			return NotFound();

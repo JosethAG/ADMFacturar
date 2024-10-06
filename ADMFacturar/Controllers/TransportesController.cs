@@ -25,19 +25,18 @@ namespace ADM.APICliente.Controllers
 
 				if (resp.IsSuccessStatusCode)
 				{
-					var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+					var content = await resp.Content.ReadAsStringAsync();
 					var transportes = JsonConvert.DeserializeObject<IEnumerable<Transporte>>(content);
-                    ViewData["Transportes"] = transportes ?? new List<Transporte>();
-                    return View("Index");
+                    return View("Index", transportes);
 				}
 
 				return View();
 			}
 		}
 
-		public IActionResult CrearTransporte()
+		public IActionResult _CrearTransporte()
 		{
-			return View();
+			return PartialView("_CrearTransporte");
 		}
 
 		[HttpPost]
@@ -70,15 +69,15 @@ namespace ADM.APICliente.Controllers
 		}
 
 
-		public async Task<IActionResult> ActualizarTransporte(int? PK)
+		public async Task<IActionResult> _ActualizarTransporte(int? id)
 		{
-			var resp = await _httpClient.GetAsync($"api/Transporte/Obtener/{PK}");
+			var resp = await _httpClient.GetAsync($"api/Transporte/Obtener/{id}");
 
 			if (resp.IsSuccessStatusCode)
 			{
 				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
 				var transporte = JsonConvert.DeserializeObject<Transporte>(content);
-				return View("ActualizarTransporte", transporte); // Devuelve 'clientes' en lugar de 'resp'
+				return PartialView("_ActualizarTransporte", transporte); // Devuelve 'clientes' en lugar de 'resp'
 			}
 
 			return NotFound();
