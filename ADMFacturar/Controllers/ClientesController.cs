@@ -38,7 +38,6 @@ namespace ADM.APICliente.Controllers
 				ViewData["Cantones"] = await ObtenerDatosDeApi<Canton>("api/Direccion/Listar/Canton");
 				ViewData["Distritos"] = await ObtenerDatosDeApi<Distrito>("api/Direccion/Listar/Distrito");
 
-
 				return View("Index");
 			}
 
@@ -50,13 +49,15 @@ namespace ADM.APICliente.Controllers
 		 * Modificación 13/07/24 por Joseth Araya
 		 * Reducción de código sobre ViewData con metodo de ObtenerDatosDeApi
 		 */
-		public async Task<IActionResult> CrearCliente()
+		public async Task<IActionResult> _CrearCliente()
 		{
 			ViewData["Provincias"] = await ObtenerDatosDeApi<Provincia>("api/Direccion/Listar/Provincia");
 			ViewData["Cantones"] = await ObtenerDatosDeApi<Canton>("api/Direccion/Listar/Canton");
 			ViewData["Distritos"] = await ObtenerDatosDeApi<Distrito>("api/Direccion/Listar/Distrito");
+			ViewData["Vendedores"] = await ObtenerDatosDeApi<Vendedor>("api/Vendedor/Listar");
+			ViewData["Tranportes"] = await ObtenerDatosDeApi<Transporte>("api/Transporte/Listar");
 
-			return View();
+			return PartialView("_CrearCliente");
 		}
 
 		[HttpPost]
@@ -66,8 +67,6 @@ namespace ADM.APICliente.Controllers
 			{
 				var json = JsonConvert.SerializeObject(cliente);
 				var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-
 				var response = await _httpClient.PostAsync("/api/Cliente/Crear", content);
 
 				// Log the response content for debugging
@@ -93,19 +92,21 @@ namespace ADM.APICliente.Controllers
 		 * Modificación 13/07/24 por Joseth Araya
 		 * Reducción de código sobre ViewData con metodo de ObtenerDatosDeApi
 		 */
-		public async Task<IActionResult> ActualizarCliente(string? PK)
+		public async Task<IActionResult> _ActualizarCliente(string? id)
 		{
-			ViewData["Provincias"] = await ObtenerDatosDeApi<Provincia>("api/Direccion/Listar/Provincia");
-			ViewData["Cantones"] = await ObtenerDatosDeApi<Canton>("api/Direccion/Listar/Canton");
-			ViewData["Distritos"] = await ObtenerDatosDeApi<Distrito>("api/Direccion/Listar/Distrito");
-
-			var resp = await _httpClient.GetAsync($"api/Cliente/Obtener/{PK}");
+			var resp = await _httpClient.GetAsync($"api/Cliente/Obtener/{id}");
 
 			if (resp.IsSuccessStatusCode)
 			{
+				ViewData["Provincias"] = await ObtenerDatosDeApi<Provincia>("api/Direccion/Listar/Provincia");
+				ViewData["Cantones"] = await ObtenerDatosDeApi<Canton>("api/Direccion/Listar/Canton");
+				ViewData["Distritos"] = await ObtenerDatosDeApi<Distrito>("api/Direccion/Listar/Distrito");
+				ViewData["Vendedores"] = await ObtenerDatosDeApi<Vendedor>("api/Vendedor/Listar");
+				ViewData["Tranportes"] = await ObtenerDatosDeApi<Transporte>("api/Transporte/Listar");
+
 				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
 				var cliente = JsonConvert.DeserializeObject<Cliente>(content);
-				return View("ActualizarCliente", cliente); // Devuelve 'clientes' en lugar de 'resp'
+				return PartialView("_ActualizarCliente", cliente); // Devuelve 'clientes' en lugar de 'resp'
 			}
 
 			return NotFound();
