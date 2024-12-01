@@ -27,21 +27,21 @@
                 <div class="sm:col-span-2">
                     <label for="PK_FK_Documento" class="block text-sm font-medium">Número de Documento</label>
                     <div class="mt-2">
-                        <input asp-for="PK_FK_Documento" id="PK_FK_Documento" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
+                        <input asp-for="PK_FK_Documento" id="PK_FK_Documento" type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
                     </div>
                 </div>
 
                 <div class="sm:col-span-2">
                     <label for="Fecha_Compra" class="block text-sm font-medium">Fecha de Compra</label>
                     <div class="mt-2">
-                        <input asp-for="Fecha_Compra" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
+                        <input asp-for="Fecha_Compra" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
                     </div>
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="PK_FK_Proveedor" class="block text-sm font-medium">Proveedor</label>
+                    <label for="PK_FK_Proveedor"  class="block text-sm font-medium leading-6 text-white">Proveedor</label>
                     <div class="mt-2">
-                        <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                        <select asp-for="PK_FK_Proveedor" id="PK_FK_Proveedor" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 37px;" required>
                             <option value="">Seleccione un proveedor</option>
                             @if (proveedores != null)
                             {
@@ -57,7 +57,7 @@
                 <div class="sm:col-span-2">
                     <label for="FK_CondicionPago" class="block text-sm font-medium">Condición de Pago</label>
                     <div class="mt-2">
-                        <select asp-for="FK_CondicionPago" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 38px;" required>
+                        <select asp-for="FK_CondicionPago" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px; height: 37px;" required>
                             <option value="">Seleccionar Forma de Pago</option>
                             <option value="1">Contado</option>
                             <option value="2">Crédito 30 días</option>
@@ -69,7 +69,7 @@
                 <div class="sm:col-span-4">
                     <label for="document_number" class="block text-sm font-medium">Observaciones</label>
                     <div class="mt-2">
-                        <input type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;">
+                        <input type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;">
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 <div class="sm:col-span-2">
                     <label for="PK_FK_Articulo" class="block text-sm font-medium leading-6 text-white">Código Artículo</label>
                     <div class="mt-2 flex items-center space-x-2">
-                        <input asp-for="PK_FK_Articulo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
+                        <input asp-for="PK_FK_Articulo" value="" type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
                         <button type="button" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded inline-flex items-center justify-center" onclick="openModal()">
                             <i class="fas fa-search"></i>
                         </button>
@@ -87,13 +87,14 @@
                 <div class="sm:col-span-2">
                     <label for="Cantidad" class="block text-sm font-medium leading-6 text-white">Cantidad</label>
                     <div class="mt-2">
-                        <input asp-for="Cantidad" value="" type="text" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
+                        <input asp-for="Cantidad" value="" type="text" class="block w-full rounded-md bg-gray-700 border-0 py-1.5 text-white focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 10px;" required>
                     </div>
                 </div>
                 <div class="sm:col-span-2">
                     <label for="Costo" class="block text-sm font-medium leading-6 text-white">Costo</label>
                     <div class="mt-2 flex items-center space-x-2">
-                        <input asp-for="Costo" value="" type="text" class="flex-grow rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
+                        <input asp-for="Costo" value="" type="text"
+                               class="flex-grow rounded-md border-0 py-1.5 bg-gray-700 text-white shadow-sm focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6" style="padding-left: 17px;" required>
                         <button type="submit" asp-action="AgregarInventario" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-4 rounded">
                             Agregar Artículo
                         </button>
@@ -190,27 +191,26 @@
     <!--                  Inicio Modal                       -->
 
     <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden">
-        <div class="bg-gray-900 text-white rounded-lg p-6 w-full max-w-md shadow-xl">
+        <div class="bg-gray-800 text-white rounded-lg p-6 w-full max-w-md shadow-xl">
             <div class="mb-6">
                 <h3 class="text-xl font-bold mb-4">Buscar Artículo</h3>
                 <div class="relative">
-                    <input type="text" id="buscarArticulo" class="block w-full rounded-md py-2 px-3 bg-white text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Buscar por código o descripción">
+                    <input type="text" id="buscarArticulo" class="block w-full rounded-md py-2 px-3 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Buscar por código o descripción">
                 </div>
             </div>
             <div class="overflow-x-auto">
-                <div class="bg-white rounded-b-lg shadow-lg overflow-hidden">
-                    <table class="min-w-full leading-normal" id="tablaArticulosModal">
-                        <thead>
-                            <tr class="bg-gray-800 text-white">
-                                <th class="text-center py-3 px-4">Código</th>
-                                <th class="text-center py-3 px-4">Descripción</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-gray-700">
-                            <!-- Filas de artículos generadas dinámicamente por JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
+                <table class="min-w-full bg-gray-800 text-white" id="tablaArticulosModal">
+                    <thead class="bg-gray-900">
+                        <tr>
+                            <th class="py-3 px-4 text-center">Código</th>
+                            <th class="py-3 px-4 text-center">Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <!-- Filas de artículos generadas dinámicamente por JavaScript -->
+                    </tbody>
+                </table>
+
             </div>
             <div class="mt-6 flex justify-end">
                 <button type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded" onclick="closeModal()">Cerrar</button>

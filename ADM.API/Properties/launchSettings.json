@@ -24,7 +24,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7270;http://localhost:5296",
+      "applicationUrl": "https://admfacturarapi-drg4cmduhxhhh8b7.centralus-01.azurewebsites.net;http://localhost:5296",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
