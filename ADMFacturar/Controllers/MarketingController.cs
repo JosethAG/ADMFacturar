@@ -23,7 +23,7 @@ namespace ADMFacturar.Controllers
         {
             _smtpSettings = smtpSettings.Value;
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:7270/api");
+            _httpClient.BaseAddress = new Uri("https://admfacturarapi-drg4cmduhxhhh8b7.centralus-01.azurewebsites.net/api");
         }
 
         public async Task<IActionResult> Index()

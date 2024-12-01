@@ -6,7 +6,9 @@ namespace ADM.Architectur
     public class DBData
     {
       
-    public static string connectionString = "Data Source=localhost;Initial Catalog=ADM;Integrated Security=True;";
+
+    public static string connectionString = "Server=tcp:mdafacturarapp.database.windows.net,1433;Initial Catalog=ADM;Persist Security Info=False;User ID=mdafacturaradmin;Password=@zureApp;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
 
 
         public static DataSet TableList(string SPName, List<DBParameter> parameters = null)

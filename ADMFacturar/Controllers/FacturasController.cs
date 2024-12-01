@@ -20,7 +20,7 @@ namespace ADMFacturar.Controllers
         public FacturasController(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:7270/api");
+            _httpClient.BaseAddress = new Uri("https://admfacturarapi-drg4cmduhxhhh8b7.centralus-01.azurewebsites.net/api");
         }
         public async Task<IActionResult> Index()
         {
@@ -383,7 +383,7 @@ namespace ADMFacturar.Controllers
                             // Imagen
                             row.ConstantItem(100).AlignMiddle().Column(innerColumn =>
                             {
-                                var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\joset\Source\Repos\JosethAG\ADMFacturar\ConsoleApp1\IMPORTACIONES_MDA.png");
+                                var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\Angel\Source\Repos\JosethAG\ADMFacturar\ConsoleApp1\IMPORTACIONES_MDA.png");
                                 if (imagePath != null)
                                 {
                                     innerColumn.Item().Image(imagePath); // Ajusta la imagen
