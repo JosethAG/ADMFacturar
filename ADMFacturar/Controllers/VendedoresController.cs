@@ -27,17 +27,16 @@ namespace ADM.APICliente.Controllers
 				{
 					var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
 					var vendedores = JsonConvert.DeserializeObject<IEnumerable<Vendedor>>(content);
-					ViewData["Vendedores"] = vendedores ?? new List<Vendedor>();
-					return View("Index");
+					return View("Index", vendedores);
 				}
 
 				return View();
 			}
 		}
 
-		public IActionResult CrearVendedor()
+		public IActionResult _CrearVendedor()
 		{
-			return View();
+			return PartialView("_CrearVendedor");
 		}
 
 		[HttpPost]
@@ -68,15 +67,15 @@ namespace ADM.APICliente.Controllers
 			return View(vendedor);
 		}
 
-		public async Task<IActionResult> ActualizarVendedor(int? PK)
+		public async Task<IActionResult> _ActualizarVendedor(int? id)
 		{
-			var resp = await _httpClient.GetAsync($"api/Vendedor/Obtener/{PK}");
+			var resp = await _httpClient.GetAsync($"api/Vendedor/Obtener/{id}");
 
 			if (resp.IsSuccessStatusCode)
 			{
 				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
 				var vendedor = JsonConvert.DeserializeObject<Vendedor>(content);
-				return View("ActualizarVendedor", vendedor); // Devuelve 'vendedor' en lugar de 'resp'
+				return PartialView("_ActualizarVendedor", vendedor); // Devuelve 'vendedor' en lugar de 'resp'
 			}
 
 			return NotFound();

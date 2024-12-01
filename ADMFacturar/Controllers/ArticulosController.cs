@@ -34,9 +34,10 @@ namespace ADM.APICliente.Controllers
 			return View();
 		}
 
-		public IActionResult CrearArticulo()
+		public async Task<IActionResult> _CrearArticulo()
 		{
-			return View();
+            ViewData["Proveedores"] = await ObtenerDatosDeApi<Proveedor>("api/Proveedor/Listar");
+            return PartialView("_CrearArticulo");
 		}
 
 		[HttpPost]
@@ -66,15 +67,16 @@ namespace ADM.APICliente.Controllers
 			return View(articulo);
 		}
 
-		public async Task<IActionResult> ActualizarArticulo(string? PK)
+		public async Task<IActionResult> _ActualizarArticulo(string? id)
 		{
-			var resp = await _httpClient.GetAsync($"api/Articulo/Obtener/{PK}");
+			var resp = await _httpClient.GetAsync($"api/Articulo/Obtener/{id}");
 
 			if (resp.IsSuccessStatusCode)
 			{
-				var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
+                ViewData["Proveedores"] = await ObtenerDatosDeApi<Proveedor>("api/Proveedor/Listar");
+                var content = await resp.Content.ReadAsStringAsync(); //Lee la respuesta del API
 				var articulo = JsonConvert.DeserializeObject<Articulo>(content);
-				return View("ActualizarArticulo", articulo); // Devuelve 'articulos' en lugar de 'resp'
+				return PartialView("_ActualizarArticulo", articulo); // Devuelve 'articulos' en lugar de 'resp'
 			}
 
 			return NotFound();
@@ -145,5 +147,15 @@ namespace ADM.APICliente.Controllers
 				return BadRequest("Error al obtener los articulo");
 			}
 		}
-	}
+        private async Task<List<T>> ObtenerDatosDeApi<T>(string endpoint)
+        {
+            var response = await _httpClient.GetAsync(endpoint);
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<T>>(data) ?? new List<T>();
+            }
+            return new List<T>();
+        }
+    }
 }

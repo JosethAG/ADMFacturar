@@ -4,7 +4,6 @@
 
 @{
 	var articulos = ViewData["Articulos"] as List<Articulo>;
-	var articuloModel = new Articulo();  // Inicialización de un nuevo objeto Articulo
 }
 
 <!DOCTYPE html>
@@ -13,20 +12,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Ingreso de Articulos</title>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-	<link href="~/css/custom.css" rel="stylesheet" />
-	<!-- SweetAlert2 CSS -->
-	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-	<!-- Tabla Paginar  -->
-	<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 
 	<div class="w-full">
 	</div>
-
 	<!--                  Formulario                        -->
 	<form>
 		<div class="bg-gray-800 text-white p-5 rounded-lg shadow-lg">
@@ -45,7 +35,7 @@
 	<div class="w-full mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
     <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg">
         <h3 class="text-xl font-semibold"><i class="fas fa-list mr-3"></i> Listado de Artículos</h3>
-        <a onclick="abrirModal('modalCrearArticulo')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Artículo</a>
+			<button id="btnCreateArt" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Crear Artículo</button>
     </div>
     <!-- Tabla -->
     <div class="overflow-auto mt-4">
@@ -88,7 +78,7 @@
                             </td>
                             <td>
                                 <div class="flex justify-center space-x-2">
-										<a onclick="ActuVarArticulo('@articulo.PK_Articulo')" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar">
+										<a onclick="ParsActuArticulo('@articulo.PK_Articulo')" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" title="Editar">
 											<i class="fa-solid fa-edit"></i>
                                     </a>
                                     <form method="post" asp-action="DesactivarArticulo" class="desactivar-form">
@@ -118,16 +108,16 @@
 		Ajuste 7/9/24 por Joseth Araya -->
 	<div id="modalCrearArticulo" class="modal">
 		<div class="modal-content">
-			@Html.Partial("ArticulosPars/_CrearArticulo")
+			<div id="contentCrearArt"></div>
 		</div>
 	</div>
 	<!--                  Final Modal de Crear Tempalte                        -->
 	<!--                  Modal de Actualizar Template                        -->
 	<!--Reducción de codigo realizando vista parcial
-		Ajuste 7/9/24 por Joseth Araya -->
-	<div id="modalActualizarArticulo" class="modal">
+		Ajustado por Joseth Araya -->
+	<div id="modalActuArticulo" class="modal">
 		<div class="modal-content">
-			@Html.Partial("ArticulosPars/_ActualizarArticulo");
+			<div id="contentActuArticulo"></div>
 		</div>
 	</div>
 	<!--                  Final Modal de Actualizar Tempalte                        -->
@@ -135,59 +125,28 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 
-		/*funcion encargada de obtener y colocar los datos en la modal
-		incorporación 7/10/24 por Joseth Araya */
-		function ActuVarArticulo(PK) {
-			console.log("Respuesta   " + PK);
-			fetch(`/Articulos/ObtenerArt?PK=${PK}`, {
-				method: 'GET'
-			})
-				.then(response => {
-					if (response.ok) {
-						return response.json();
-					} else {
-						throw new Error('Error al obtener el artículo');
-					}
-				})
-				.then(data => {
-					console.log('Datos del artículo:', data);
-
-					//Asignación de datos al modal
-					document.getElementById('PKART').value = data.pK_Articulo;
-					console.log('Datos del PK:', data.pK_Articulo); //Pruebas de datos
-					document.getElementById('Descp').value = data.descripcion;
-					console.log('Datos del Descripcion:', data.descripcion); //Pruebas de datos
-					console.log('Datos del Cod:', data.codigo_Barras); //Pruebas de datos
-					document.getElementById('CodBarras').value = data.codigo_Barras;
-					document.getElementById('FKProveedor').value = data.fK_Proveedor.toString(); // Convertir a string si es necesario
-					document.getElementById('Cant').value = data.cantidad;
-					document.getElementById('cost').value = data.costo.toFixed(2); // Asegurar dos decimales
-					document.getElementById('Price').value = data.precio.toFixed(2); // Asegurar dos decimales
-					document.getElementById('State').value = data.estado.toString().toLowerCase(); // Convertir a string si es necesario
-
-					// Abrir el modal de actualización
-					openModal('modalActualizarArticulo');
-				})
-				.catch(error => {
-					// Mostrar mensaje de error con SweetAlert2 u otra forma
-					console.error('Error:', error);
-					Swal.fire({
-						icon: 'error',
-						title: 'Error',
-						text: 'Error al obtener los datos del artículo',
-						confirmButtonColor: '#3085d6',
-						cancelButtonColor: '#d33',
-						confirmButtonText: 'OK'
-					});
-				});
-		}
-
+		/* Apertura de modales */
 		/*funcion encargada de abrir el modal
-		incorporación 6/10/24 por Joseth Araya */
+		incorporación por Joseth Araya */
 		function openModal(idModal) {
 			var modal = document.getElementById(idModal);
 			modal.style.display = "block";
 		}
+
+		/*funcion para abrir modal Crear AJAX para cargar la vista parcial*/
+		$(document).ready(function () {
+			$("#btnCreateArt").click(function () {
+				$("#contentCrearArt").load("/Articulos/_CrearArticulo", function () {
+					openModal("modalCrearArticulo");
+				});
+			});
+		});
+
+		function ParsActuArticulo(id) {
+			$("#contentActuArticulo").load(`/Articulos/_ActualizarArticulo?id=${id}`, function () {
+				openModal("modalActuArticulo");
+			});
+		};
 
 		// Función para mostrar modal de confirmación de desactivación
 		function mostrarConfirmacion(event) {
@@ -225,136 +184,6 @@
 
 		// Enlazar evento de input para el campo de nombre de artículo
 		document.getElementById('nombre_articulo').addEventListener('input', filtrarTabla);
-
-		document.getElementById('btnGuardar').addEventListener('click', function (event) {
-			event.preventDefault(); // Detener el envío normal del formulario
-
-			// Validar campos requeridos
-			var codigoArticulo = document.querySelector('[name="PK_Articulo"]').value;
-			var descripcion = document.querySelector('[name="Descripcion"]').value;
-			var codigoBarras = document.querySelector('[name="Codigo_Barras"]').value;
-			var proveedor = document.querySelector('[name="FK_Proveedor"]').value;
-			var cantidad = document.querySelector('[name="Cantidad"]').value;
-			var costo = document.querySelector('[name="Costo"]').value;
-			var precio = document.querySelector('[name="Precio"]').value;
-			var estado = document.querySelector('[name="Estado"]').value;
-
-			if (!codigoArticulo || !descripcion || !codigoBarras || !proveedor || !cantidad || !costo || !precio || !estado) {
-				// Mostrar mensaje de error con SweetAlert2 si no están completos los campos
-				Swal.fire({
-					icon: 'error',
-					title: 'Error',
-					text: 'Por favor complete todos los campos requeridos.',
-					confirmButtonColor: '#3085d6',
-					cancelButtonColor: '#d33',
-					confirmButtonText: 'OK'
-				});
-			} else {
-				// Crear objeto FormData con los datos del formulario
-				var formData = new FormData(document.getElementById('formcreate'));
-
-				// Enviar los datos al controlador utilizando fetch
-				fetch('/Articulos/CrearArticulo', {
-					method: 'POST',
-					body: formData
-				})
-					.then(response => {
-						if (response.ok) {
-							// Mostrar mensaje de éxito con SweetAlert2
-							Swal.fire({
-								icon: 'success',
-								title: 'Guardado Correctamente',
-								showConfirmButton: true,
-								confirmButtonColor: '#3085d6',
-								confirmButtonText: 'OK'
-							}).then((result) => {
-								// Redirigir a la página de índice de artículos después de guardar
-								window.location.href = '/Articulos/Index';
-							});
-						} else {
-							throw new Error('Error al guardar los datos');
-						}
-					})
-					.catch(error => {
-						// Mostrar mensaje de error con SweetAlert2
-						Swal.fire({
-							icon: 'error',
-							title: 'Error',
-							text: error.message,
-							confirmButtonColor: '#3085d6',
-							cancelButtonColor: '#d33',
-							confirmButtonText: 'OK'
-						});
-					});
-			}
-		});
-
-		/*Inicio de validaci[on de boton actualizar
-			Actualización 10/7/24 por Joseth Araya
-			Se modificaron los getElementId para obtener los datos correctos*/
-		document.getElementById('btnActualizar').addEventListener('click', function (event) {
-			event.preventDefault(); // Detener el envío normal del formulario
-
-			// Validar campos requeridos
-			var codigoArticulo = document.getElementById('PKART').value;
-			var descripcion = document.getElementById('Descp').value;
-			var codigoBarras = document.getElementById('CodBarras').value;
-			var proveedor = document.getElementById('FKProveedor').value;
-			var cantidad = document.getElementById('Cant').value;
-			var costo = document.getElementById('cost').value;
-			var precio = document.getElementById('Price').value;
-			var estado = document.getElementById('State').value;
-
-			if (!codigoArticulo || !descripcion || !codigoBarras || !proveedor || !cantidad || !costo || !precio || !estado) {
-				// Mostrar mensaje de error con SweetAlert2 si no están completos los campos
-				Swal.fire({
-					icon: 'error',
-					title: 'Error',
-					text: 'Por favor complete todos los campos requeridos.',
-					confirmButtonColor: '#3085d6',
-					cancelButtonColor: '#d33',
-					confirmButtonText: 'OK'
-				});
-			} else {
-				// Crear objeto FormData con los datos del formulario
-				var formData = new FormData(document.getElementById('formupdate'));
-
-				// Enviar los datos al controlador utilizando fetch
-				fetch('/Articulos/ActualizarArticulo', {
-					method: 'POST',
-					body: formData
-				})
-					.then(response => {
-						if (response.ok) {
-							// Mostrar mensaje de éxito con SweetAlert2
-							Swal.fire({
-								icon: 'success',
-								title: 'Actualizado Correctamente',
-								showConfirmButton: true,
-								confirmButtonColor: '#3085d6',
-								confirmButtonText: 'OK'
-							}).then((result) => {
-								// Redirigir a la página de índice de artículos después de guardar
-								window.location.href = '/Articulos/Index';
-							});
-						} else {
-							throw new Error('Error al guardar los datos');
-						}
-					})
-					.catch(error => {
-						// Mostrar mensaje de error con SweetAlert2
-						Swal.fire({
-							icon: 'error',
-							title: 'Error',
-							text: error.message,
-							confirmButtonColor: '#3085d6',
-							cancelButtonColor: '#d33',
-							confirmButtonText: 'OK'
-						});
-					});
-			}
-		});
-
 
 		// <!-- Inicio Validación botón desactivar -->
 		document.querySelectorAll('.desactivar-form').forEach(function (form) {
